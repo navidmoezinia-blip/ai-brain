@@ -1,0 +1,4 @@
+interface:
+  display_name: "Inpatient Rounding"
+  short_description: "Previsit guide, full note, presentation, audit, handoff, UpToDate prompt"
+  default_prompt: "Use $inpatient-rounding to turn the pasted chart data and my bedside dictation into the requested rounding output (p1, full note, pres, audit, handoff, or utd)."
