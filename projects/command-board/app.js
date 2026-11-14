@@ -477,8 +477,11 @@
               <button type="button" class="btn" data-inspect-agent="${agent.id}">Prompt</button>
               <div style="display:flex;gap:5px;">
                 <button type="button" class="btn" data-copy-agent="${agent.id}">Copy</button>
-                <button type="button" class="btn btn-primary" data-launch-agent="${agent.id}">
-                  Open ${escapeHtml(agent.short)}
+                <button type="button" class="btn btn-primary" data-run-single="${agent.id}" title="Run just ${escapeHtml(agent.short)} now">
+                  Run
+                </button>
+                <button type="button" class="btn" data-launch-agent="${agent.id}">
+                  Web
                 </button>
               </div>
             </div>
@@ -639,6 +642,65 @@
     }
   }
 
+  async function checkBridgeHealth(notifyUser) {
+    const btn = document.getElementById("bridge-status-btn");
+    try {
+      const res = await fetch(`${state.bridgeUrl}/health`, { method: "GET" });
+      if (res.ok) {
+        const data = await res.json();
+        state.bridgeOnline = Boolean(data.ok);
+        state.bridgeAgents = data.agents || {};
+      } else {
+        state.bridgeOnline = false;
+      }
+    } catch (_) {
+      state.bridgeOnline = false;
+    }
+    if (btn) {
+      btn.textContent = state.bridgeOnline ? "Bridge: ON" : "Bridge: OFF";
+      btn.classList.toggle("btn-primary", state.bridgeOnline);
+    }
+    if (notifyUser) {
+      showToast(
+        state.bridgeOnline
+          ? "Local Bridge connected — Spawn Cloud Run will execute CLIs directly!"
+          : "Local Bridge offline. Run projects/command-board/bridge/start-bridge.bat on your PC."
+      );
+    }
+  }
+
+  async function pollBridgeRuns() {
+    if (!state.bridgeOnline) return;
+    try {
+      const res = await fetch(`${state.bridgeUrl}/runs`);
+      if (!res.ok) return;
+      const data = await res.json();
+      let changed = false;
+      (data.runs || []).forEach((run) => {
+        const sat = state.satellites.find((s) => s.id === run.id);
+        if (!sat) return;
+        const nextStage =
+          run.status === "running"
+            ? "Running"
+            : run.status === "done"
+            ? "PR Ready"
+            : "Error";
+        if (sat.stage !== nextStage || sat.detail !== run.output) {
+          sat.stage = nextStage;
+          sat.detail = run.output || sat.detail;
+          changed = true;
+        }
+      });
+      if (changed) {
+        saveTasks();
+        renderWorldNodes();
+        if (state.inspector && state.inspector.type === "sat") {
+          renderInspector();
+        }
+      }
+    } catch (_) {}
+  }
+
   async function spawnCloudRuns() {
     const activeIds = Array.from(state.selectedAgents);
     if (activeIds.length === 0) {
@@ -656,8 +718,23 @@
       const prompt = buildAgentPrompt(id);
       const branch = `${agent.prefix}/${slug}`;
       let targetUrl = agent.cloudUrl;
+      let satId = `run-${Date.now()}-${id}`;
+      let stage = "Queued";
 
-      if (state.ghConfig.token) {
+      if (state.bridgeOnline) {
+        try {
+          const res = await fetch(`${state.bridgeUrl}/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ agent: id, prompt, title: state.title }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            satId = data.run_id || satId;
+            stage = "Running";
+          }
+        } catch (_) {}
+      } else if (state.ghConfig.token) {
         try {
           const res = await fetch(
             `https://api.github.com/repos/${state.ghConfig.repo}/issues`,
@@ -683,11 +760,11 @@
       }
 
       state.satellites.unshift({
-        id: `run-${Date.now()}-${id}`,
+        id: satId,
         title: state.title || "Cloud Task",
         agent: id,
         branch,
-        stage: "Queued",
+        stage,
         detail: state.instructions[id] || state.sharedContext,
         prompt,
         url: targetUrl,
@@ -699,7 +776,9 @@
     renderSvgLayer();
     renderWorldNodes();
     showToast(
-      state.ghConfig.token
+      state.bridgeOnline
+        ? `Started ${activeIds.length} local CLI run(s) directly from the board!`
+        : state.ghConfig.token
         ? `Dispatched ${activeIds.length} GitHub Issue(s) & orbit nodes!`
         : `Spawned ${activeIds.length} cloud run satellite(s) in orbit!`
     );
@@ -954,6 +1033,19 @@
         return;
       }
 
+      const runSingleBtn = e.target.closest("[data-run-single]");
+      if (runSingleBtn) {
+        const id = runSingleBtn.getAttribute("data-run-single");
+        const prevSelected = new Set(state.selectedAgents);
+        state.selectedAgents = new Set([id]);
+        spawnCloudRuns().finally(() => {
+          state.selectedAgents = prevSelected;
+          renderSvgLayer();
+          renderWorldNodes();
+        });
+        return;
+      }
+
       const launchBtn = e.target.closest("[data-launch-agent]");
       if (launchBtn) {
         const id = launchBtn.getAttribute("data-launch-agent");
@@ -1096,5 +1188,7 @@
     renderWorldNodes();
     fitViewportToOrbit();
     bindCanvasInteractions();
+    checkBridgeHealth(false);
+    setInterval(pollBridgeRuns, 3000);
   });
 })();

@@ -24,8 +24,11 @@
     <div id="hud-presets" style="display:flex;align-items:center;gap:3px;flex-wrap:wrap;"></div>
   </header>
 
-  <!-- Top-Right Floating HUD: GitHub Sync, Snap Layout & Theme -->
+  <!-- Top-Right Floating HUD: Local Bridge, GitHub Sync, Snap Layout & Theme -->
   <div class="hud-bar hud-top-right">
+    <button type="button" id="bridge-status-btn" class="btn" title="Check Local Bridge (http://127.0.0.1:8787)">
+      Bridge: OFF
+    </button>
     <button type="button" id="sync-github-btn" class="btn" title="Pull live PRs into outer orbit">
       Sync PRs
     </button>
