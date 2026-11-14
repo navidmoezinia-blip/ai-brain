@@ -2,23 +2,18 @@
 
 Prepared for the shared artifact-type layout on 2026-11-14 from the user's
 current instructions, the Codex shared-workspace policy, and its PHI-free
-`shared-memory/user.md`. This is an additive workflow document; the profile
-and clinical-stack documents proposed in [Claude PR #1](https://github.com/navidmoezinia-blip/ai-brain/pull/1)
-remain a separate pending import. Current user instructions take precedence.
+`shared-memory/user.md`. The [personal context index](README.md) owns the
+imported profile, style, learning and collaboration preferences. Claude PR #1
+still proposes older overlapping profile/work-style files and a separate
+clinical-stack document. Current user instructions take precedence.
 
-## Collaboration
+## Collaboration and browser use
 
-- Carry clear requests through implementation, verification, commit, push and
-  reviewable handoff. Short go-signals mean retry the blocked step.
-- Preserve the user's structure and voice. Make targeted edits, and remove
-  requested material completely. Keep clinical meaning when shortening.
-- Search the referenced prior chat or email before asking the user to repeat it.
-- Verify claims in the actual named app and display mode. Anki uses night mode.
-- Prefer the user's real Chrome and fast text/form tools. Stop on expired
-  authentication, including UTMB Duo; the user handles login. Close task-opened
-  tabs after the task.
-- Use `AGENTS.md` and `STATUS.md` in this repository for multi-agent rules.
-  Work on a `codex/*` branch and open a PR to `main`; preserve other agents' work.
+Use [collaboration preferences](collaboration-and-personality.md) and
+[communication style](communication-and-writing-style.md) for personal defaults.
+Use `AGENTS.md` and `STATUS.md` for repository rules. Prefer the user's real
+Chrome with fast text/form tools, stop on expired authentication, and close
+task-opened tabs when finished. The user handles login and Duo.
 
 ## Clinical source fidelity and house style
 

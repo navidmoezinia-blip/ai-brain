@@ -8,7 +8,7 @@ been merged or that installed tools have been reconfigured.
 
 | Destination | Prepared source | Import decision |
 | :--- | :--- | :--- |
-| `context/codex-workspace-conventions.md` | Current user instructions; shared-workspace `AGENTS.md`, `config/global-AGENTS.md`, `shared-memory/user.md` | Curated standing workflow and clinical house style; avoids the profile filenames in PR #1. |
+| `context/` | Current user instructions; shared-workspace policy/user facts; prepared PR #1 profile/work-style; selected local user/feedback memory records | Personal background/interests, communication/writing style, collaboration and labeled working impressions, learning preferences, clinical/workspace conventions. Sources are curated rather than raw memory dumps; older PR #1 profiles map to the fuller documents below. |
 | `prompts/clinic/` | Shared-workspace `prompts/fm-continuity-clinic-assistant.md`, `templates/fm-continuity-clinic-assistant.md`, `templates/family-medicine-deidentified-previsit-brief.txt` | Two operational clinic files with reciprocal links adapted; worksheet saved as Markdown; README documents routing and cap. |
 | `prompts/emergency-department/` | Prepared `ed-hpi-templates/ED-Encounter-Prompt.md`, `UTMB-ED-Note-Template.md` | Current baseline and Epic field map; local generation paths removed, relative companions added. |
 | `knowledge/emergency-department/` | Prepared `ed-hpi-templates/ED-Previsit-Launchers.md` | Existing clinical launcher reference; older embedded engine is subordinate to the current baseline. No new evidence review. |
@@ -33,7 +33,7 @@ branch was modified.
 
 | Existing work | Coordination decision |
 | :--- | :--- |
-| [PR #1: Claude initial import](https://github.com/navidmoezinia-blip/ai-brain/pull/1), targets `main` | Do not overwrite its profile, inpatient global ruleset, or 11 skill paths. Its rounding source is rev 8; the rev 9 changed references are staged separately for deliberate reconciliation. |
+| [PR #1: Claude initial import](https://github.com/navidmoezinia-blip/ai-brain/pull/1), targets `main` | Do not modify its branch or overwrite its inpatient global ruleset/11 skill paths. On the user's follow-up request, curated its prepared personal facts/preferences into the four fuller shared context documents below; reconcile those older profile files into these owners rather than keep parallel profiles. Its rounding source is rev 8; rev 9 changed references are staged separately. |
 | [PR #2: Claude topic layout](https://github.com/navidmoezinia-blip/ai-brain/pull/2), targets `structured-by-topic` | Keep this PR on the user's chosen `main` artifact-type layout. Do not reorganize the other branch. |
 | [PR #4: Claude desktop import](https://github.com/navidmoezinia-blip/ai-brain/pull/4), targets `structured-by-topic` | Its topic/reconcile copies overlap `ask-all`, `note-audit`, `codex-self-improvement`, old `ed-note`, and chart-check resources. Use the single canonical main-layout paths from this import when consolidating, and reconcile behavioral differences rather than adding duplicate installed copies. |
 | [PR #5: Gemini cloud command board](https://github.com/navidmoezinia-blip/ai-brain/pull/5), merged to `main` during handoff | Its `projects/command-board/` and deployment workflow have no imported source-path overlap. Merged the updated `origin/main` into this Codex branch, preserving the board/deployment files unchanged and deliberately combining both `STATUS.md` inventories/activity entries. |
@@ -55,6 +55,37 @@ The `note-audit` `utd` specification can be read from the imported reconciliatio
 copy independently. The full `inpatient-rounding` and `inpatient-day-prep`
 workflows are not newly installed by this PR. Their dependencies must be
 resolved before promoting the candidate router.
+
+## Personal-context expansion
+
+The user explicitly requested personal context, style and personality during
+the initial-import handoff. Applied the `productivity:memory-management` skill
+for a short discovery index and focused detail files, while retaining this
+repository's required `context/` layout. No global agent entrypoint or private
+memory database was changed.
+
+| Proposed owner on `main` | Material reconciled from older prepared context |
+| :--- | :--- |
+| `context/navid-personal-context.md` | PR #1 `user-profile.md` identity and `work-style.md` background/interests; dated local user facts. |
+| `context/communication-and-writing-style.md` | PR #1 tone/writing defaults; current instructions, voice-dictation preference and Nov 12-13 clinical-writing corrections. |
+| `context/collaboration-and-personality.md` | PR #1 working/iteration preferences plus explicit local feedback. Working impressions are labeled interpretations, without psychological or diagnostic claims. |
+| `context/learning-preferences.md` | Recorded study approaches, concrete-example preference, Anki/night-mode and source-linked reasoning. NotebookLM is a recorded interest; no notebook links/content were imported. |
+
+Use these owners when consolidating PR #1's `context/user-profile.md` and
+`context/work-style.md`. Do not add the two older full profiles as competing
+current instructions. Its `clinical-ai-stack.md` remains a separate proposal.
+
+Resolved stale/conflicting details: omitted old "no Git repos" statements,
+rotation schedules, browser/authentication claims, contact lists and surname
+ambiguity. Generic plain-text/no-header rules yield to active clinical
+templates; clinical shorthand can use semicolons even though personal prose
+defaults avoid them. Clear requests proceed; material uncertainty gets a
+concise question rather than an unconditional pause.
+
+[personal-context-sources.json](personal-context-sources.json) records the
+selected source paths/dates and hashes without copying their raw incidents,
+private contacts, patient details or memory/session identifiers. Saved facts,
+explicit preferences and working interpretations remain distinct.
 
 ## Deliberate exclusions
 

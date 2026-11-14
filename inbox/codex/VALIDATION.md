@@ -43,6 +43,14 @@ The [manifest](MANIFEST.md) records the inventory, source selection and limits.
 
 ## Scope limits
 
+The personal-context extension was checked separately after the initial
+import: current instructions and dated personal/feedback sources were reviewed,
+older profile claims were scoped or omitted, and all active context links and
+source/output hashes were verified. A second agent checked the reconciliation
+of generic style rules with current clinical-template and autonomy rules.
+No raw chat history, private contacts, patient material or session identifiers
+were copied. Working-personality impressions are explicitly interpretations.
+
 No patient chart, checkpoint, populated worksheet, patient-specific research or
 patient delivery folder was imported. No Epic access, EHR write, clinical query
 submission, application installation, model call or source-installation cutover
