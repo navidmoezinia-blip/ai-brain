@@ -1,0 +1,275 @@
+{
+  "captured_on": "2026-11-14",
+  "layout_base": "main",
+  "branch": "codex/initial-import",
+  "shared_workspace_commit": "4989cff62f34957c5869a7653c0d2bb0c792b28b",
+  "hash_convention": "Source raw SHA-256 records bytes read locally. LF hashes normalize UTF-8 BOM/CRLF. Imported files use UTF-8 without BOM and LF.",
+  "standing_context_sources": [
+    {
+      "source_path": "AGENTS.md",
+      "source_sha256_lf": "5edbb7f1abada2080117ae2e2913d1475fff2b96658cf9b568be264be4719e14"
+    },
+    {
+      "source_path": "config/global-AGENTS.md",
+      "source_sha256_lf": "1f787035312d25ae2cb6f8691dc6f98577f9c177300e38e34149e64a019253c3"
+    },
+    {
+      "source_path": "shared-memory/user.md",
+      "source_sha256_lf": "de6aca3abc560a38b8e8736daeb939360aafa0ff8c3d91ad88b07d282c5e8b10"
+    }
+  ],
+  "source_backed_files": [
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-chart-check/SKILL.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-chart-check/SKILL.md",
+      "source_sha256_raw": "2ed2b9ffb52ac4ac9f78d707508e8bc57f9db4d67cb7bbdd560a92bbc3a1fcca",
+      "source_sha256_lf": "2ed2b9ffb52ac4ac9f78d707508e8bc57f9db4d67cb7bbdd560a92bbc3a1fcca",
+      "imported_sha256_lf": "2ed2b9ffb52ac4ac9f78d707508e8bc57f9db4d67cb7bbdd560a92bbc3a1fcca",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-chart-check/references/recording-verification.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-chart-check/references/recording-verification.md",
+      "source_sha256_raw": "cdeb58c3ac821a81d3f5abff7809b7f9dd5b599747d6eb9ed01896a0aeca32c7",
+      "source_sha256_lf": "cdeb58c3ac821a81d3f5abff7809b7f9dd5b599747d6eb9ed01896a0aeca32c7",
+      "imported_sha256_lf": "cdeb58c3ac821a81d3f5abff7809b7f9dd5b599747d6eb9ed01896a0aeca32c7",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-chart-check/references/screen-hints.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-chart-check/references/screen-hints.md",
+      "source_sha256_raw": "eca9d55a9308125538d84494aa78c50fb5dd64bf1a109d9173f140118d7b7d80",
+      "source_sha256_lf": "eca9d55a9308125538d84494aa78c50fb5dd64bf1a109d9173f140118d7b7d80",
+      "imported_sha256_lf": "eca9d55a9308125538d84494aa78c50fb5dd64bf1a109d9173f140118d7b7d80",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-day-prep/SKILL.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-day-prep/SKILL.md",
+      "source_sha256_raw": "edbe414657a9883e1c974718041c210fab9ac5bf2acbe98051fd6522fb4122b2",
+      "source_sha256_lf": "cae8fffea46935e5d83efecc46cd30277696c61b9681c118c6bd0f43fd1147d1",
+      "imported_sha256_lf": "cae8fffea46935e5d83efecc46cd30277696c61b9681c118c6bd0f43fd1147d1",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-day-prep/agents/openai.yaml",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-day-prep/agents/openai.yaml",
+      "source_sha256_raw": "196363c061a51201c1cb20de9eb59b7d2a0a7f7a2c8d944fc05e6bf8f7555c12",
+      "source_sha256_lf": "e81d97e653ac87cd99d89e1321e6db473d3d72552b2a768670ef50f8c75f3d50",
+      "imported_sha256_lf": "e81d97e653ac87cd99d89e1321e6db473d3d72552b2a768670ef50f8c75f3d50",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/R1_master_instructions.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/R1_master_instructions.md",
+      "source_sha256_raw": "3cbc34e79a5c63a8a536c609957bb1c1974855794b4ec5e43ffcb3e0a814a909",
+      "source_sha256_lf": "3cbc34e79a5c63a8a536c609957bb1c1974855794b4ec5e43ffcb3e0a814a909",
+      "imported_sha256_lf": "3cbc34e79a5c63a8a536c609957bb1c1974855794b4ec5e43ffcb3e0a814a909",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/R2_shared_rules.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/R2_shared_rules.md",
+      "source_sha256_raw": "6be6a7602ebceced4ad61eaa894e670a54da15b39fdcadd385a7de7f03ecf0ed",
+      "source_sha256_lf": "6be6a7602ebceced4ad61eaa894e670a54da15b39fdcadd385a7de7f03ecf0ed",
+      "imported_sha256_lf": "6be6a7602ebceced4ad61eaa894e670a54da15b39fdcadd385a7de7f03ecf0ed",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/R3_previsit_guide.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/R3_previsit_guide.md",
+      "source_sha256_raw": "9f444daae621226e5ca80dc59f45b8265e14c6729d0a80466d81c8e8f074c900",
+      "source_sha256_lf": "9f444daae621226e5ca80dc59f45b8265e14c6729d0a80466d81c8e8f074c900",
+      "imported_sha256_lf": "9f444daae621226e5ca80dc59f45b8265e14c6729d0a80466d81c8e8f074c900",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/R4_assessment_plan.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/R4_assessment_plan.md",
+      "source_sha256_raw": "9f4b6381a4744430f9428a3a7cef13f56e013f2403250d797e850ebb338d78a7",
+      "source_sha256_lf": "9f4b6381a4744430f9428a3a7cef13f56e013f2403250d797e850ebb338d78a7",
+      "imported_sha256_lf": "9f4b6381a4744430f9428a3a7cef13f56e013f2403250d797e850ebb338d78a7",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/R5_note_body_presentation.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/R5_note_body_presentation.md",
+      "source_sha256_raw": "4d79e834b2fef1e774377e1d75666042e712b83cdf5315f2f5da3bd1c96fb5b2",
+      "source_sha256_lf": "4d79e834b2fef1e774377e1d75666042e712b83cdf5315f2f5da3bd1c96fb5b2",
+      "imported_sha256_lf": "4d79e834b2fef1e774377e1d75666042e712b83cdf5315f2f5da3bd1c96fb5b2",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/R6_followups_handoff.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/R6_followups_handoff.md",
+      "source_sha256_raw": "cb51943fb6d189b4a90e7044555716118adb606b0578a46756baaec03a5b10de",
+      "source_sha256_lf": "cb51943fb6d189b4a90e7044555716118adb606b0578a46756baaec03a5b10de",
+      "imported_sha256_lf": "cb51943fb6d189b4a90e7044555716118adb606b0578a46756baaec03a5b10de",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/R8_baseline_style.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/R8_baseline_style.md",
+      "source_sha256_raw": "0ad687905419c1c610db1a4d65ca1f74d8d261841532f02c345ad9e5f4304f1e",
+      "source_sha256_lf": "0ad687905419c1c610db1a4d65ca1f74d8d261841532f02c345ad9e5f4304f1e",
+      "imported_sha256_lf": "0ad687905419c1c610db1a4d65ca1f74d8d261841532f02c345ad9e5f4304f1e",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/epic-review.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/epic-review.md",
+      "source_sha256_raw": "7d014df2078a84fba949502e94daa4649688a4920afa71686ae3c12d68b7e503",
+      "source_sha256_lf": "7d014df2078a84fba949502e94daa4649688a4920afa71686ae3c12d68b7e503",
+      "imported_sha256_lf": "7d014df2078a84fba949502e94daa4649688a4920afa71686ae3c12d68b7e503",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "inbox/codex/reconciliation/inpatient-rounding/references/workflow-learning.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/inpatient-rounding/references/workflow-learning.md",
+      "source_sha256_raw": "e985f58de25206804f7430c8e9853f33f2917bc84e6cb327905af728d7a45c5b",
+      "source_sha256_lf": "e985f58de25206804f7430c8e9853f33f2917bc84e6cb327905af728d7a45c5b",
+      "imported_sha256_lf": "e985f58de25206804f7430c8e9853f33f2917bc84e6cb327905af728d7a45c5b",
+      "adaptation": "LF only; partial uninstalled reconciliation snapshot"
+    },
+    {
+      "destination": "knowledge/emergency-department/ED-Previsit-Launchers.md",
+      "source_collection": "prepared-ed-hpi-templates",
+      "source_path": "ED-Previsit-Launchers.md",
+      "source_sha256_raw": "fe8d12fd2890bf182af7e98e0bb41df26d86af5916aa6285fe8d2750a0b97ce1",
+      "source_sha256_lf": "fe8d12fd2890bf182af7e98e0bb41df26d86af5916aa6285fe8d2750a0b97ce1",
+      "imported_sha256_lf": "fe8d12fd2890bf182af7e98e0bb41df26d86af5916aa6285fe8d2750a0b97ce1",
+      "adaptation": "LF only; README sets current engine precedence"
+    },
+    {
+      "destination": "projects/workspace-templates/project-AGENTS.template.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": "templates/project-AGENTS.template.md",
+      "source_sha256_raw": "9ac5d6e459efbf662ca6f1e5d8ab8027071aa0f8db9d70dbfde3ba46e2510629",
+      "source_sha256_lf": "9ac5d6e459efbf662ca6f1e5d8ab8027071aa0f8db9d70dbfde3ba46e2510629",
+      "imported_sha256_lf": "9ac5d6e459efbf662ca6f1e5d8ab8027071aa0f8db9d70dbfde3ba46e2510629",
+      "adaptation": "LF only"
+    },
+    {
+      "destination": "projects/workspace-templates/project-index.template.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": "templates/project-index.template.md",
+      "source_sha256_raw": "eddb12430f88c09ba4437891f253253bf3ed1576b638b08e5e4f1e53d38aa1c7",
+      "source_sha256_lf": "eddb12430f88c09ba4437891f253253bf3ed1576b638b08e5e4f1e53d38aa1c7",
+      "imported_sha256_lf": "eddb12430f88c09ba4437891f253253bf3ed1576b638b08e5e4f1e53d38aa1c7",
+      "adaptation": "LF only"
+    },
+    {
+      "destination": "projects/workspace-templates/project.gitignore",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": "templates/project.gitignore",
+      "source_sha256_raw": "725890994ee944498d5c9683b9090a71b19da2f4568afd67e029058c97d509d7",
+      "source_sha256_lf": "725890994ee944498d5c9683b9090a71b19da2f4568afd67e029058c97d509d7",
+      "imported_sha256_lf": "725890994ee944498d5c9683b9090a71b19da2f4568afd67e029058c97d509d7",
+      "adaptation": "LF only"
+    },
+    {
+      "destination": "prompts/clinic/family-medicine-deidentified-previsit-brief.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": "templates/family-medicine-deidentified-previsit-brief.txt",
+      "source_sha256_raw": "992aadb74852632454d2bfb7e7a5feaef5f99a8cde5dd94d07db79444ab9ad95",
+      "source_sha256_lf": "992aadb74852632454d2bfb7e7a5feaef5f99a8cde5dd94d07db79444ab9ad95",
+      "imported_sha256_lf": "992aadb74852632454d2bfb7e7a5feaef5f99a8cde5dd94d07db79444ab9ad95",
+      "adaptation": "Markdown extension and LF only"
+    },
+    {
+      "destination": "prompts/clinic/fm-continuity-clinic-assistant.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": "prompts/fm-continuity-clinic-assistant.md",
+      "source_sha256_raw": "c723390aafb0bb58f5167b9cda07d91fecfceae873b7449ae09d57e86d02f337",
+      "source_sha256_lf": "c723390aafb0bb58f5167b9cda07d91fecfceae873b7449ae09d57e86d02f337",
+      "imported_sha256_lf": "98d73b7e1aa24658cda9fb6aa779436baede9001ac12f163715c7c03a9deee06",
+      "adaptation": "reciprocal link only"
+    },
+    {
+      "destination": "prompts/clinic/fm-continuity-clinic-templates.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": "templates/fm-continuity-clinic-assistant.md",
+      "source_sha256_raw": "89b7c98d540ff5c77236ce5b42b002513f4df6ea1ef9ef387d49a22442ace0c5",
+      "source_sha256_lf": "89b7c98d540ff5c77236ce5b42b002513f4df6ea1ef9ef387d49a22442ace0c5",
+      "imported_sha256_lf": "9ce64948f9951fb8b3b8589503ad59c8e612aa6b45df6cf28034b01f68cfacd7",
+      "adaptation": "rename and reciprocal link only"
+    },
+    {
+      "destination": "prompts/emergency-department/ED-Encounter-Prompt.md",
+      "source_collection": "prepared-ed-hpi-templates",
+      "source_path": "ED-Encounter-Prompt.md",
+      "source_sha256_raw": "d22a2953c2e90c40f3115236b1353de4d5309c42da4fd0b0e013ac7a33145d15",
+      "source_sha256_lf": "d22a2953c2e90c40f3115236b1353de4d5309c42da4fd0b0e013ac7a33145d15",
+      "imported_sha256_lf": "11d3a85a3f34900f43938b70d3f03a1f43cfb6898849d18acb950e6cfdffbdf0",
+      "adaptation": "portable header paths/companions; clinical engine unchanged"
+    },
+    {
+      "destination": "prompts/emergency-department/UTMB-ED-Note-Template.md",
+      "source_collection": "prepared-ed-hpi-templates",
+      "source_path": "UTMB-ED-Note-Template.md",
+      "source_sha256_raw": "6d107ee010a5289a3988d7c7d52e9834953a076da7166df81be630d0df650411",
+      "source_sha256_lf": "6d107ee010a5289a3988d7c7d52e9834953a076da7166df81be630d0df650411",
+      "imported_sha256_lf": "6d107ee010a5289a3988d7c7d52e9834953a076da7166df81be630d0df650411",
+      "adaptation": "LF only"
+    },
+    {
+      "destination": "skills/ask-all/SKILL.md",
+      "source_collection": "local-custom-agent-skills",
+      "source_path": "ask-all/SKILL.md",
+      "source_sha256_raw": "1483604c05f2550291036acae9ed5af31875dddeb85b035a2c672423129cf22e",
+      "source_sha256_lf": "1483604c05f2550291036acae9ed5af31875dddeb85b035a2c672423129cf22e",
+      "imported_sha256_lf": "1483604c05f2550291036acae9ed5af31875dddeb85b035a2c672423129cf22e",
+      "adaptation": "LF only"
+    },
+    {
+      "destination": "skills/codex-self-improvement/SKILL.md",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/codex-self-improvement/SKILL.md",
+      "source_sha256_raw": "7db81a9dd0048c9e0e05199462cbd0ff6264db20fd47b39e9e9f459e7e270132",
+      "source_sha256_lf": "7db81a9dd0048c9e0e05199462cbd0ff6264db20fd47b39e9e9f459e7e270132",
+      "imported_sha256_lf": "7db81a9dd0048c9e0e05199462cbd0ff6264db20fd47b39e9e9f459e7e270132",
+      "adaptation": "LF only"
+    },
+    {
+      "destination": "skills/codex-self-improvement/agents/openai.yaml",
+      "source_collection": "codex-shared-workspace@4989cff",
+      "source_path": ".agents/skills/codex-self-improvement/agents/openai.yaml",
+      "source_sha256_raw": "67cf712c1e2d282e0319a9224ea16f8e776d47f323c54ab0631fb45af04baa94",
+      "source_sha256_lf": "67cf712c1e2d282e0319a9224ea16f8e776d47f323c54ab0631fb45af04baa94",
+      "imported_sha256_lf": "67cf712c1e2d282e0319a9224ea16f8e776d47f323c54ab0631fb45af04baa94",
+      "adaptation": "LF only"
+    },
+    {
+      "destination": "skills/ed-note/SKILL.md",
+      "source_collection": "local-custom-agent-skills",
+      "source_path": "ed-note/SKILL.md",
+      "source_sha256_raw": "680589e5ca84adf38b8f92de1639b42cdc9e8101685060803378254f047e92d5",
+      "source_sha256_lf": "680589e5ca84adf38b8f92de1639b42cdc9e8101685060803378254f047e92d5",
+      "imported_sha256_lf": "81f7b02d4bc05e1507477e197428e8206dba4dcc6dd22ff074516bc423d38099",
+      "adaptation": "thin entrypoint to newer prepared canonical prompt; obsolete embedded engine omitted"
+    },
+    {
+      "destination": "skills/note-audit/SKILL.md",
+      "source_collection": "local-custom-agent-skills",
+      "source_path": "note-audit/SKILL.md",
+      "source_sha256_raw": "6cf73ad18c617f394dd5369b6c7460ec02fb986c85b6cd88b886c0c6e68fb019",
+      "source_sha256_lf": "6cf73ad18c617f394dd5369b6c7460ec02fb986c85b6cd88b886c0c6e68fb019",
+      "imported_sha256_lf": "8d4c1543054e75f4029590a3605744b1500c243ba922676a14b15e027b94ceca",
+      "adaptation": "host-neutral browser, user content restriction and explicit UTD source link"
+    }
+  ]
+}

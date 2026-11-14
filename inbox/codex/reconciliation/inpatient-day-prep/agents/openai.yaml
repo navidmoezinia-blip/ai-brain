@@ -1,0 +1,4 @@
+interface:
+  display_name: "Inpatient Day Prep (merged)"
+  short_description: "Compatibility entry for inpatient rounding and Epic review"
+  default_prompt: "Use $inpatient-day-prep to resume the merged inpatient-rounding workflow and prepare my morning or evening report."

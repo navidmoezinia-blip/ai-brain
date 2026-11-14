@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Self Improvement"
+  short_description: "Package repeated Codex workflows."
+  default_prompt: "Mine recent Codex sessions, memories, rollout summaries, existing skills, agents, and automations; shortlist repeated workflows; then create or extend only high-confidence missing reusable assets."

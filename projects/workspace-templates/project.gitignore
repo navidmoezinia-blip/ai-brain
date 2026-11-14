@@ -1,0 +1,36 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+auth*.json
+
+# Codex and local tool state
+.codex/
+.agents/local/
+.clasp.json
+.clasprc.json
+
+# Dependencies and generated files
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+coverage/
+tmp/
+output/
+outputs/
+*.log
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
