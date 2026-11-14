@@ -8,3 +8,6 @@ Nested by clinical setting/rotation so all prompts, quick-reference guides, Epic
 - **[`study/`](./study/)** — ITE/Board study notes, Anki decks & deck-builder scripts, clinical pearls
 
 > **Strict Rule:** Zero PHI. De-identify all examples and templates completely.
+
+## Read first
+- [`clinical-ai-stack.md`](./clinical-ai-stack.md) — clinical AI platforms, char limits, and current inpatient/ED setup. Read before editing any clinical prompt.
