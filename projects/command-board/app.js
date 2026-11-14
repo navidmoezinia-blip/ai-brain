@@ -1,6 +1,6 @@
 /* ==========================================================================
-   AI Brain Cloud Dispatch — Interactive Application Logic (app.js)
-   Multi-LLM task composer, question-first prompt compiler & GitHub board sync
+   AI Brain Radial Infinite Canvas — Spatial Engine & Cloud Dispatch (app.js)
+   Pan/zoom infinite board, circular LLM orbit, draggable nodes & GitHub sync
    ========================================================================== */
 
 (function () {
@@ -8,242 +8,221 @@
 
   const STORAGE_KEYS = {
     THEME: "aibrain_theme",
-    TASKS: "aibrain_board_tasks_v1",
+    TASKS: "aibrain_radial_tasks_v1",
     GH_CONFIG: "aibrain_gh_config_v1",
   };
+
+  const SVG_OFFSET = 3000; // world-svg spans [-3000..+3000]
+  const INNER_RADIUS = 375;
+  const OUTER_RADIUS = 625;
 
   const AGENTS = {
     codex: {
       id: "codex",
+      code: "CX",
       label: "OpenAI Codex",
       short: "Codex",
       prefix: "codex",
+      angleDeg: -90, // Top (12 o'clock)
       entryDoc: "AGENTS.md",
       cloudName: "Codex Cloud",
       cloudUrl: "https://chatgpt.com/codex",
-      strengths: "Repo refactors, scripts, adversarial review",
     },
     claude: {
       id: "claude",
+      code: "CL",
       label: "Claude",
       short: "Claude",
       prefix: "claude",
+      angleDeg: 30, // Bottom-right (4 o'clock)
       entryDoc: "CLAUDE.md + AGENTS.md",
-      cloudName: "Claude Web / Code",
+      cloudName: "Claude Web",
       cloudUrl: "https://claude.ai/code",
-      strengths: "Clinical synthesis, SKILL.md authoring, prose",
     },
     gemini: {
       id: "gemini",
+      code: "AG",
       label: "Antigravity / Gemini",
       short: "Antigravity",
       prefix: "gemini",
+      angleDeg: 150, // Bottom-left (8 o'clock)
       entryDoc: "GEMINI.md + AGENTS.md",
       cloudName: "Gemini / Antigravity",
       cloudUrl: "https://gemini.google.com/",
-      strengths: "Google Drive/Docs/Slides sync, scaffolding, UI",
     },
   };
 
   const PRESETS = {
     "split-roles": {
-      label: "Split Cloud Roles",
-      title: "MICU Vasopressor & Shock Quick-Reference",
-      domain: "clinical",
+      label: "Split Roles",
+      title: "MICU Vasopressor & Shock Reference",
       baseBranch: "main",
       targetPath: "knowledge/micu/",
       sharedContext:
-        "Build a clean, evidence-backed MICU shock and vasopressor study + rounding reference in ai-brain (100% synthetic/de-identified, zero PHI).",
+        "Build a clean, evidence-backed MICU shock and vasopressor reference in ai-brain (100% synthetic, zero PHI).",
       selected: ["codex", "claude", "gemini"],
       instructions: {
         codex:
-          "Audit dosing tables, titration ranges, receptor profiles, and cross-check any calculator/script helpers for edge-case errors. Flag unsupported claims.",
+          "Audit dosing tables, titration ranges, receptor profiles, and check scripts/calculators for edge-case errors.",
         claude:
-          "Draft the structured clinical reference guide and a reusable bedside rounding checklist in Markdown under knowledge/micu/.",
+          "Draft the structured clinical guide and bedside rounding checklist in Markdown under knowledge/micu/.",
         gemini:
-          "Pull related MICU learning objectives from Google Drive, cross-link NotebookLM study outputs in learning/notebooklm/, and update STATUS.md.",
+          "Pull MICU learning objectives from Google Drive, cross-link NotebookLM study outputs, and update STATUS.md.",
       },
     },
     "ask-all": {
-      label: "Parallel Ask-All (3x)",
-      title: "Independent 3-Model Architecture / Clinical Review",
-      domain: "research",
+      label: "Ask-All 3x",
+      title: "Independent 3-Model Clinical / Architecture Review",
       baseBranch: "main",
       targetPath: "knowledge/reviews/",
       sharedContext:
-        "Answer independently first before checking other agent branches. Provide concise reasoning, concrete trade-offs, and cite primary guidelines or literature.",
+        "Answer independently first before reading peer branches. Highlight concrete trade-offs and primary evidence.",
       selected: ["codex", "claude", "gemini"],
       instructions: {
         codex:
-          "Answer the core question independently with a focus on failure modes, edge cases, and implementation trade-offs. Save output to inbox/codex/.",
+          "Analyze failure modes, edge cases, and implementation trade-offs independently. Save notes to inbox/codex/.",
         claude:
-          "Answer the core question independently with structured synthesis, practical workflow fit, and nuanced caveats. Save output to inbox/claude/.",
+          "Provide structured clinical/workflow synthesis and nuanced caveats independently. Save notes to inbox/claude/.",
         gemini:
-          "Answer the core question independently, cross-checking workspace docs and summarizing where models are likely to diverge. Save output to inbox/gemini/.",
+          "Cross-check workspace docs and summarize where models diverge. Save notes to inbox/gemini/.",
       },
     },
     audit: {
-      label: "Builder + Adversarial Critic",
-      title: "Skill Consolidation & Reconciliation",
-      domain: "automation",
+      label: "Builder + Critic",
+      title: "Reconcile Diverged Skills",
       baseBranch: "main",
       targetPath: "skills/",
       sharedContext:
-        "Reconcile diverged skill files into canonical skills/<name>/SKILL.md without losing v8 rules or platform compatibility.",
+        "Consolidate diverged skill files into canonical skills/<name>/SKILL.md without losing rules.",
       selected: ["claude", "codex"],
       instructions: {
         codex:
-          "Run a line-by-line adversarial diff between reconcile/ versions and canonical skills/. List every dropped constraint or regression before approving.",
+          "Run a line-by-line adversarial diff between reconcile/ and skills/ to catch any dropped constraints.",
         claude:
-          "Merge the best instructions into canonical skills/<name>/SKILL.md with relative symlinks for .claude/skills/ and .agents/skills/.",
+          "Merge canonical SKILL.md files and configure relative symlinks for .claude/skills/ and .agents/skills/.",
         gemini:
-          "Verify skill frontmatter compatibility across Gemini/Antigravity, Claude, and Codex and update STATUS.md.",
+          "Verify frontmatter compatibility across Gemini/Antigravity, Claude, and Codex and update STATUS.md.",
       },
     },
     notebooklm: {
-      label: "NotebookLM Study Hub",
-      title: "Organize NotebookLM Topics & Output Links",
-      domain: "study",
+      label: "NotebookLM Hub",
+      title: "Populate NotebookLM Topics & Links",
       baseBranch: "main",
       targetPath: "learning/notebooklm/",
       sharedContext:
-        "Organize NotebookLM study notebooks by topic folder with separate videos.md, audios.md, and mindmaps.md hyperlink tables.",
+        "Organize NotebookLM study notebooks by topic folder with videos.md, audios.md, and mindmaps.md hyperlink tables.",
       selected: ["gemini"],
       instructions: {
         codex:
-          "Validate all Markdown relative links and table formatting across learning/notebooklm/ and ensure README index stays sorted.",
+          "Validate all Markdown relative links and table formatting across learning/notebooklm/.",
         claude:
-          "Add concise high-yield study focus bullets to each topic README.md based on rotation learning objectives.",
+          "Add concise high-yield study bullets to each topic README.md.",
         gemini:
-          "Read the NotebookLM README/links doc, populate learning/notebooklm/<topic>/ (README.md, videos.md, audios.md, mindmaps.md), and update learning/notebooklm/README.md.",
-      },
-    },
-    migration: {
-      label: "Context & Knowledge Migration",
-      title: "Initial Workspace Import to ai-brain",
-      domain: "automation",
-      baseBranch: "main",
-      targetPath: "context/",
-      sharedContext:
-        "Migrate prepared standing context, domain knowledge, reusable prompts, and portable skills into navidmoezinia-blip/ai-brain.",
-      selected: ["codex"],
-      instructions: {
-        codex:
-          "Import prepared ChatGPT/Codex context, prompts, knowledge, and skills onto codex/initial-import. Place unsorted items in inbox/codex/, update STATUS.md, and open a PR to main.",
-        claude:
-          "Organize Claude memory, templates, and canonical skills onto claude/<topic>, update STATUS.md, and open a PR.",
-        gemini:
-          "Sync Google Drive exports and organize shared workspace indexes on gemini/<topic>, update STATUS.md, and open a PR.",
+          "Read the NotebookLM README links doc, populate learning/notebooklm/<topic>/ (videos.md, audios.md, mindmaps.md), and update master index.",
       },
     },
   };
 
-  const INITIAL_SEED_TASKS = [
+  const SEED_SATELLITES = [
     {
-      id: "seed-pr-4",
-      title: "Import Claude Code (desktop) memory, skills, and scripts",
+      id: "sat-pr-4",
+      title: "PR #4 · Desktop memory & skills",
       agent: "claude",
-      domain: "automation",
       branch: "claude/desktop-import",
-      status: "review",
-      instruction:
-        "Verbatim copies of desktop memory notes, ask-all & note-audit skills, AHK/userscripts, and reconcile/ mapping.",
+      stage: "PR Ready",
+      detail: "Desktop memory notes, ask-all & note-audit skills, AHK/userscripts, reconcile/.",
       url: "https://github.com/navidmoezinia-blip/ai-brain/pull/4",
-      updatedAt: "2026-11-14",
     },
     {
-      id: "seed-pr-2",
-      title: "Claude import into topic layout",
+      id: "sat-pr-2",
+      title: "PR #2 · Topic layout import",
       agent: "claude",
-      domain: "clinical",
       branch: "claude/by-topic",
-      status: "review",
-      instruction:
-        "Organizes imported Claude skills, clinical templates, and research references into topic-nested folders.",
+      stage: "PR Ready",
+      detail: "Organizes imported Claude materials into structured-by-topic folders.",
       url: "https://github.com/navidmoezinia-blip/ai-brain/pull/2",
-      updatedAt: "2026-11-14",
     },
     {
-      id: "seed-pr-1",
-      title: "Claude initial import: skills, context, prompts, knowledge",
+      id: "sat-pr-1",
+      title: "PR #1 · Initial Claude import",
       agent: "claude",
-      domain: "automation",
       branch: "claude/initial-import",
-      status: "review",
-      instruction:
-        "Initial Claude web import targeting main functional layout (context/, knowledge/, prompts/, skills/).",
+      stage: "PR Ready",
+      detail: "Initial Claude web import targeting main functional layout.",
       url: "https://github.com/navidmoezinia-blip/ai-brain/pull/1",
-      updatedAt: "2026-11-14",
     },
     {
-      id: "seed-gemini-nlm",
-      title: "NotebookLM study directory scaffold & topic links",
+      id: "sat-gem-nlm",
+      title: "NotebookLM study scaffold",
       agent: "gemini",
-      domain: "study",
       branch: "gemini/learning-notebooklm",
-      status: "running",
-      instruction:
-        "Scaffolded learning/notebooklm/ with _template/ (videos.md, audios.md, mindmaps.md). Waiting on Gemini README links to populate topics.",
+      stage: "Running",
+      detail: "Scaffolded learning/notebooklm/ + _template/; ready for Gemini README links.",
       url: "https://github.com/navidmoezinia-blip/ai-brain",
-      updatedAt: "2026-11-14",
     },
     {
-      id: "seed-codex-mig",
-      title: "Codex context, prompts & workflow migration",
+      id: "sat-gem-board",
+      title: "PR #5 · Radial Cloud Board",
+      agent: "gemini",
+      branch: "gemini/cloud-command-board",
+      stage: "PR Ready",
+      detail: "Circular infinite command board + GitHub Pages deploy workflow.",
+      url: "https://github.com/navidmoezinia-blip/ai-brain/pull/5",
+    },
+    {
+      id: "sat-cx-mig",
+      title: "Codex context migration",
       agent: "codex",
-      domain: "automation",
       branch: "codex/initial-import",
-      status: "queued",
-      instruction:
-        "Migrate prepared ChatGPT/Codex context, prompts, and tools into ai-brain and log inventory in STATUS.md.",
+      stage: "Queued",
+      detail: "Queued migration of ChatGPT/Codex context, prompts & tools into ai-brain.",
       url: "https://chatgpt.com/codex",
-      updatedAt: "2026-11-14",
-    },
-    {
-      id: "seed-pr-3",
-      title: "Import Claude materials into topic-nested layout (#3)",
-      agent: "claude",
-      domain: "automation",
-      branch: "claude/ai-brain-repo-org-36ae4a",
-      status: "merged",
-      instruction: "Merged into structured-by-topic branch.",
-      url: "https://github.com/navidmoezinia-blip/ai-brain/pull/3",
-      updatedAt: "2026-11-14",
     },
   ];
 
-  // Application State
+  // State
   const state = {
-    activeView: "composer", // 'composer' | 'board'
+    camera: { x: 0, y: 0, zoom: 0.78 },
     activePreset: "split-roles",
-    selectedAgents: new Set(["codex", "claude", "gemini"]),
+    selectedAgents: new Set(PRESETS["split-roles"].selected),
     title: PRESETS["split-roles"].title,
-    domain: PRESETS["split-roles"].domain,
     baseBranch: PRESETS["split-roles"].baseBranch,
     targetPath: PRESETS["split-roles"].targetPath,
     sharedContext: PRESETS["split-roles"].sharedContext,
     instructions: { ...PRESETS["split-roles"].instructions },
-    boardFilterAgent: "all",
-    boardFilterDomain: "all",
-    tasks: [],
+    positions: {}, // nodeKey -> { x, y }
+    satellites: [],
+    inspector: null, // { type: 'agent'|'sat', id: string }
     ghConfig: {
       repo: "navidmoezinia-blip/ai-brain",
       token: "",
     },
   };
 
-  // Helpers
-  function slugify(text) {
-    const base = (text || "task")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 34);
-    return base || "cloud-task";
+  function degToRad(deg) {
+    return (deg * Math.PI) / 180;
   }
 
-  function escapeHtml(str) {
-    return String(str || "")
+  function polarToCartesian(radius, angleDeg) {
+    const r = degToRad(angleDeg);
+    return {
+      x: Math.round(radius * Math.cos(r)),
+      y: Math.round(radius * Math.sin(r)),
+    };
+  }
+
+  function slugify(str) {
+    return (
+      String(str || "task")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 32) || "cloud-task"
+    );
+  }
+
+  function escapeHtml(s) {
+    return String(s || "")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
@@ -255,378 +234,430 @@
     if (!el) return;
     el.textContent = msg;
     el.hidden = false;
-    clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => {
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => {
       el.hidden = true;
-    }, 2600);
+    }, 2400);
   }
 
-  // Guardrail Check: Detects potential PHI or API keys client-side
-  function scanGuardrails(texts) {
-    const combined = texts.join("\n");
-    const findings = [];
+  // Compute Radial Node Coordinates
+  function computeRadialPositions(preserveHubAndAgents) {
+    if (!preserveHubAndAgents) {
+      state.positions["hub"] = { x: 0, y: 0 };
+      Object.values(AGENTS).forEach((agent) => {
+        state.positions[`agent:${agent.id}`] = polarToCartesian(INNER_RADIUS, agent.angleDeg);
+      });
+    }
 
-    if (/\b(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{25,}|github_pat_[A-Za-z0-9_]{25,}|AIza[0-9A-Za-z_-]{30,})\b/.test(combined)) {
-      findings.push("Possible API key or token detected (AGENTS.md forbids secrets).");
-    }
-    if (/\b(MRN|Medical Record|DOB|Date of Birth)\s*[:#-]?\s*\d+/i.test(combined)) {
-      findings.push("Possible patient identifier (MRN/DOB label) detected — verify 100% de-identified.");
-    }
-    if (/\b\d{3}-\d{2}-\d{4}\b/.test(combined)) {
-      findings.push("SSN-like pattern (XXX-XX-XXXX) detected.");
-    }
-    return findings;
+    // Group satellites by parent agent and fan them out radially along outer orbit
+    ["codex", "claude", "gemini"].forEach((agentId) => {
+      const baseAngle = AGENTS[agentId].angleDeg;
+      const items = state.satellites.filter((s) => s.agent === agentId);
+      const step = 24;
+      const startOffset = -((items.length - 1) * step) / 2;
+      items.forEach((sat, idx) => {
+        const key = `sat:${sat.id}`;
+        if (!preserveHubAndAgents || !state.positions[key]) {
+          state.positions[key] = polarToCartesian(OUTER_RADIUS, baseAngle + startOffset + idx * step);
+        }
+      });
+    });
   }
 
-  // Question-First Stateless Prompt Compiler
+  function fitViewportToOrbit() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const minDim = Math.min(vw, vh);
+    const idealZoom = Math.max(0.45, Math.min(0.95, minDim / 1380));
+    state.camera.x = Math.round(vw / 2);
+    state.camera.y = Math.round(vh / 2 + 12);
+    state.camera.zoom = Number(idealZoom.toFixed(2));
+    applyCameraTransform();
+  }
+
+  function applyCameraTransform() {
+    const world = document.getElementById("canvas-world");
+    const zoomReadout = document.getElementById("zoom-readout");
+    if (world) {
+      world.style.transform = `translate(${state.camera.x}px, ${state.camera.y}px) scale(${state.camera.zoom})`;
+    }
+    if (zoomReadout) {
+      zoomReadout.textContent = `${Math.round(state.camera.zoom * 100)}%`;
+    }
+  }
+
+  // Guardrail Scanner
+  function scanGuardrails() {
+    const active = Array.from(state.selectedAgents);
+    const blob = [
+      state.title,
+      state.sharedContext,
+      ...active.map((id) => state.instructions[id] || ""),
+    ].join("\n");
+
+    if (/\b(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{25,}|github_pat_[A-Za-z0-9_]{25,}|AIza[0-9A-Za-z_-]{30,})\b/.test(blob)) {
+      return "Blocked: API key/secret detected";
+    }
+    if (/\b(MRN|Medical Record|DOB|Date of Birth)\s*[:#-]?\s*\d+/i.test(blob)) {
+      return "Warning: Possible PHI (MRN/DOB) detected";
+    }
+    return "";
+  }
+
+  // Stateless Question-First Cloud Prompt Compiler
   function buildAgentPrompt(agentId) {
     const agent = AGENTS[agentId];
     const slug = slugify(state.title);
     const branchName = `${agent.prefix}/${slug}`;
-    const specificInstruction = (state.instructions[agentId] || "").trim();
+    const specific = (state.instructions[agentId] || "").trim();
     const shared = (state.sharedContext || "").trim();
-    const targetDir = (state.targetPath || "").trim() || "(see AGENTS.md layout)";
-
-    const peerAgents = Array.from(state.selectedAgents)
+    const peerList = Array.from(state.selectedAgents)
       .filter((id) => id !== agentId)
       .map((id) => `${AGENTS[id].short} (\`${AGENTS[id].prefix}/${slug}\`)`);
-
-    const peerLine =
-      peerAgents.length > 0
-        ? `- Parallel cloud agents on this task: ${peerAgents.join(", ")}. Isolate your writes to \`${branchName}\` so nothing conflicts.`
-        : `- You are the sole assigned cloud agent on this task.`;
 
     return [
       `TASK: ${state.title || "Untitled Cloud Task"}`,
       ``,
       `YOUR SPECIFIC INSTRUCTIONS (${agent.label}):`,
-      specificInstruction || shared || "(Describe exact deliverable here)",
-      shared && specificInstruction ? `\nSHARED GOAL & CONTEXT:\n${shared}` : "",
+      specific || shared || "(Enter deliverable instructions)",
+      shared && specific ? `\nSHARED GOAL & CONTEXT:\n${shared}` : "",
       ``,
-      `REPO & CLOUD EXECUTION PROTOCOL (\`${state.ghConfig.repo}\`):`,
-      `- Sync first: \`git fetch origin --prune\`, inspect \`STATUS.md\`, and follow \`${agent.entryDoc}\`.`,
-      `- Base branch: \`${state.baseBranch}\` -> create/checkout your branch \`${branchName}\`.`,
-      `- Target path: \`${targetDir}\``,
-      peerLine,
-      `- Safety: ZERO PHI (100% synthetic/de-identified only) and ZERO secrets/API keys.`,
-      `- Handoff: Update \`STATUS.md\` with what you added, push \`${branchName}\`, and open a PR to \`${state.baseBranch}\`.`,
+      `REPO & CLOUD PROTOCOL (\`${state.ghConfig.repo}\`):`,
+      `- Sync first: \`git fetch origin --prune\`, read \`STATUS.md\`, and follow \`${agent.entryDoc}\`.`,
+      `- Base branch: \`${state.baseBranch}\` -> checkout \`${branchName}\`.`,
+      `- Target path: \`${state.targetPath || "(see AGENTS.md)"}\``,
+      peerList.length
+        ? `- Parallel cloud peers: ${peerList.join(", ")}. Isolate writes to \`${branchName}\`.`
+        : `- Sole assigned cloud agent for this run.`,
+      `- Safety: ZERO PHI (100% de-identified/synthetic) & ZERO secrets/API keys.`,
+      `- Handoff: Update \`STATUS.md\`, push \`${branchName}\`, and open a PR to \`${state.baseBranch}\`.`,
     ]
       .filter(Boolean)
       .join("\n");
   }
 
-  // Persistence
-  function loadState() {
-    try {
-      const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
-      if (savedTheme === "dark" || savedTheme === "light") {
-        document.documentElement.setAttribute("data-theme", savedTheme);
-      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
+  // SVG Curved Tethers & Orbit Rings
+  function curvedPath(p1, p2) {
+    const x1 = p1.x + SVG_OFFSET;
+    const y1 = p1.y + SVG_OFFSET;
+    const x2 = p2.x + SVG_OFFSET;
+    const y2 = p2.y + SVG_OFFSET;
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    // Gentle perpendicular curvature for organic orbital look
+    const cx = mx - dy * 0.11;
+    const cy = my + dx * 0.11;
+    return `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+  }
 
-      const savedTasks = localStorage.getItem(STORAGE_KEYS.TASKS);
-      state.tasks = savedTasks ? JSON.parse(savedTasks) : [...INITIAL_SEED_TASKS];
+  function renderSvgLayer() {
+    const svg = document.getElementById("world-svg");
+    if (!svg) return;
+    const hubPos = state.positions["hub"] || { x: 0, y: 0 };
+    const cx = hubPos.x + SVG_OFFSET;
+    const cy = hubPos.y + SVG_OFFSET;
 
-      const savedGh = localStorage.getItem(STORAGE_KEYS.GH_CONFIG);
-      if (savedGh) {
-        const parsed = JSON.parse(savedGh);
-        state.ghConfig.repo = parsed.repo || "navidmoezinia-blip/ai-brain";
-        state.ghConfig.token = parsed.token || "";
-      }
-    } catch (_) {
-      state.tasks = [...INITIAL_SEED_TASKS];
+    const rings = `
+      <circle class="orbit-ring" cx="${cx}" cy="${cy}" r="${INNER_RADIUS}" />
+      <circle class="orbit-ring" cx="${cx}" cy="${cy}" r="${OUTER_RADIUS}" />
+    `;
+
+    const agentTethers = Object.values(AGENTS)
+      .map((agent) => {
+        const pos = state.positions[`agent:${agent.id}`] || { x: 0, y: 0 };
+        const isActive = state.selectedAgents.has(agent.id);
+        const cls = isActive ? `tether-path active-${agent.id}` : "tether-path";
+        return `<path class="${cls}" d="${curvedPath(hubPos, pos)}" />`;
+      })
+      .join("");
+
+    const satTethers = state.satellites
+      .map((sat) => {
+        const parentPos = state.positions[`agent:${sat.agent}`] || hubPos;
+        const satPos = state.positions[`sat:${sat.id}`];
+        if (!satPos) return "";
+        return `<path class="satellite-tether" d="${curvedPath(parentPos, satPos)}" />`;
+      })
+      .join("");
+
+    svg.innerHTML = rings + satTethers + agentTethers;
+  }
+
+  // Build Initial / Structural DOM Nodes on the Infinite Canvas
+  function renderWorldNodes() {
+    const layer = document.getElementById("nodes-layer");
+    if (!layer) return;
+
+    const hubPos = state.positions["hub"] || { x: 0, y: 0 };
+    const slug = slugify(state.title);
+    const warning = scanGuardrails();
+
+    const hubHtml = `
+      <div
+        id="node-hub"
+        class="spatial-node hub-node"
+        data-node-key="hub"
+        style="left:${hubPos.x}px; top:${hubPos.y}px;"
+      >
+        <div class="hub-kicker node-drag-handle" title="Drag hub">AI-BRAIN CORE · DRAG</div>
+        <input
+          id="hub-title-input"
+          class="hub-title-input"
+          type="text"
+          value="${escapeHtml(state.title)}"
+          placeholder="Task title..."
+        />
+        <textarea
+          id="hub-shared-input"
+          class="hub-shared-textarea"
+          rows="3"
+          placeholder="Shared goal & context sent to active cloud LLMs..."
+        >${escapeHtml(state.sharedContext)}</textarea>
+        <div class="hub-meta-row">
+          <select id="hub-branch-select" class="compact-select" title="Base branch">
+            <option value="main" ${state.baseBranch === "main" ? "selected" : ""}>main</option>
+            <option value="structured-by-topic" ${state.baseBranch === "structured-by-topic" ? "selected" : ""}>by-topic</option>
+          </select>
+          <input
+            id="hub-path-input"
+            class="compact-input"
+            style="width:128px;"
+            type="text"
+            value="${escapeHtml(state.targetPath)}"
+            placeholder="target folder/"
+          />
+        </div>
+        <div id="hub-guardrail-label" class="hub-guardrail ${warning ? "warn" : ""}">
+          ${escapeHtml(warning || "Zero-PHI & Secret check clear")}
+        </div>
+        <div class="hub-meta-row">
+          <button type="button" id="hub-spawn-btn" class="btn btn-primary">
+            Spawn Cloud Run (${state.selectedAgents.size})
+          </button>
+        </div>
+      </div>
+    `;
+
+    const agentNodesHtml = Object.values(AGENTS)
+      .map((agent) => {
+        const pos = state.positions[`agent:${agent.id}`] || { x: 0, y: 0 };
+        const active = state.selectedAgents.has(agent.id);
+        return `
+          <div
+            id="node-agent-${agent.id}"
+            class="spatial-node llm-node ${active ? `active-${agent.id}` : "inactive"}"
+            data-node-key="agent:${agent.id}"
+            style="left:${pos.x}px; top:${pos.y}px;"
+          >
+            <div class="llm-header node-drag-handle" title="Drag ${escapeHtml(agent.label)} node">
+              <div class="llm-orb-title">
+                <span class="llm-orb ${agent.id}">${agent.code}</span>
+                <div>
+                  <div class="llm-name">${escapeHtml(agent.label)}</div>
+                  <div class="llm-branch" data-branch-label="${agent.id}">${agent.prefix}/${escapeHtml(slug)}</div>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="power-pill ${active ? "on" : ""}"
+                data-toggle-agent="${agent.id}"
+              >${active ? "LINKED" : "OFF"}</button>
+            </div>
+
+            <textarea
+              class="llm-textarea"
+              rows="3"
+              data-agent-textarea="${agent.id}"
+              placeholder="Specific instructions for ${escapeHtml(agent.short)}..."
+            >${escapeHtml(state.instructions[agent.id] || "")}</textarea>
+
+            <div class="llm-actions">
+              <button type="button" class="btn" data-inspect-agent="${agent.id}">Prompt</button>
+              <div style="display:flex;gap:5px;">
+                <button type="button" class="btn" data-copy-agent="${agent.id}">Copy</button>
+                <button type="button" class="btn btn-primary" data-launch-agent="${agent.id}">
+                  Open ${escapeHtml(agent.short)}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    const satNodesHtml = state.satellites
+      .map((sat) => {
+        const pos = state.positions[`sat:${sat.id}`] || { x: 0, y: 0 };
+        return `
+          <div
+            id="node-sat-${escapeHtml(sat.id)}"
+            class="spatial-node satellite-node node-drag-handle"
+            data-node-key="sat:${escapeHtml(sat.id)}"
+            data-sat-id="${escapeHtml(sat.id)}"
+            style="left:${pos.x}px; top:${pos.y}px;"
+            title="Click to inspect or drag to reposition"
+          >
+            <span class="sat-dot ${escapeHtml(sat.agent)}"></span>
+            <div class="sat-body">
+              <div class="sat-title">${escapeHtml(sat.title)}</div>
+              <div class="sat-meta">${escapeHtml(sat.stage)} · ${escapeHtml(sat.branch)}</div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    layer.innerHTML = hubHtml + agentNodesHtml + satNodesHtml;
+    bindHubInputListeners();
+  }
+
+  // In-place updates while typing (preserves cursor & focus!)
+  function updateLiveLabelsInPlace() {
+    const slug = slugify(state.title);
+    Object.values(AGENTS).forEach((agent) => {
+      const el = document.querySelector(`[data-branch-label="${agent.id}"]`);
+      if (el) el.textContent = `${agent.prefix}/${slug}`;
+    });
+
+    const guard = document.getElementById("hub-guardrail-label");
+    const warn = scanGuardrails();
+    if (guard) {
+      guard.textContent = warn || "Zero-PHI & Secret check clear";
+      guard.classList.toggle("warn", Boolean(warn));
+    }
+
+    if (state.inspector && state.inspector.type === "agent") {
+      renderInspector();
     }
   }
 
-  function saveTasks() {
-    try {
-      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(state.tasks));
-    } catch (_) {}
-  }
-
-  function saveGhConfig() {
-    try {
-      localStorage.setItem(STORAGE_KEYS.GH_CONFIG, JSON.stringify(state.ghConfig));
-    } catch (_) {}
-  }
-
-  // Rendering Functions
-  function renderMastheadStatus() {
-    const dot = document.getElementById("gh-status-dot");
-    const label = document.getElementById("gh-status-text");
-    const countBadge = document.getElementById("board-count-badge");
-    const repoLink = document.getElementById("repo-header-link");
-
-    if (repoLink) {
-      repoLink.textContent = state.ghConfig.repo;
-      repoLink.href = `https://github.com/${state.ghConfig.repo}`;
-    }
-
-    const connected = Boolean(state.ghConfig.token);
-    if (dot) dot.classList.toggle("connected", connected);
-    if (label) label.textContent = connected ? "GitHub Queue Live" : "Connect GitHub Sync";
-    if (countBadge) countBadge.textContent = String(state.tasks.length);
-  }
-
-  function renderPresets() {
-    const container = document.getElementById("preset-strip");
-    if (!container) return;
-
-    container.innerHTML = Object.entries(PRESETS)
+  function renderHudPresets() {
+    const box = document.getElementById("hud-presets");
+    if (!box) return;
+    box.innerHTML = Object.entries(PRESETS)
       .map(
-        ([key, preset]) => `
+        ([k, p]) => `
         <button
           type="button"
-          id="preset-btn-${key}"
-          class="preset-chip ${state.activePreset === key ? "active" : ""}"
-          data-preset="${key}"
-        >${escapeHtml(preset.label)}</button>`
+          class="preset-pill ${state.activePreset === k ? "active" : ""}"
+          data-preset="${k}"
+        >${escapeHtml(p.label)}</button>`
       )
       .join("");
   }
 
-  function renderAgentToggles() {
-    const container = document.getElementById("agent-selector-grid");
-    if (!container) return;
+  function renderInspector() {
+    const drawer = document.getElementById("inspector-drawer");
+    const content = document.getElementById("inspector-body");
+    if (!drawer || !content) return;
 
-    container.innerHTML = Object.values(AGENTS)
-      .map((agent) => {
-        const isSelected = state.selectedAgents.has(agent.id);
-        return `
-          <button
-            type="button"
-            id="toggle-agent-${agent.id}"
-            class="agent-toggle ${isSelected ? "selected" : ""}"
-            data-agent="${agent.id}"
-            aria-pressed="${isSelected}"
-          >
-            <div class="agent-toggle-top">
-              <span class="agent-name">${escapeHtml(agent.label)}</span>
-              <span class="agent-check">${isSelected ? "ACTIVE" : "OFF"}</span>
-            </div>
-            <span class="agent-meta">${escapeHtml(agent.strengths)}</span>
+    if (!state.inspector) {
+      drawer.hidden = true;
+      return;
+    }
+    drawer.hidden = false;
+
+    if (state.inspector.type === "agent") {
+      const agent = AGENTS[state.inspector.id];
+      const prompt = buildAgentPrompt(agent.id);
+      content.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <strong>${escapeHtml(agent.label)} Cloud Packet</strong>
+          <button type="button" class="btn" id="close-inspector-btn">Close</button>
+        </div>
+        <pre class="inspector-pre">${escapeHtml(prompt)}</pre>
+        <div style="display:flex;justify-content:flex-end;gap:6px;">
+          <button type="button" class="btn" data-drawer-copy="${agent.id}">Copy Prompt</button>
+          <button type="button" class="btn btn-primary" data-drawer-launch="${agent.id}">
+            Copy &amp; Open ${escapeHtml(agent.cloudName)}
           </button>
-        `;
-      })
-      .join("");
-  }
-
-  function renderPerAgentInputs() {
-    const container = document.getElementById("per-agent-stack");
-    if (!container) return;
-
-    const slug = slugify(state.title);
-    const activeIds = Array.from(state.selectedAgents);
-
-    if (activeIds.length === 0) {
-      container.innerHTML = `<div class="guardrail-banner warn">Select at least one cloud LLM above to assign instructions.</div>`;
-      return;
-    }
-
-    container.innerHTML = activeIds
-      .map((id) => {
-        const agent = AGENTS[id];
-        const val = state.instructions[id] || "";
-        return `
-          <div class="agent-instruction-box">
-            <div class="agent-instruction-header">
-              <span class="agent-badge ${agent.id}">${escapeHtml(agent.label)}</span>
-              <span class="branch-preview">branch: ${escapeHtml(agent.prefix)}/${escapeHtml(slug)}</span>
-            </div>
-            <textarea
-              id="instruction-input-${agent.id}"
-              class="textarea"
-              rows="2"
-              data-agent-input="${agent.id}"
-              placeholder="Specific role or deliverable for ${escapeHtml(agent.label)}..."
-            >${escapeHtml(val)}</textarea>
+        </div>
+      `;
+    } else if (state.inspector.type === "sat") {
+      const sat = state.satellites.find((s) => s.id === state.inspector.id);
+      if (!sat) {
+        drawer.hidden = true;
+        return;
+      }
+      const agent = AGENTS[sat.agent] || AGENTS.codex;
+      const stages = ["Queued", "Running", "PR Ready", "Merged"];
+      content.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <strong>${escapeHtml(sat.title)}</strong>
+          <button type="button" class="btn" id="close-inspector-btn">Close</button>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-muted);">
+          ${escapeHtml(agent.label)} · ${escapeHtml(sat.branch)}
+        </div>
+        <p style="margin:2px 0;font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(sat.detail || "")}</p>
+        ${sat.prompt ? `<pre class="inspector-pre">${escapeHtml(sat.prompt)}</pre>` : ""}
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+          ${stages
+            .map(
+              (st) => `
+            <button
+              type="button"
+              class="preset-pill ${sat.stage === st ? "active" : ""}"
+              data-sat-stage="${st}"
+              data-sat-target="${escapeHtml(sat.id)}"
+            >${st}</button>`
+            )
+            .join("")}
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;">
+          <button type="button" class="btn" data-sat-delete="${escapeHtml(sat.id)}">Remove</button>
+          <div style="display:flex;gap:6px;">
+            ${
+              sat.prompt
+                ? `<button type="button" class="btn" data-sat-copy="${escapeHtml(sat.id)}">Copy Prompt</button>`
+                : ""
+            }
+            ${
+              sat.url
+                ? `<a class="btn btn-primary" href="${escapeHtml(sat.url)}" target="_blank" rel="noopener">Open Link</a>`
+                : ""
+            }
           </div>
-        `;
-      })
-      .join("");
+        </div>
+      `;
+    }
   }
 
-  function renderGuardrailsAndPackets() {
-    const guardrailEl = document.getElementById("guardrail-banner");
-    const packetsEl = document.getElementById("packet-list");
-    if (!guardrailEl || !packetsEl) return;
-
-    const activeIds = Array.from(state.selectedAgents);
-    const textsToScan = [
-      state.title,
-      state.sharedContext,
-      ...activeIds.map((id) => state.instructions[id] || ""),
-    ];
-    const warnings = scanGuardrails(textsToScan);
-
-    if (warnings.length > 0) {
-      guardrailEl.className = "guardrail-banner warn";
-      guardrailEl.textContent = "Safety Check: " + warnings.join(" ");
+  function copyToClipboard(text, msg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => showToast(msg));
     } else {
-      guardrailEl.className = "guardrail-banner ok";
-      guardrailEl.textContent =
-        "Zero-PHI & Secret check clear • Question-first stateless prompts ready for cloud execution.";
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      showToast(msg);
     }
-
-    if (activeIds.length === 0) {
-      packetsEl.innerHTML = `<p class="panel-subtitle">Toggle Codex, Claude, or Antigravity on the left to preview cloud dispatch prompts.</p>`;
-      return;
-    }
-
-    const slug = slugify(state.title);
-    packetsEl.innerHTML = activeIds
-      .map((id) => {
-        const agent = AGENTS[id];
-        const prompt = buildAgentPrompt(id);
-        return `
-          <div class="packet-card">
-            <div class="packet-card-top">
-              <div>
-                <span class="agent-badge ${agent.id}">${escapeHtml(agent.label)}</span>
-                <span class="branch-preview" style="margin-left:6px;">${escapeHtml(agent.prefix)}/${escapeHtml(slug)}</span>
-              </div>
-              <div class="packet-actions">
-                <button type="button" class="btn btn-sm" data-copy-agent="${agent.id}" id="copy-btn-${agent.id}">
-                  Copy Prompt
-                </button>
-                <button type="button" class="btn btn-sm btn-primary" data-launch-agent="${agent.id}" id="launch-btn-${agent.id}">
-                  Copy &amp; Open ${escapeHtml(agent.short)}
-                </button>
-              </div>
-            </div>
-            <pre class="prompt-pre">${escapeHtml(prompt)}</pre>
-          </div>
-        `;
-      })
-      .join("");
   }
 
-  function renderBoard() {
-    const columns = {
-      queued: document.getElementById("col-queued"),
-      running: document.getElementById("col-running"),
-      review: document.getElementById("col-review"),
-      merged: document.getElementById("col-merged"),
-    };
-    const counts = {
-      queued: document.getElementById("count-queued"),
-      running: document.getElementById("count-running"),
-      review: document.getElementById("count-review"),
-      merged: document.getElementById("count-merged"),
-    };
-
-    if (!columns.queued) return;
-
-    const filtered = state.tasks.filter((t) => {
-      if (state.boardFilterAgent !== "all" && t.agent !== state.boardFilterAgent) return false;
-      if (state.boardFilterDomain !== "all" && t.domain !== state.boardFilterDomain) return false;
-      return true;
-    });
-
-    const grouped = { queued: [], running: [], review: [], merged: [] };
-    filtered.forEach((t) => {
-      const bucket = grouped[t.status] ? t.status : "queued";
-      grouped[bucket].push(t);
-    });
-
-    const stageOrder = ["queued", "running", "review", "merged"];
-
-    stageOrder.forEach((stage, idx) => {
-      if (counts[stage]) counts[stage].textContent = String(grouped[stage].length);
-      const nextStage = stageOrder[idx + 1] || null;
-
-      columns[stage].innerHTML =
-        grouped[stage]
-          .map((task) => {
-            const agent = AGENTS[task.agent] || AGENTS.codex;
-            return `
-              <article class="task-card">
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
-                  <span class="agent-badge ${agent.id}">${escapeHtml(agent.short)}</span>
-                  <span class="branch-preview">${escapeHtml(task.branch || "")}</span>
-                </div>
-                <h3 class="task-card-title">${escapeHtml(task.title)}</h3>
-                <p class="task-card-desc">${escapeHtml(task.instruction || "")}</p>
-                <div class="task-card-footer">
-                  <span>${escapeHtml(task.updatedAt || "Today")}</span>
-                  <div class="task-card-links">
-                    ${
-                      task.prompt
-                        ? `<button type="button" class="btn btn-sm" data-copy-task="${escapeHtml(task.id)}">Prompt</button>`
-                        : ""
-                    }
-                    ${
-                      task.url
-                        ? `<a class="inline-link" href="${escapeHtml(task.url)}" target="_blank" rel="noopener">Open</a>`
-                        : ""
-                    }
-                    ${
-                      nextStage
-                        ? `<button type="button" class="btn btn-sm" data-advance-task="${escapeHtml(task.id)}" data-next-stage="${nextStage}" title="Advance stage">&rarr;</button>`
-                        : ""
-                    }
-                    <button type="button" class="btn btn-sm" data-delete-task="${escapeHtml(task.id)}" title="Remove card">&times;</button>
-                  </div>
-                </div>
-              </article>
-            `;
-          })
-          .join("") || `<p class="panel-subtitle" style="margin:8px 0;">No tasks in this stage.</p>`;
-    });
-  }
-
-  function syncFormInputsFromState() {
-    const titleInput = document.getElementById("task-title-input");
-    const domainSelect = document.getElementById("task-domain-select");
-    const branchSelect = document.getElementById("base-branch-select");
-    const pathInput = document.getElementById("target-path-input");
-    const sharedInput = document.getElementById("shared-context-input");
-
-    if (titleInput) titleInput.value = state.title;
-    if (domainSelect) domainSelect.value = state.domain;
-    if (branchSelect) branchSelect.value = state.baseBranch;
-    if (pathInput) pathInput.value = state.targetPath;
-    if (sharedInput) sharedInput.value = state.sharedContext;
-  }
-
-  function renderAll() {
-    renderMastheadStatus();
-    renderPresets();
-    renderAgentToggles();
-    renderPerAgentInputs();
-    renderGuardrailsAndPackets();
-    renderBoard();
-  }
-
-  // Actions: Queue Locally & Optionally Push to GitHub Repo Issues
-  async function queueTasksToBoard(alsoCreateGitHubIssue) {
+  async function spawnCloudRuns() {
     const activeIds = Array.from(state.selectedAgents);
     if (activeIds.length === 0) {
-      showToast("Select at least one LLM first.");
+      showToast("Link at least one LLM node to spawn a run.");
       return;
     }
-
-    const warnings = scanGuardrails([
-      state.title,
-      state.sharedContext,
-      ...activeIds.map((id) => state.instructions[id] || ""),
-    ]);
-    if (warnings.length > 0) {
-      showToast("Blocked: resolve PHI / secret warning before dispatching.");
+    if (scanGuardrails()) {
+      showToast("Resolve PHI / secret warning before spawning.");
       return;
     }
 
     const slug = slugify(state.title);
-    const today = new Date().toISOString().slice(0, 10);
-
-    for (const agentId of activeIds) {
-      const agent = AGENTS[agentId];
-      const prompt = buildAgentPrompt(agentId);
+    for (const id of activeIds) {
+      const agent = AGENTS[id];
+      const prompt = buildAgentPrompt(id);
       const branch = `${agent.prefix}/${slug}`;
-      let issueUrl = agent.cloudUrl;
+      let targetUrl = agent.cloudUrl;
 
-      if (alsoCreateGitHubIssue && state.ghConfig.token) {
+      if (state.ghConfig.token) {
         try {
           const res = await fetch(
             `https://api.github.com/repos/${state.ghConfig.repo}/issues`,
@@ -639,54 +670,50 @@
               },
               body: JSON.stringify({
                 title: `[${agent.short}] ${state.title}`,
-                body: `### Assigned Cloud Agent: **${agent.label}**\n- **Target Branch:** \`${branch}\`\n- **Base Branch:** \`${state.baseBranch}\`\n\n\`\`\`text\n${prompt}\n\`\`\``,
-                labels: [`agent:${agent.id}`, `domain:${state.domain}`],
+                body: `### Assigned Cloud Agent: **${agent.label}**\n- **Branch:** \`${branch}\`\n\n\`\`\`text\n${prompt}\n\`\`\``,
+                labels: [`agent:${agent.id}`],
               }),
             }
           );
           if (res.ok) {
-            const data = await res.json();
-            issueUrl = data.html_url;
+            const issue = await res.json();
+            targetUrl = issue.html_url;
           }
-        } catch (_) {
-          // Graceful fallback to local queue if offline
-        }
+        } catch (_) {}
       }
 
-      state.tasks.unshift({
-        id: `task-${Date.now()}-${agentId}`,
-        title: state.title || "Untitled Cloud Task",
-        agent: agentId,
-        domain: state.domain,
+      state.satellites.unshift({
+        id: `run-${Date.now()}-${id}`,
+        title: state.title || "Cloud Task",
+        agent: id,
         branch,
-        status: "queued",
-        instruction: state.instructions[agentId] || state.sharedContext,
+        stage: "Queued",
+        detail: state.instructions[id] || state.sharedContext,
         prompt,
-        url: issueUrl,
-        updatedAt: today,
+        url: targetUrl,
       });
     }
 
     saveTasks();
-    renderMastheadStatus();
-    renderBoard();
+    computeRadialPositions(true);
+    renderSvgLayer();
+    renderWorldNodes();
     showToast(
-      alsoCreateGitHubIssue && state.ghConfig.token
-        ? `Dispatched ${activeIds.length} cloud task(s) to GitHub Issues & Board!`
-        : `Added ${activeIds.length} task card(s) to Mission Board.`
+      state.ghConfig.token
+        ? `Dispatched ${activeIds.length} GitHub Issue(s) & orbit nodes!`
+        : `Spawned ${activeIds.length} cloud run satellite(s) in orbit!`
     );
   }
 
-  async function syncPullRequestsFromGitHub() {
+  async function syncGitHubPullRequests() {
     if (!state.ghConfig.token) {
       document.getElementById("gh-modal").hidden = false;
       return;
     }
-
-    showToast("Syncing live PRs from GitHub...");
+    showToast("Syncing live PRs into outer orbit...");
     try {
       const res = await fetch(
-        `https://api.github.com/repos/${state.ghConfig.repo}/pulls?state=all&per_page=25`,
+        `https://api.github.com/repos/${state.ghConfig.repo}/pulls?state=all&per_page=20`,
         {
           headers: {
             Accept: "application/vnd.github+json",
@@ -695,166 +722,235 @@
         }
       );
       if (!res.ok) {
-        showToast(`GitHub sync failed (${res.status}). Check token scopes.`);
+        showToast(`GitHub sync error (${res.status}).`);
         return;
       }
       const prs = await res.json();
-      const nonSeedPrTasks = state.tasks.filter(
-        (t) => !String(t.id).startsWith("seed-pr-") && !String(t.id).startsWith("gh-pr-")
+      const customRuns = state.satellites.filter(
+        (s) => !String(s.id).startsWith("sat-pr-") && !String(s.id).startsWith("gh-pr-")
       );
-
-      const prCards = prs.map((pr) => {
-        const ref = pr.head && pr.head.ref ? pr.head.ref : "";
+      const prSats = prs.map((pr) => {
+        const ref = (pr.head && pr.head.ref) || "";
         let agent = "claude";
         if (ref.startsWith("codex/")) agent = "codex";
         else if (ref.startsWith("gemini/")) agent = "gemini";
 
-        let status = "review";
-        if (pr.merged_at) status = "merged";
-        else if (pr.draft) status = "running";
-        else if (pr.state === "closed") status = "merged";
-
         return {
           id: `gh-pr-${pr.number}`,
-          title: `${pr.title} (#${pr.number})`,
+          title: `PR #${pr.number} · ${pr.title}`,
           agent,
-          domain: "automation",
           branch: ref,
-          status,
-          instruction: pr.body ? pr.body.slice(0, 220) : "Pull request in ai-brain.",
+          stage: pr.merged_at ? "Merged" : "PR Ready",
+          detail: (pr.body || "").slice(0, 200),
           url: pr.html_url,
-          updatedAt: (pr.updated_at || "").slice(0, 10),
         };
       });
 
-      state.tasks = [...prCards, ...nonSeedPrTasks];
+      state.satellites = [...prSats, ...customRuns];
       saveTasks();
-      renderMastheadStatus();
-      renderBoard();
-      showToast(`Synced ${prCards.length} PRs from ${state.ghConfig.repo}.`);
+      computeRadialPositions(true);
+      renderSvgLayer();
+      renderWorldNodes();
+      showToast(`Synced ${prSats.length} PRs into orbit.`);
     } catch (_) {
-      showToast("Network error while reaching GitHub API.");
+      showToast("Network error syncing GitHub PRs.");
     }
   }
 
-  function copyText(text, successMsg) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => showToast(successMsg));
-    } else {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      ta.remove();
-      showToast(successMsg);
+  function saveTasks() {
+    try {
+      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(state.satellites));
+    } catch (_) {}
+  }
+
+  function loadState() {
+    try {
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
+      if (savedTheme === "dark" || savedTheme === "light") {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+
+      const savedSats = localStorage.getItem(STORAGE_KEYS.TASKS);
+      state.satellites = savedSats ? JSON.parse(savedSats) : [...SEED_SATELLITES];
+
+      const savedGh = localStorage.getItem(STORAGE_KEYS.GH_CONFIG);
+      if (savedGh) {
+        const parsed = JSON.parse(savedGh);
+        state.ghConfig.repo = parsed.repo || "navidmoezinia-blip/ai-brain";
+        state.ghConfig.token = parsed.token || "";
+      }
+    } catch (_) {
+      state.satellites = [...SEED_SATELLITES];
     }
   }
 
-  // Event Wiring
-  function bindEvents() {
-    // View switcher
-    document.querySelectorAll("[data-view-tab]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.activeView = btn.getAttribute("data-view-tab");
-        document.querySelectorAll("[data-view-tab]").forEach((b) =>
-          b.classList.toggle("active", b === btn)
-        );
-        document
-          .getElementById("view-composer")
-          .classList.toggle("hidden", state.activeView !== "composer");
-        document
-          .getElementById("view-board")
-          .classList.toggle("hidden", state.activeView !== "board");
+  function bindHubInputListeners() {
+    const titleEl = document.getElementById("hub-title-input");
+    const sharedEl = document.getElementById("hub-shared-input");
+    const branchEl = document.getElementById("hub-branch-select");
+    const pathEl = document.getElementById("hub-path-input");
+    const spawnBtn = document.getElementById("hub-spawn-btn");
+
+    if (titleEl) {
+      titleEl.addEventListener("input", (e) => {
+        state.title = e.target.value;
+        updateLiveLabelsInPlace();
       });
+    }
+    if (sharedEl) {
+      sharedEl.addEventListener("input", (e) => {
+        state.sharedContext = e.target.value;
+        updateLiveLabelsInPlace();
+      });
+    }
+    if (branchEl) {
+      branchEl.addEventListener("change", (e) => {
+        state.baseBranch = e.target.value;
+        updateLiveLabelsInPlace();
+      });
+    }
+    if (pathEl) {
+      pathEl.addEventListener("input", (e) => {
+        state.targetPath = e.target.value;
+        updateLiveLabelsInPlace();
+      });
+    }
+    if (spawnBtn) {
+      spawnBtn.addEventListener("click", spawnCloudRuns);
+    }
+  }
+
+  // Infinite Canvas Pan, Wheel Zoom & Draggable Node Mechanics
+  function bindCanvasInteractions() {
+    const viewport = document.getElementById("canvas-viewport");
+    const layer = document.getElementById("nodes-layer");
+
+    let panDrag = null; // { startX, startY, camX, camY }
+    let nodeDrag = null; // { key, el, startX, startY, origX, origY, moved }
+
+    viewport.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("input, textarea, select, button, a")) return;
+
+      const handle = e.target.closest(".node-drag-handle");
+      const nodeEl = e.target.closest("[data-node-key]");
+
+      if (handle && nodeEl) {
+        const key = nodeEl.getAttribute("data-node-key");
+        const cur = state.positions[key] || { x: 0, y: 0 };
+        nodeDrag = {
+          key,
+          el: nodeEl,
+          satId: nodeEl.getAttribute("data-sat-id"),
+          startX: e.clientX,
+          startY: e.clientY,
+          origX: cur.x,
+          origY: cur.y,
+          moved: false,
+        };
+        viewport.setPointerCapture(e.pointerId);
+        return;
+      }
+
+      if (!nodeEl) {
+        panDrag = {
+          startX: e.clientX,
+          startY: e.clientY,
+          camX: state.camera.x,
+          camY: state.camera.y,
+        };
+        viewport.classList.add("panning");
+        viewport.setPointerCapture(e.pointerId);
+      }
     });
 
-    // Theme switcher
-    document.getElementById("theme-toggle-btn").addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-      const next = current === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", next);
+    viewport.addEventListener("pointermove", (e) => {
+      if (nodeDrag) {
+        const dx = (e.clientX - nodeDrag.startX) / state.camera.zoom;
+        const dy = (e.clientY - nodeDrag.startY) / state.camera.zoom;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) nodeDrag.moved = true;
+        const nx = Math.round(nodeDrag.origX + dx);
+        const ny = Math.round(nodeDrag.origY + dy);
+        state.positions[nodeDrag.key] = { x: nx, y: ny };
+        nodeDrag.el.style.left = `${nx}px`;
+        nodeDrag.el.style.top = `${ny}px`;
+        renderSvgLayer();
+        return;
+      }
+
+      if (panDrag) {
+        state.camera.x = Math.round(panDrag.camX + (e.clientX - panDrag.startX));
+        state.camera.y = Math.round(panDrag.camY + (e.clientY - panDrag.startY));
+        applyCameraTransform();
+      }
+    });
+
+    viewport.addEventListener("pointerup", (e) => {
+      if (nodeDrag) {
+        if (!nodeDrag.moved && nodeDrag.satId) {
+          state.inspector = { type: "sat", id: nodeDrag.satId };
+          renderInspector();
+        }
+        nodeDrag = null;
+      }
+      if (panDrag) {
+        panDrag = null;
+        viewport.classList.remove("panning");
+      }
       try {
-        localStorage.setItem(STORAGE_KEYS.THEME, next);
+        viewport.releasePointerCapture(e.pointerId);
       } catch (_) {}
     });
 
-    // Preset clicks
-    document.getElementById("preset-strip").addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-preset]");
-      if (!btn) return;
-      const key = btn.getAttribute("data-preset");
-      const preset = PRESETS[key];
-      if (!preset) return;
+    // Smooth cursor-centered zoom
+    viewport.addEventListener(
+      "wheel",
+      (e) => {
+        if (e.target.closest("textarea, .inspector-pre")) return;
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.08 : 0.92;
+        const nextZoom = Math.max(0.35, Math.min(1.85, state.camera.zoom * factor));
+        const wx = (e.clientX - state.camera.x) / state.camera.zoom;
+        const wy = (e.clientY - state.camera.y) / state.camera.zoom;
+        state.camera.zoom = Number(nextZoom.toFixed(3));
+        state.camera.x = Math.round(e.clientX - wx * state.camera.zoom);
+        state.camera.y = Math.round(e.clientY - wy * state.camera.zoom);
+        applyCameraTransform();
+      },
+      { passive: false }
+    );
 
-      state.activePreset = key;
-      state.selectedAgents = new Set(preset.selected);
-      state.title = preset.title;
-      state.domain = preset.domain;
-      state.baseBranch = preset.baseBranch;
-      state.targetPath = preset.targetPath;
-      state.sharedContext = preset.sharedContext;
-      state.instructions = { ...preset.instructions };
-
-      syncFormInputsFromState();
-      renderAll();
+    // Delegated LLM node controls & typing
+    layer.addEventListener("input", (e) => {
+      const id = e.target.getAttribute("data-agent-textarea");
+      if (!id) return;
+      state.instructions[id] = e.target.value;
+      updateLiveLabelsInPlace();
     });
 
-    // Agent toggles
-    document.getElementById("agent-selector-grid").addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-agent]");
-      if (!btn) return;
-      const id = btn.getAttribute("data-agent");
-      if (state.selectedAgents.has(id)) {
-        state.selectedAgents.delete(id);
-      } else {
-        state.selectedAgents.add(id);
+    layer.addEventListener("click", (e) => {
+      const toggleBtn = e.target.closest("[data-toggle-agent]");
+      if (toggleBtn) {
+        const id = toggleBtn.getAttribute("data-toggle-agent");
+        if (state.selectedAgents.has(id)) state.selectedAgents.delete(id);
+        else state.selectedAgents.add(id);
+        renderSvgLayer();
+        renderWorldNodes();
+        return;
       }
-      renderAgentToggles();
-      renderPerAgentInputs();
-      renderGuardrailsAndPackets();
-    });
 
-    // Form fields
-    document.getElementById("task-title-input").addEventListener("input", (e) => {
-      state.title = e.target.value;
-      renderPerAgentInputs();
-      renderGuardrailsAndPackets();
-    });
+      const inspectBtn = e.target.closest("[data-inspect-agent]");
+      if (inspectBtn) {
+        state.inspector = { type: "agent", id: inspectBtn.getAttribute("data-inspect-agent") };
+        renderInspector();
+        return;
+      }
 
-    document.getElementById("task-domain-select").addEventListener("change", (e) => {
-      state.domain = e.target.value;
-    });
-
-    document.getElementById("base-branch-select").addEventListener("change", (e) => {
-      state.baseBranch = e.target.value;
-      renderGuardrailsAndPackets();
-    });
-
-    document.getElementById("target-path-input").addEventListener("input", (e) => {
-      state.targetPath = e.target.value;
-      renderGuardrailsAndPackets();
-    });
-
-    document.getElementById("shared-context-input").addEventListener("input", (e) => {
-      state.sharedContext = e.target.value;
-      renderGuardrailsAndPackets();
-    });
-
-    // Delegated per-agent textareas
-    document.getElementById("per-agent-stack").addEventListener("input", (e) => {
-      const agentId = e.target.getAttribute("data-agent-input");
-      if (!agentId) return;
-      state.instructions[agentId] = e.target.value;
-      renderGuardrailsAndPackets();
-    });
-
-    // Copy / Launch actions
-    document.getElementById("packet-list").addEventListener("click", (e) => {
       const copyBtn = e.target.closest("[data-copy-agent]");
       if (copyBtn) {
         const id = copyBtn.getAttribute("data-copy-agent");
-        copyText(buildAgentPrompt(id), `Copied ${AGENTS[id].label} prompt.`);
+        copyToClipboard(buildAgentPrompt(id), `Copied ${AGENTS[id].label} prompt.`);
         return;
       }
 
@@ -862,80 +958,68 @@
       if (launchBtn) {
         const id = launchBtn.getAttribute("data-launch-agent");
         const agent = AGENTS[id];
-        const prompt = buildAgentPrompt(id);
-        copyText(prompt, `Copied prompt & opening ${agent.cloudName}...`);
+        copyToClipboard(buildAgentPrompt(id), `Copied prompt & opening ${agent.cloudName}...`);
         window.open(agent.cloudUrl, "_blank", "noopener");
       }
     });
 
-    // Queue buttons
-    document.getElementById("queue-board-btn").addEventListener("click", () => {
-      queueTasksToBoard(false);
+    // HUD & Drawer Controls
+    document.getElementById("hud-presets").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-preset]");
+      if (!btn) return;
+      const key = btn.getAttribute("data-preset");
+      const p = PRESETS[key];
+      if (!p) return;
+      state.activePreset = key;
+      state.selectedAgents = new Set(p.selected);
+      state.title = p.title;
+      state.baseBranch = p.baseBranch;
+      state.targetPath = p.targetPath;
+      state.sharedContext = p.sharedContext;
+      state.instructions = { ...p.instructions };
+      renderHudPresets();
+      renderSvgLayer();
+      renderWorldNodes();
     });
 
-    document.getElementById("dispatch-github-btn").addEventListener("click", () => {
-      if (!state.ghConfig.token) {
-        document.getElementById("gh-modal").hidden = false;
-        return;
-      }
-      queueTasksToBoard(true);
+    document.getElementById("snap-radial-btn").addEventListener("click", () => {
+      computeRadialPositions(false);
+      fitViewportToOrbit();
+      renderSvgLayer();
+      renderWorldNodes();
+      showToast("Snapped nodes to circular orbit.");
     });
 
-    // Board filters & actions
-    document.getElementById("board-agent-filter").addEventListener("change", (e) => {
-      state.boardFilterAgent = e.target.value;
-      renderBoard();
+    document.getElementById("zoom-in-btn").addEventListener("click", () => {
+      state.camera.zoom = Math.min(1.85, Number((state.camera.zoom * 1.15).toFixed(2)));
+      applyCameraTransform();
     });
 
-    document.getElementById("board-domain-filter").addEventListener("change", (e) => {
-      state.boardFilterDomain = e.target.value;
-      renderBoard();
+    document.getElementById("zoom-out-btn").addEventListener("click", () => {
+      state.camera.zoom = Math.max(0.35, Number((state.camera.zoom * 0.87).toFixed(2)));
+      applyCameraTransform();
     });
 
-    document.getElementById("sync-prs-btn").addEventListener("click", syncPullRequestsFromGitHub);
+    document.getElementById("zoom-fit-btn").addEventListener("click", fitViewportToOrbit);
 
-    document.getElementById("view-board").addEventListener("click", (e) => {
-      const adv = e.target.closest("[data-advance-task]");
-      if (adv) {
-        const id = adv.getAttribute("data-advance-task");
-        const next = adv.getAttribute("data-next-stage");
-        const found = state.tasks.find((t) => t.id === id);
-        if (found && next) {
-          found.status = next;
-          saveTasks();
-          renderBoard();
-        }
-        return;
-      }
-
-      const copyTask = e.target.closest("[data-copy-task]");
-      if (copyTask) {
-        const id = copyTask.getAttribute("data-copy-task");
-        const found = state.tasks.find((t) => t.id === id);
-        if (found && found.prompt) {
-          copyText(found.prompt, "Copied saved task prompt.");
-        }
-        return;
-      }
-
-      const del = e.target.closest("[data-delete-task]");
-      if (del) {
-        const id = del.getAttribute("data-delete-task");
-        state.tasks = state.tasks.filter((t) => t.id !== id);
-        saveTasks();
-        renderMastheadStatus();
-        renderBoard();
-      }
+    document.getElementById("theme-btn").addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      const next = cur === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem(STORAGE_KEYS.THEME, next);
+      } catch (_) {}
     });
 
-    // GitHub Settings Modal
-    document.getElementById("gh-settings-btn").addEventListener("click", () => {
+    document.getElementById("sync-github-btn").addEventListener("click", syncGitHubPullRequests);
+
+    document.getElementById("gh-config-btn").addEventListener("click", () => {
       document.getElementById("gh-repo-input").value = state.ghConfig.repo;
       document.getElementById("gh-token-input").value = state.ghConfig.token;
       document.getElementById("gh-modal").hidden = false;
     });
 
-    document.getElementById("gh-modal-close").addEventListener("click", () => {
+    document.getElementById("gh-modal-cancel").addEventListener("click", () => {
       document.getElementById("gh-modal").hidden = true;
     });
 
@@ -943,22 +1027,74 @@
       state.ghConfig.repo =
         document.getElementById("gh-repo-input").value.trim() || "navidmoezinia-blip/ai-brain";
       state.ghConfig.token = document.getElementById("gh-token-input").value.trim();
-      saveGhConfig();
-      renderMastheadStatus();
+      try {
+        localStorage.setItem(STORAGE_KEYS.GH_CONFIG, JSON.stringify(state.ghConfig));
+      } catch (_) {}
       document.getElementById("gh-modal").hidden = true;
-      if (state.ghConfig.token) {
-        syncPullRequestsFromGitHub();
-      } else {
-        showToast("Saved repository settings (local mode).");
+      if (state.ghConfig.token) syncGitHubPullRequests();
+      else showToast("Saved repo settings.");
+    });
+
+    // Inspector Drawer Delegated Actions
+    document.getElementById("inspector-drawer").addEventListener("click", (e) => {
+      if (e.target.id === "close-inspector-btn") {
+        state.inspector = null;
+        renderInspector();
+        return;
+      }
+      const dc = e.target.closest("[data-drawer-copy]");
+      if (dc) {
+        const id = dc.getAttribute("data-drawer-copy");
+        copyToClipboard(buildAgentPrompt(id), `Copied ${AGENTS[id].label} prompt.`);
+        return;
+      }
+      const dl = e.target.closest("[data-drawer-launch]");
+      if (dl) {
+        const id = dl.getAttribute("data-drawer-launch");
+        const agent = AGENTS[id];
+        copyToClipboard(buildAgentPrompt(id), `Copied prompt & opening ${agent.cloudName}...`);
+        window.open(agent.cloudUrl, "_blank", "noopener");
+        return;
+      }
+      const stBtn = e.target.closest("[data-sat-stage]");
+      if (stBtn) {
+        const sat = state.satellites.find((s) => s.id === stBtn.getAttribute("data-sat-target"));
+        if (sat) {
+          sat.stage = stBtn.getAttribute("data-sat-stage");
+          saveTasks();
+          renderWorldNodes();
+          renderInspector();
+        }
+        return;
+      }
+      const sc = e.target.closest("[data-sat-copy]");
+      if (sc) {
+        const sat = state.satellites.find((s) => s.id === sc.getAttribute("data-sat-copy"));
+        if (sat && sat.prompt) copyToClipboard(sat.prompt, "Copied task prompt.");
+        return;
+      }
+      const sd = e.target.closest("[data-sat-delete]");
+      if (sd) {
+        const targetId = sd.getAttribute("data-sat-delete");
+        state.satellites = state.satellites.filter((s) => s.id !== targetId);
+        state.inspector = null;
+        saveTasks();
+        renderSvgLayer();
+        renderWorldNodes();
+        renderInspector();
       }
     });
+
+    window.addEventListener("resize", fitViewportToOrbit);
   }
 
-  // Initialize
   document.addEventListener("DOMContentLoaded", () => {
     loadState();
-    syncFormInputsFromState();
-    renderAll();
-    bindEvents();
+    computeRadialPositions(false);
+    renderHudPresets();
+    renderSvgLayer();
+    renderWorldNodes();
+    fitViewportToOrbit();
+    bindCanvasInteractions();
   });
 })();
