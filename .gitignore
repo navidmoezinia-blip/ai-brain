@@ -1,0 +1,47 @@
+# Environment & Secrets (NEVER commit credentials)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*.json
+*service-account*.json
+token.json
+secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node / Web
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Local agent ephemeral state (keep shared skills/configs tracked!)
+.claude/settings.local.json
+.codex/local/
+*.log
+tmp/
+temp/
