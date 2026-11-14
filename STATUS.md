@@ -17,19 +17,19 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Directory | Current Contents | Maintained By |
 | :--- | :--- | :--- |
-| [`context/`](./context/) | Ready for standing user context, preferences, and house styles | All LLMs |
-| [`knowledge/`](./knowledge/) | Ready for clinical references, protocols, and research syntheses | All LLMs |
-| [`prompts/`](./prompts/) | Ready for system prompts, templates, and assistant instructions | All LLMs |
-| [`skills/`](./skills/) | Ready for portable `SKILL.md` skills shared across agents | All LLMs |
+| [`context/`](./context/) | `user-profile.md`, `work-style.md`, `clinical-ai-stack.md` (PR from `claude/initial-import`) | All LLMs |
+| [`knowledge/`](./knowledge/) | `clinical/ed-consult-reference.md` (PR from `claude/initial-import`) | All LLMs |
+| [`prompts/`](./prompts/) | `inpatient/global-ruleset.md` (PR from `claude/initial-import`) | All LLMs |
+| [`skills/`](./skills/) | 11 skills from Claude: duty-hours, ed-workflow, epic-chart-collect-to-notes, inpatient-chart-check, inpatient-rounding, medspacy, openevidence-chart-check-upload, openevidence-upload-patient-docs, qgenda, qgenda-capacity-audit, self-improvement; symlinked from `.claude/skills/` and `.agents/skills/` (PR from `claude/initial-import`) | All LLMs |
 | [`projects/`](./projects/) | Ready for apps, scripts, Anki builders, and pipelines | All LLMs |
-| [`inbox/`](./inbox/) | Staging area for initial imports (`inbox/codex/`, `inbox/claude/`, etc.) | All LLMs |
+| [`inbox/`](./inbox/) | `inbox/claude/`: chat-history review, 6 third-party skills, `MANIFEST.md` (PR from `claude/initial-import`) | All LLMs |
 
 ---
 
 ## Active Onboarding / Pending Imports
 
 - [ ] **Codex (`codex/*`):** Initial upload of prepared Codex/ChatGPT workflows, context, prompts, and tools.
-- [ ] **Claude (`claude/*`):** Initial upload of prepared Claude skills, research, templates, and knowledge files.
+- [x] **Claude (`claude/*`):** Initial upload on `claude/initial-import` (PR open). Still to import: Doximity/QH/OpenEvidence prompt files from Drive and claude.ai artifacts, AHK scripts and userscripts, legacy skills (clinic-note, nbn-note, pulm-note, nephro-final). See `inbox/claude/MANIFEST.md`.
 - [ ] **Consolidation (`main`):** Review and merge Codex + Claude branches into unified folders on `main`.
 
 ---
@@ -39,3 +39,4 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
 | 2026-11-14 | Gemini / Antigravity | `main` | Initialized `ai-brain` scaffolding (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `STATUS.md`, shared folder structure). |
+| 2026-11-14 | Claude | `claude/initial-import` | Imported 11 skills (+ symlinks), user profile, work style, clinical AI stack, inpatient global ruleset, ED consult reference, chat-history review, and 6 third-party skills in inbox. No PHI; ed-workflow contains UTMB staff phone numbers and Nav's callback number (repo is private). |

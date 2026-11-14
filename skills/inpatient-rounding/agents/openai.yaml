@@ -1,0 +1,4 @@
+interface:
+  display_name: "Inpatient Rounding and Epic Review"
+  short_description: "Epic review, morning prep, notes, and handoffs"
+  default_prompt: "Use $inpatient-rounding to review my assigned patients read-only, resume the latest checkpoint, and prepare the requested morning report, guide, note, or handoff."
