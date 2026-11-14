@@ -1,6 +1,6 @@
 # `inbox/` — Agent Staging & Bulk Import Drop-Zone
 
-Use `inbox/` when importing raw exports, mixed archives, or prepared files that haven't been sorted into `context/`, `knowledge/`, `prompts/`, `skills/`, or `projects/` yet.
+Use `inbox/` when importing raw exports, mixed archives, or prepared files that have not been sorted into a topic folder (`clinical/`, `research/`, `automation-and-apps/`, `personal/`, `shared/`) yet.
 
 ## Subfolders by Agent
 - `inbox/codex/` — Unsorted imports dropped by Codex / ChatGPT

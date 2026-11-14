@@ -1,0 +1,13 @@
+interface:
+  display_name: ed workflow
+  short_description: Adult ED guides, notes, presentations, and handoffs
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+  default_prompt: Use $ed-workflow to help with this adult ED encounter.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
