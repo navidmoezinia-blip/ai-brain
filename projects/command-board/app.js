@@ -591,17 +591,17 @@
         return;
       }
       const agent = AGENTS[sat.agent] || AGENTS.codex;
-      const stages = ["Queued", "Running", "PR Ready", "Merged"];
+      const stages = ["Queued", "Running", "PR Ready", "Merged", "Error"];
       content.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
           <strong>${escapeHtml(sat.title)}</strong>
           <button type="button" class="btn" id="close-inspector-btn">Close</button>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-muted);">
-          ${escapeHtml(agent.label)} · ${escapeHtml(sat.branch)}
+          ${escapeHtml(agent.label)} · ${escapeHtml(sat.stage)} · ${escapeHtml(sat.branch)}
         </div>
-        <p style="margin:2px 0;font-size:0.8rem;color:var(--text-secondary);">${escapeHtml(sat.detail || "")}</p>
-        ${sat.prompt ? `<pre class="inspector-pre">${escapeHtml(sat.prompt)}</pre>` : ""}
+        <div style="font-size:0.74rem;font-weight:600;color:var(--text-secondary);">Live Output / Status:</div>
+        <pre class="inspector-pre">${escapeHtml(sat.detail || "(waiting for output...)")}</pre>
         <div style="display:flex;flex-wrap:wrap;gap:5px;">
           ${stages
             .map(
@@ -781,10 +781,14 @@
       });
     }
 
+    if (state.satellites.length > 0) {
+      state.inspector = { type: "sat", id: state.satellites[0].id };
+    }
     saveTasks();
     computeRadialPositions(true);
     renderSvgLayer();
     renderWorldNodes();
+    renderInspector();
     showToast(
       state.bridgeOnline
         ? `Started ${activeIds.length} local CLI run(s) directly from the board!`
