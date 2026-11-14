@@ -6,6 +6,10 @@ This repository is a **single shared workspace and knowledge hub** accessed by m
 
 Every agent working in this repository **must** follow this file so all LLMs stay synchronized, share context seamlessly, and never overwrite each other's work.
 
+> **Two Scaffolded Layout Branches Available:**
+> - **`main` (this branch):** Organizes files **by artifact type** (`context/`, `knowledge/`, `prompts/`, `skills/`, `projects/`).
+> - **`structured-by-topic` (`origin/structured-by-topic`):** Organizes files **nested by subject/content domain** (`clinical/`, `research/`, `automation-and-apps/`, `personal/`, `shared/`) so all prompts, docs, and tools for a topic stay together. Check which base branch the user specifies before importing files.
+
 ---
 
 ## 1. Session Startup Protocol (Do This First)

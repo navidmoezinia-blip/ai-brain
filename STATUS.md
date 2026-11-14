@@ -8,7 +8,9 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 ## Current Repository State
 
 - **Repository:** `navidmoezinia-blip/ai-brain` (Private)
-- **Default Branch:** `main`
+- **Layout Branches:**
+  - `main` — Functional / artifact-type layout (`context/`, `knowledge/`, `prompts/`, `skills/`, `projects/`)
+  - `structured-by-topic` — Nested subject/content layout (`clinical/`, `research/`, `automation-and-apps/`, `personal/`, `shared/`)
 - **Initialized:** 2026-11-14 by Antigravity (Gemini)
 
 ---
@@ -30,7 +32,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 - [ ] **Codex (`codex/*`):** Initial upload of prepared Codex/ChatGPT workflows, context, prompts, and tools.
 - [ ] **Claude (`claude/*`):** Initial upload of prepared Claude skills, research, templates, and knowledge files.
-- [ ] **Consolidation (`main`):** Review and merge Codex + Claude branches into unified folders on `main`.
+- [ ] **Consolidation:** Review and merge Codex + Claude branches onto preferred layout (`main` or `structured-by-topic`).
 
 ---
 
@@ -38,4 +40,5 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
+| 2026-11-14 | Gemini / Antigravity | `structured-by-topic` | Added subject/content-nested layout (`clinical/`, `research/`, `automation-and-apps/`, `personal/`, `shared/`). |
 | 2026-11-14 | Gemini / Antigravity | `main` | Initialized `ai-brain` scaffolding (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `STATUS.md`, shared folder structure). |
