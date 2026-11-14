@@ -1,0 +1,4 @@
+# Keep shared text portable and import checksums stable across hosts.
+* text=auto eol=lf
+# Two trailing spaces are intentional Markdown hard line breaks.
+*.md whitespace=-blank-at-eol

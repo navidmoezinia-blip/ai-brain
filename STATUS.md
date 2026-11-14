@@ -19,19 +19,26 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Directory | Current Contents | Maintained By |
 | :--- | :--- | :--- |
-| [`context/`](./context/) | Ready for standing user context, preferences, and house styles | All LLMs |
-| [`knowledge/`](./knowledge/) | Ready for clinical references, protocols, and research syntheses | All LLMs |
-| [`prompts/`](./prompts/) | Ready for system prompts, templates, and assistant instructions | All LLMs |
-| [`skills/`](./skills/) | Ready for portable `SKILL.md` skills shared across agents | All LLMs |
-| [`projects/`](./projects/) | [`command-board/`](./projects/command-board/) — Visual multi-LLM cloud dispatch hub & Kanban board | All LLMs |
-| [`inbox/`](./inbox/) | Staging area for initial imports (`inbox/codex/`, `inbox/claude/`, etc.) | All LLMs |
+| [`context/`](./context/) | Personal background/interests, communication and writing style, collaboration/working impressions, learning preferences, workspace/clinical conventions; mapping for older profile/work-style proposals in Claude PR #1 | All LLMs |
+| [`knowledge/`](./knowledge/) | Prepared ED complaint/host launcher reference with source and precedence notes | All LLMs |
+| [`prompts/`](./prompts/) | Two-file FM clinic system, blank deidentified previsit worksheet, current ED encounter baseline and Epic field map | All LLMs |
+| [`skills/`](./skills/) | `ed-note`, `note-audit`, `ask-all`, `codex-self-improvement`; existing Claude skill proposals are tracked separately | All LLMs |
+| [`projects/`](./projects/) | [`command-board/`](./projects/command-board/) from merged Gemini PR #5; six existing project/tool source catalogs plus three reusable workspace templates proposed by Codex | All LLMs |
+| [`inbox/`](./inbox/) | Codex import manifest, source-hash inventory, validation record, and 14 explicitly uninstalled inpatient reconciliation snapshots | All LLMs |
+
+This inventory describes the proposed `codex/initial-import` contents. Until its
+PR is merged, `main` contains the scaffold plus Gemini's command board; the
+Codex imports remain branch work.
+See [the Codex manifest](./inbox/codex/MANIFEST.md) for exact source mapping,
+overlap with PRs #1/#2/#4, deliberate exclusions, and installation limits.
 
 ---
 
 ## Active Onboarding / Pending Imports
 
-- [ ] **Codex (`codex/*`):** Initial upload of prepared Codex/ChatGPT workflows, context, prompts, and tools.
-- [ ] **Claude (`claude/*`):** Initial upload of prepared Claude skills, research, templates, and knowledge files.
+- [x] **Codex (`codex/initial-import`):** Prepared personal/workflow context, clinic/ED prompts, four portable skill entrypoints, ED reference, project catalog/templates and inpatient reconciliation delta; [PR #6](https://github.com/navidmoezinia-blip/ai-brain/pull/6) review/merge pending.
+- [ ] **Claude (`claude/*`):** PR #1 (`claude/initial-import`) targets `main`; PRs #2 (`claude/by-topic`) and #4 (`claude/desktop-import`) target `structured-by-topic`. Preserve their branches and reconcile overlapping variants deliberately.
+- [x] **Gemini (`gemini/cloud-command-board`):** PR #5 merged into `main` during this import. Its command-board project/deployment workflow and activity entry are preserved unchanged in the updated Codex branch.
 - [ ] **Consolidation:** Review and merge Codex + Claude branches onto preferred layout (`main` or `structured-by-topic`).
 
 ---
@@ -40,6 +47,8 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
+| 2026-11-14 | Codex | [PR #6](https://github.com/navidmoezinia-blip/ai-brain/pull/6) | Expanded the import at the user's request with personal background/interests, communication/writing style, learning preferences and collaboration/working-personality context. Applied memory-management to curate dated sources, separate explicit preferences from impressions, resolve stale rules and map older PR #1 profiles into the fuller shared documents. No raw memory or case data imported. |
+| 2026-11-14 | Codex | `codex/initial-import` -> `main` | Imported prepared Codex context, clinic/ED prompts, ED launcher knowledge, four skills, six project/tool catalogs and project templates. Isolated rounding rev 9 refinements, recorded raw-capture variant and compatibility router in `inbox/codex/reconciliation/` to avoid overwriting PR #1. Added source hashes and validation; no PHI, secrets, live clinical actions or installed-source cutover. See [manifest](./inbox/codex/MANIFEST.md). |
 | 2026-11-14 | Gemini / Antigravity | `gemini/cloud-command-board` | Added `projects/command-board/` visual multi-LLM cloud dispatch board + GitHub Pages deploy workflow. |
 | 2026-11-14 | Gemini / Antigravity | `structured-by-topic` | Added subject/content-nested layout (`clinical/`, `research/`, `automation-and-apps/`, `personal/`, `shared/`). |
 | 2026-11-14 | Gemini / Antigravity | `main` | Initialized `ai-brain` scaffolding (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `STATUS.md`, shared folder structure). |

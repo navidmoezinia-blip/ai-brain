@@ -1,0 +1,127 @@
+{
+  "captured_on": "2026-11-14",
+  "purpose": "User-requested expansion of AI Brain PR #6 with personal profile, style, working personality and learning preferences.",
+  "method": "productivity:memory-management for progressive discovery/detail; existing context layout retained; current explicit user instructions are primary.",
+  "source_collections": {
+    "local-claude-home-memory": "Selected user and feedback Markdown files only; raw memory documents, incident quotations, private contacts and session IDs are not imported.",
+    "ai-brain-prepared-claude-initial-import": "Prepared context at the recorded commit; source-reported facts, not independent biographical verification.",
+    "codex-shared-workspace@4989cff": "PHI-free user facts and supplied personal style baseline."
+  },
+  "interpretation_boundary": "Explicit preferences and source-reported background are separated from labeled working impressions. No psychological assessment or diagnosis is inferred.",
+  "sources": [
+    {
+      "collection": "local-claude-home-memory",
+      "path": "user_profile.md",
+      "record_date": "2026-10-24",
+      "sha256_raw": "13fc06aad15411131dcbcba02fb2297ca85856e145475ad451ba4bc856c56539",
+      "sha256_lf": "13fc06aad15411131dcbcba02fb2297ca85856e145475ad451ba4bc856c56539",
+      "selection": "Selected role, dictation, interests and communication facts; omitted stale no-repository claim."
+    },
+    {
+      "collection": "local-claude-home-memory",
+      "path": "user_medical_resident_utmb.md",
+      "record_date": "2026-08-19 metadata; body updated through October 2026",
+      "sha256_raw": "45adf4cb77b708899f8b30e276b7e0d57821cc0377e7de3322333f36d45eeabf",
+      "sha256_lf": "45adf4cb77b708899f8b30e276b7e0d57821cc0377e7de3322333f36d45eeabf",
+      "selection": "Selected role/study context only; omitted contacts, system usernames and dated schedules."
+    },
+    {
+      "collection": "local-claude-home-memory",
+      "path": "feedback_act_dont_explain.md",
+      "record_date": "2026-08-19",
+      "sha256_raw": "3d7b9cb2759abd53e8de403df2ef21ee5ece6ce0347275343f5527087d58c37c",
+      "sha256_lf": "3d7b9cb2759abd53e8de403df2ef21ee5ece6ce0347275343f5527087d58c37c",
+      "selection": "Explicit end-to-end, retry and context-retrieval preferences; raw incidents not copied."
+    },
+    {
+      "collection": "local-claude-home-memory",
+      "path": "feedback_build_exactly_as_specified.md",
+      "record_date": "2026-08-19",
+      "sha256_raw": "76d7a3f61084ac4c71daaef541cf414274d2eb9dc8d4693b0fe8016c562c23ac",
+      "sha256_lf": "76d7a3f61084ac4c71daaef541cf414274d2eb9dc8d4693b0fe8016c562c23ac",
+      "selection": "Targeted editing and scope preservation; omitted incident quotes and inferred percentage rule."
+    },
+    {
+      "collection": "local-claude-home-memory",
+      "path": "feedback_verify_before_claiming.md",
+      "record_date": "2026-08-19",
+      "sha256_raw": "4836307bdaf9816cb048d5fc3f4cf7f978ce5dd1baeb0c64cb49c3b47f858ecb",
+      "sha256_lf": "4836307bdaf9816cb048d5fc3f4cf7f978ce5dd1baeb0c64cb49c3b47f858ecb",
+      "selection": "Exact-system and night-mode verification; no raw incident details copied."
+    },
+    {
+      "collection": "local-claude-home-memory",
+      "path": "feedback_dont_break_live_apps.md",
+      "record_date": "2026-09-26",
+      "sha256_raw": "2b54b3cef4b26e8036c3831f7d96739fdf3a951b3d4a0ba47b0d663e55feb002",
+      "sha256_lf": "2b54b3cef4b26e8036c3831f7d96739fdf3a951b3d4a0ba47b0d663e55feb002",
+      "selection": "Preserve usable apps and restore temporary test settings."
+    },
+    {
+      "collection": "local-claude-home-memory",
+      "path": "feedback_fast_browser_automation.md",
+      "record_date": "2026-08-19",
+      "sha256_raw": "3074631d137d2b5e8f1db717f6c20447c27138febc3d73751221fcff444fc665",
+      "sha256_lf": "3074631d137d2b5e8f1db717f6c20447c27138febc3d73751221fcff444fc665",
+      "selection": "Efficient page/form workflows; old namespaces and raw incidents omitted."
+    },
+    {
+      "collection": "local-claude-home-memory",
+      "path": "feedback_clinical_output_note_format.md",
+      "record_date": "2026-11-12 and 2026-11-13 content dates",
+      "sha256_raw": "2105dade57ad37323d0a710ce840dc000da992cee061b23bcf256bde31c54f8b",
+      "sha256_lf": "88e1a0289c8105d224e4babe90e8c306c5816eefa2f519f46a8ffa0648b9be57",
+      "selection": "Paste-ready clinical style and resident shorthand; patient-shaped example phrases and case details not copied."
+    },
+    {
+      "collection": "codex-shared-workspace@4989cff",
+      "path": "shared-memory/user.md",
+      "sha256_raw": "b1988e6bf795209a4827469cef0d3b896156c01d75a49e3bec1ab2d1ac0f1742",
+      "sha256_lf": "de6aca3abc560a38b8e8736daeb939360aafa0ff8c3d91ad88b07d282c5e8b10",
+      "selection": "Selected user-authored preferences only; current template/request controls scope."
+    },
+    {
+      "collection": "codex-shared-workspace@4989cff",
+      "path": ".agents/skills/inpatient-rounding/references/R8_baseline_style.md",
+      "sha256_raw": "0ad687905419c1c610db1a4d65ca1f74d8d261841532f02c345ad9e5f4304f1e",
+      "sha256_lf": "0ad687905419c1c610db1a4d65ca1f74d8d261841532f02c345ad9e5f4304f1e",
+      "selection": "Selected user-authored preferences only; current template/request controls scope."
+    },
+    {
+      "collection": "ai-brain-prepared-claude-initial-import",
+      "commit": "6829d52cc3012ede83613fe6576581774b4d7dfd",
+      "path": "context/user-profile.md",
+      "record_date": "2026-11-14 prepared profile",
+      "sha256_raw": "bbbecaf7213171a16d080673217ed00764b9b0173eb36abdc5786874e189025a",
+      "sha256_lf": "bbbecaf7213171a16d080673217ed00764b9b0173eb36abdc5786874e189025a",
+      "selection": "Curated recorded background/interests/preferences; no wholesale duplicate profiles."
+    },
+    {
+      "collection": "ai-brain-prepared-claude-initial-import",
+      "commit": "6829d52cc3012ede83613fe6576581774b4d7dfd",
+      "path": "context/work-style.md",
+      "record_date": "2026-11-14 prepared profile",
+      "sha256_raw": "5ab045f048bde25e91515feeec6a1408ddbf186386e2f06c351f7bce2fdd94d2",
+      "sha256_lf": "5ab045f048bde25e91515feeec6a1408ddbf186386e2f06c351f7bce2fdd94d2",
+      "selection": "Curated recorded background/interests/preferences; no wholesale duplicate profiles."
+    }
+  ],
+  "curated_outputs": [
+    {
+      "path": "context/navid-personal-context.md",
+      "sha256_lf": "9478023f085b8eca3dd94a6412a41fcde9fb48addf7d6461d789cf66eb8dd0a5"
+    },
+    {
+      "path": "context/communication-and-writing-style.md",
+      "sha256_lf": "9219240ea3d4af4d7e277e28ca640ac4fb4ac26d6100c73df9216f8c9e79e2ba"
+    },
+    {
+      "path": "context/collaboration-and-personality.md",
+      "sha256_lf": "34e700fdc1012f306549dfffb2768b5f583d4c6bd41ceb354bd0d5734edc8c45"
+    },
+    {
+      "path": "context/learning-preferences.md",
+      "sha256_lf": "373714d6b89f0cf96a1d0b58cbc25b8ceadf725dd655b56d183f5814370010bf"
+    }
+  ]
+}
