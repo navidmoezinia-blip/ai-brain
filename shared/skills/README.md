@@ -17,9 +17,7 @@ Canonical `SKILL.md` packages for every LLM. `.claude/skills/<name>` and `.agent
 | [`self-improvement`](./self-improvement/) | Review past chats for friction and fold fixes into skills/memory | [`automation-and-apps/ai-workflows/`](../../automation-and-apps/ai-workflows/) |
 | [`ask-all`](./ask-all/) | Ask Claude, ChatGPT (Codex CLI) and Gemini the same question and compare | [`automation-and-apps/ai-workflows/`](../../automation-and-apps/ai-workflows/) |
 | [`note-audit`](./note-audit/) | Audit a clinical note against OpenEvidence and UpToDate | [`clinical/`](../../clinical/) |
-| [`ed-note`](./ed-note/) | Older Claude Code ED encounter skill (Aug 2026); overlaps `ed-workflow`, reconcile or retire | [`clinical/rotations/ed-aer1/`](../../clinical/rotations/ed-aer1/) |
-| [`epic-chart-check-capture`](./epic-chart-check-capture/) | Pre-round capture of a patient's Epic data into one cleaned text file | [`clinical/inpatient/`](../../clinical/inpatient/) |
-| [`inpatient-day-prep`](./inpatient-day-prep/) | Codex-side inpatient day prep | [`clinical/inpatient/`](../../clinical/inpatient/) |
-| [`codex-self-improvement`](./codex-self-improvement/) | Codex version of the self-improvement review (mines Codex sessions) | [`automation-and-apps/ai-workflows/`](../../automation-and-apps/ai-workflows/) |
 
 Third-party skills awaiting license review sit in [`inbox/claude/third-party-skills/`](../../inbox/claude/third-party-skills/).
+
+Desktop copies that are similar to a skill here but not identical wait in [`reconcile/`](../../reconcile/).

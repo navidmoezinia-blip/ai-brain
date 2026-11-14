@@ -12,8 +12,5 @@ Not imported yet (needs another pass):
 
 ## Desktop (Claude Code) additions, 2026-11-14
 
-| Item | What | Suggested home |
-| :-- | :-- | :-- |
-| `desktop-skill-variants/inpatient-chart-check/` | Claude Code/Codex capture workflow (references, PowerShell and Python scripts) | Merge with or rename beside `shared/skills/inpatient-chart-check` |
-| `desktop-skill-variants/inpatient-rounding/` | Local v8 copy, older than `shared/skills/inpatient-rounding` | Delete after confirming the shared copy has everything |
-| `third-party-skills/goal-loop`, `third-party-skills/de-ai-ify` | Installed skills, origin not verified | Same license check as the others |
+- `third-party-skills/goal-loop`, `third-party-skills/de-ai-ify`: installed skills, origin not verified; same license check as the others.
+- Desktop copies that overlap existing files are in [`reconcile/`](../../reconcile/), not here.
