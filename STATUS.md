@@ -40,6 +40,6 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
-| 2026-11-14 | Gemini / Antigravity | `gemini/cloud-command-board` | Added `projects/command-board/` visual multi-LLM cloud dispatch board + GitHub Pages deploy workflow. |
+| 2026-11-14 | Gemini / Antigravity | `gemini/cloud-command-board` | Added `projects/command-board/` visual multi-LLM cloud dispatch board (hosting: Cloudflare Pages, see project README). |
 | 2026-11-14 | Gemini / Antigravity | `structured-by-topic` | Added subject/content-nested layout (`clinical/`, `research/`, `automation-and-apps/`, `personal/`, `shared/`). |
 | 2026-11-14 | Gemini / Antigravity | `main` | Initialized `ai-brain` scaffolding (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `STATUS.md`, shared folder structure). |

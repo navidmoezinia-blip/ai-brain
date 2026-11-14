@@ -21,23 +21,27 @@ Visual multi-LLM command board for coordinating **OpenAI Codex**, **Claude**, an
 
 ---
 
-## Hosting Options
+## Hosting (Free): Cloudflare Pages
 
-### Option 1: GitHub Pages (Included Workflow)
-A workflow is configured at [`.github/workflows/deploy-command-board.yml`](../../.github/workflows/deploy-command-board.yml):
-1. In GitHub, open **Settings → Pages**.
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-3. Once merged to `main`, the board automatically publishes from `projects/command-board/`.
-*(Note: GitHub Pages on private repos requires GitHub Pro/Team. If using GitHub Free on a private repo, use Cloudflare Pages or Vercel below for free private-repo hosting.)*
+Static site, no build step. Cloudflare Pages is free and works with private GitHub repos. Every push to `main` redeploys automatically.
 
-### Option 2: Cloudflare Pages / Vercel (Free with Private GitHub Repos)
-- Connect `navidmoezinia-blip/ai-brain`
-- **Framework preset:** `None` (Static HTML)
-- **Build command:** *(leave empty)*
-- **Output / Root directory:** `projects/command-board`
+1. Sign in at https://dash.cloudflare.com → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
+2. Authorize GitHub and pick `navidmoezinia-blip/ai-brain` (you can grant access to that one repo only).
+3. Build settings:
+   - **Production branch:** `main`
+   - **Framework preset:** `None`
+   - **Build command:** *(leave empty)*
+   - **Build output directory:** `projects/command-board`
+4. **Save and Deploy** → site is live at `https://<project-name>.pages.dev`.
 
-### Option 3: Local Zero-Install
-Open `projects/command-board/index.html` directly in any browser, or run:
+### Optional: lock it to just you (free)
+The `*.pages.dev` URL is public by default. Cloudflare Access (free up to 50 users) can put an email sign-in in front of it:
+1. Pages project → **Settings** → **General** → **Access policy** → **Enable**, then **Manage**.
+2. In the Access application that opens, **Edit** → **Overview** → delete the `*` in the **Subdomain** box so the policy covers the main `<project-name>.pages.dev` URL, not just preview builds.
+3. Under **Policies**, allow only your email. Visitors then sign in with a one-time code sent to that email.
+
+### Local (zero install)
+Open `projects/command-board/index.html` in any browser, or run:
 ```bash
 python3 -m http.server 8080 --directory projects/command-board
 ```
