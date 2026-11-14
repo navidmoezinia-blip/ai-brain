@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 AI Brain Local Bridge + Static Board Server + GitHub Queue Poller (Zero-Dependency)
-- Streams real-time tool calls & output to both the browser drawer and the console window
+- Streams real-time thinking, tool calls, tool results & output to both browser and console
+- Passes multi-line prompts via stdin so Windows never truncates or hangs on newlines
 - Serves the command board UI at http://127.0.0.1:8787/
-- Sends CORS + Access-Control-Allow-Private-Network: true for https://navidmoezinia-blip.github.io/ai-brain/
 """
 
 import json
@@ -51,44 +51,87 @@ def detect_cli(agent: str):
 
 
 def build_command(agent: str, exe: str, prompt: str, mode: str):
+    """
+    Pipes multi-line prompts over stdin for all CLIs so Windows CreateProcess
+    never chokes on newlines or quotes.
+    """
     if agent == "codex":
-        if mode == "readonly":
+        # Note: On Windows, `codex -s read-only` triggers 'Access is denied' on shell execution
+        if mode == "readonly" and os.name != "nt":
             return [exe, "exec", "--skip-git-repo-check", "--ephemeral", "-s", "read-only", "-"], prompt
         return [exe, "exec", "--full-auto", "-"], prompt
 
     if agent == "claude":
-        # Use stream-json + verbose so Claude flushes every tool call & message immediately instead of buffering
         base = [exe, "-p", "--verbose", "--output-format", "stream-json"]
         if mode != "readonly":
             base.append("--dangerously-skip-permissions")
-        base.append(prompt)
-        return base, None
+        return base, prompt
 
+    # gemini / agy
     return [exe, "-p", prompt], None
 
 
+def check_claude_settings_warnings(work_dir: str) -> str:
+    """Checks ~/.claude/settings.json for stale ANTHROPIC_BASE_URL or proxy overrides that cause ConnectionRefused."""
+    warnings = []
+    candidates = [
+        Path.home() / ".claude" / "settings.json",
+        Path(work_dir) / ".claude" / "settings.json",
+        Path(work_dir) / ".claude" / "settings.local.json",
+    ]
+    for path in candidates:
+        try:
+            if path.is_file():
+                data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+                env_block = data.get("env") if isinstance(data, dict) else None
+                if isinstance(env_block, dict):
+                    for key in ("ANTHROPIC_BASE_URL", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"):
+                        if key in env_block:
+                            warnings.append(f"[Warning] {path} defines env.{key}={env_block[key]!r} (may cause ConnectionRefused)\n")
+        except Exception:
+            pass
+    return "".join(warnings)
+
+
 def format_stream_line(agent: str, raw_line: str) -> str:
-    """Converts Claude stream-json events into readable live log lines, or passes raw text through."""
+    """Converts Claude stream-json events (including thinking, tool_use, tool_result, errors) into live logs."""
     if agent != "claude":
         return raw_line
     s = raw_line.strip()
+    if not s:
+        return ""
     if not s.startswith("{"):
-        return raw_line
+        return raw_line if raw_line.endswith("\n") else raw_line + "\n"
     try:
         evt = json.loads(s)
     except Exception:
-        return raw_line
+        return raw_line if raw_line.endswith("\n") else raw_line + "\n"
 
     etype = evt.get("type")
-    if etype == "system" and evt.get("subtype") == "init":
-        model = evt.get("model", "claude")
-        return f"[Claude session initialized · model: {model}]\n"
+
+    if etype == "system":
+        subtype = evt.get("subtype", "")
+        if subtype == "init":
+            model = evt.get("model", "claude")
+            mcps = evt.get("mcp_servers") or []
+            mcp_summary = ", ".join(
+                f"{m.get('name')}({m.get('status')})" for m in mcps if isinstance(m, dict)
+            )
+            extra = f" | MCPs: {mcp_summary}" if mcp_summary else ""
+            return f"[Claude initialized · model: {model}{extra}]\n[Thinking / working on prompt...]\n"
+        return f"[System: {subtype}]\n" if subtype else ""
+
     if etype == "assistant":
         msg = evt.get("message", {})
         parts = []
         for block in msg.get("content", []):
             btype = block.get("type")
-            if btype == "text" and block.get("text"):
+            if btype == "thinking":
+                thought = (block.get("thinking") or "").strip()
+                if thought:
+                    preview = thought.replace("\n", " ")[:220]
+                    parts.append(f"[Thinking] {preview}...\n")
+            elif btype == "text" and block.get("text"):
                 parts.append(block["text"].strip() + "\n")
             elif btype == "tool_use":
                 tname = block.get("name", "tool")
@@ -97,15 +140,37 @@ def format_stream_line(agent: str, raw_line: str) -> str:
                     tinp.get("command")
                     or tinp.get("file_path")
                     or tinp.get("pattern")
-                    or json.dumps(tinp)[:120]
+                    or json.dumps(tinp)[:140]
                 )
                 parts.append(f"-> [Tool: {tname}] {cmd_preview}\n")
         return "".join(parts)
+
+    if etype == "user":
+        msg = evt.get("message", {})
+        parts = []
+        for block in msg.get("content", []):
+            if isinstance(block, dict) and block.get("type") == "tool_result":
+                content = block.get("content", "")
+                if isinstance(content, list):
+                    content = " ".join(
+                        c.get("text", "") for c in content if isinstance(c, dict)
+                    )
+                snippet = str(content).strip().replace("\n", " ")[:180]
+                if snippet:
+                    parts.append(f"   <- [Tool Result] {snippet}\n")
+        return "".join(parts)
+
     if etype == "result":
         res_text = evt.get("result", "")
+        is_err = evt.get("is_error", False)
         cost = evt.get("total_cost_usd")
-        suffix = f"\n[Completed · ${cost:.4f}]\n" if isinstance(cost, (int, float)) else "\n[Completed]\n"
+        tag = "ERROR" if is_err else "Completed"
+        suffix = f"\n[{tag} · ${cost:.4f}]\n" if isinstance(cost, (int, float)) else f"\n[{tag}]\n"
         return (f"\n{res_text}\n" if res_text else "") + suffix
+
+    if etype == "error":
+        return f"[Error] {json.dumps(evt)}\n"
+
     return ""
 
 
@@ -125,17 +190,29 @@ def run_agent_subprocess(run_id: str, agent: str, prompt: str, cwd: str, mode: s
     cmd, stdin_data = build_command(agent, exe, prompt, mode)
     work_dir = cwd if (cwd and os.path.isdir(cwd)) else DEFAULT_CWD
 
-    header = f"[{time.strftime('%H:%M:%S')}] Starting {agent.upper()} ({exe})\nWorking directory: {work_dir}\n{'-' * 48}\n"
+    diag = check_claude_settings_warnings(work_dir) if agent == "claude" else ""
+    header = f"[{time.strftime('%H:%M:%S')}] Starting {agent.upper()} ({exe})\nWorking directory: {work_dir}\n{diag}{'-' * 48}\n"
     print(f"\n=== [{run_id}] START {agent.upper()} ===", flush=True)
     with RUNS_LOCK:
         RUNS[run_id]["output"] = header
 
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
+    # 1. Strip CLAUDE_CODE_SSE_PORT and parent session vars (Claude Code issue #91904 causes 11 retries + ConnectionRefused)
+    for k in list(env.keys()):
+        ku = k.upper()
+        if ku.startswith("CLAUDE_CODE_") or ku in ("CLAUDECODE", "CLAUDE_ENTRYPOINT"):
+            env.pop(k, None)
+    # 2. Strip dead local ANTHROPIC_BASE_URL (issue #87259) and proxy vars
+    if "127.0.0.1" in env.get("ANTHROPIC_BASE_URL", "") or "localhost" in env.get("ANTHROPIC_BASE_URL", ""):
+        env.pop("ANTHROPIC_BASE_URL", None)
     for pkey in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
-        pval = env.get(pkey, "")
-        if "192.168.49.1" in pval or "127.0.0.1" in pval or "localhost" in pval:
-            env.pop(pkey, None)
+        env.pop(pkey, None)
+    # 3. Force Bun (claude.exe on Windows) to bypass HKCU Internet Settings proxy (192.168.49.1:8282)
+    env["NO_PROXY"] = "*"
+    env["no_proxy"] = "*"
+    env[" ANTHROPIC_BASE_URL"] = "https://api.anthropic.com"
+    env.pop(" ANTHROPIC_BASE_URL", None)
 
     try:
         proc = subprocess.Popen(
@@ -154,6 +231,8 @@ def run_agent_subprocess(run_id: str, agent: str, prompt: str, cwd: str, mode: s
         if stdin_data is not None and proc.stdin:
             try:
                 proc.stdin.write(stdin_data)
+                if not stdin_data.endswith("\n"):
+                    proc.stdin.write("\n")
             except Exception:
                 pass
             finally:
