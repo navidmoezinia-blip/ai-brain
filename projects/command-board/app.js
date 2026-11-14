@@ -197,6 +197,12 @@
       repo: "navidmoezinia-blip/ai-brain",
       token: "",
     },
+    bridgeUrl:
+      window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+        ? window.location.origin
+        : "http://127.0.0.1:8787",
+    bridgeOnline: false,
+    bridgeAgents: {},
   };
 
   function degToRad(deg) {
@@ -751,13 +757,14 @@
               body: JSON.stringify({
                 title: `[${agent.short}] ${state.title}`,
                 body: `### Assigned Cloud Agent: **${agent.label}**\n- **Branch:** \`${branch}\`\n\n\`\`\`text\n${prompt}\n\`\`\``,
-                labels: [`agent:${agent.id}`],
+                labels: [`agent:${agent.id}`, "status:queued"],
               }),
             }
           );
           if (res.ok) {
             const issue = await res.json();
             targetUrl = issue.html_url;
+            satId = `gh-issue-${issue.number}`;
           }
         } catch (_) {}
       }

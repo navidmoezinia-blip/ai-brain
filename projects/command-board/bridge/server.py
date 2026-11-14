@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 """
-AI Brain Local Bridge + Static Board Server (Zero-Dependency)
-- Serves the command board UI directly at http://127.0.0.1:8787/ (same-origin, zero CORS/PNA blocks)
-- Also sends CORS + Access-Control-Allow-Private-Network headers so https://navidmoezinia-blip.github.io/ai-brain/ works too
-- Runs codex, claude, and agy/gemini CLIs on your Windows PC using your signed-in subscriptions ($0 API cost)
+AI Brain Local Bridge + Static Board Server + GitHub Queue Poller (Zero-Dependency)
+1. Local Mode (this PC):
+   - Serves the command board UI at http://127.0.0.1:8787/
+   - Sends CORS + Access-Control-Allow-Private-Network: true so https://navidmoezinia-blip.github.io/ai-brain/ also connects
+2. Remote Mode (Option B — laptop / phone / anywhere):
+   - Polls GitHub Issues labeled `status:queued` on navidmoezinia-blip/ai-brain every 12s (via `gh` CLI)
+   - Runs codex / claude / agy locally, comments the output on the Issue, and flips label to `status:done`
 """
 
 import json
 import mimetypes
 import os
+import re
 import shutil
 import subprocess
 import threading
@@ -21,6 +25,7 @@ from urllib.parse import urlparse
 
 HOST = os.environ.get("AI_BRAIN_BRIDGE_HOST", "127.0.0.1")
 PORT = int(os.environ.get("AI_BRAIN_BRIDGE_PORT", "8787"))
+REPO_SLUG = os.environ.get("AI_BRAIN_GH_REPO", "navidmoezinia-blip/ai-brain")
 
 BRIDGE_DIR = Path(__file__).resolve().parent
 BOARD_DIR = BRIDGE_DIR.parent  # projects/command-board/
@@ -28,6 +33,7 @@ DEFAULT_CWD = os.environ.get("AI_BRAIN_REPO_DIR", str(BOARD_DIR.parents[1]))
 
 RUNS = {}
 RUNS_LOCK = threading.Lock()
+CLAIMED_ISSUES = set()
 
 
 def detect_cli(agent: str):
@@ -42,6 +48,8 @@ def detect_cli(agent: str):
             or shutil.which("gemini")
             or shutil.which("gemini.cmd")
         )
+    if agent == "gh":
+        return shutil.which("gh") or shutil.which("gh.exe")
     return None
 
 
@@ -59,13 +67,16 @@ def build_command(agent: str, exe: str, prompt: str, mode: str):
     return [exe, "-p", prompt], None
 
 
-def run_agent_subprocess(run_id: str, agent: str, prompt: str, cwd: str, mode: str):
+def run_agent_subprocess(run_id: str, agent: str, prompt: str, cwd: str, mode: str, gh_issue_num=None):
     exe = detect_cli(agent)
     if not exe:
+        msg = f"CLI for '{agent}' not found on PATH."
         with RUNS_LOCK:
             RUNS[run_id]["status"] = "error"
-            RUNS[run_id]["output"] = f"CLI for '{agent}' not found on PATH."
+            RUNS[run_id]["output"] = msg
             RUNS[run_id]["finished_at"] = time.time()
+        if gh_issue_num:
+            finish_github_issue(gh_issue_num, False, msg)
         return
 
     cmd, stdin_data = build_command(agent, exe, prompt, mode)
@@ -103,17 +114,143 @@ def run_agent_subprocess(run_id: str, agent: str, prompt: str, cwd: str, mode: s
                     RUNS[run_id]["output"] = tail
 
         ret = proc.wait(timeout=1800)
-        final_out = "".join(collected)[-12000:].strip()
+        final_out = "".join(collected)[-12000:].strip() or f"(completed with exit code {ret})"
+        ok = ret == 0
         with RUNS_LOCK:
-            RUNS[run_id]["status"] = "done" if ret == 0 else "error"
+            RUNS[run_id]["status"] = "done" if ok else "error"
             RUNS[run_id]["exit_code"] = ret
-            RUNS[run_id]["output"] = final_out or f"(completed with exit code {ret})"
+            RUNS[run_id]["output"] = final_out
             RUNS[run_id]["finished_at"] = time.time()
+
+        if gh_issue_num:
+            finish_github_issue(gh_issue_num, ok, final_out)
     except Exception as exc:
+        msg = f"Execution failed: {exc}"
         with RUNS_LOCK:
             RUNS[run_id]["status"] = "error"
-            RUNS[run_id]["output"] = f"Execution failed: {exc}"
+            RUNS[run_id]["output"] = msg
             RUNS[run_id]["finished_at"] = time.time()
+        if gh_issue_num:
+            finish_github_issue(gh_issue_num, False, msg)
+
+
+def finish_github_issue(issue_num: int, ok: bool, output: str):
+    gh = detect_cli("gh")
+    if not gh:
+        return
+    new_label = "status:done" if ok else "status:error"
+    snippet = output[-3500:] if output else "(no output)"
+    comment = f"### Local Bridge Execution {'Succeeded' if ok else 'Failed'}\n\n```text\n{snippet}\n```"
+    try:
+        subprocess.run(
+            [gh, "issue", "comment", str(issue_num), "-R", REPO_SLUG, "--body", comment],
+            capture_output=True,
+            timeout=30,
+        )
+        subprocess.run(
+            [
+                gh,
+                "issue",
+                "edit",
+                str(issue_num),
+                "-R",
+                REPO_SLUG,
+                "--remove-label",
+                "status:queued,status:running",
+                "--add-label",
+                new_label,
+            ],
+            capture_output=True,
+            timeout=30,
+        )
+    except Exception:
+        pass
+
+
+def github_queue_poller_loop():
+    """Option B: Polls GitHub Issues labeled status:queued so laptop/phone runs execute on this PC."""
+    gh = detect_cli("gh")
+    if not gh:
+        return
+
+    while True:
+        try:
+            res = subprocess.run(
+                [
+                    gh,
+                    "issue",
+                    "list",
+                    "-R",
+                    REPO_SLUG,
+                    "--label",
+                    "status:queued",
+                    "--state",
+                    "open",
+                    "--json",
+                    "number,title,body,labels",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=25,
+            )
+            if res.returncode == 0 and res.stdout.strip():
+                issues = json.loads(res.stdout)
+                for issue in issues:
+                    num = issue.get("number")
+                    if not num or num in CLAIMED_ISSUES:
+                        continue
+                    CLAIMED_ISSUES.add(num)
+
+                    labels = [l.get("name", "") for l in issue.get("labels", [])]
+                    agent = "codex"
+                    for candidate in ("codex", "claude", "gemini"):
+                        if f"agent:{candidate}" in labels:
+                            agent = candidate
+                            break
+
+                    body = issue.get("body") or ""
+                    m = re.search(r"```text\s*(.*?)\s*```", body, re.DOTALL)
+                    prompt = m.group(1).strip() if m else body.strip()
+                    if not prompt:
+                        continue
+
+                    subprocess.run(
+                        [
+                            gh,
+                            "issue",
+                            "edit",
+                            str(num),
+                            "-R",
+                            REPO_SLUG,
+                            "--remove-label",
+                            "status:queued",
+                            "--add-label",
+                            "status:running",
+                        ],
+                        capture_output=True,
+                        timeout=20,
+                    )
+
+                    run_id = f"gh-issue-{num}"
+                    with RUNS_LOCK:
+                        RUNS[run_id] = {
+                            "id": run_id,
+                            "agent": agent,
+                            "title": issue.get("title", f"Issue #{num}"),
+                            "status": "running",
+                            "output": f"Picked up remote GitHub Issue #{num} for {agent}...",
+                            "started_at": time.time(),
+                        }
+
+                    print(f"[GitHub Poller] Starting Issue #{num} with {agent}...")
+                    threading.Thread(
+                        target=run_agent_subprocess,
+                        args=(run_id, agent, prompt, DEFAULT_CWD, "workspace", num),
+                        daemon=True,
+                    ).start()
+        except Exception:
+            pass
+        time.sleep(12)
 
 
 class BridgeHandler(BaseHTTPRequestHandler):
@@ -165,6 +302,7 @@ class BridgeHandler(BaseHTTPRequestHandler):
                 {
                     "ok": True,
                     "cwd": DEFAULT_CWD,
+                    "gh_poller": bool(detect_cli("gh")),
                     "agents": {
                         "codex": bool(detect_cli("codex")),
                         "claude": bool(detect_cli("claude")),
@@ -231,11 +369,12 @@ class BridgeHandler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     url = f"http://{HOST}:{PORT}/"
-    print("=" * 60)
+    print("=" * 64)
     print(f"AI Brain Local Board + Bridge running at: {url}")
     print(f"Repo CWD: {DEFAULT_CWD}")
-    print("Detected CLIs:", {a: detect_cli(a) for a in ("codex", "claude", "gemini")})
-    print("=" * 60)
+    print("Detected CLIs:", {a: bool(detect_cli(a)) for a in ("codex", "claude", "gemini", "gh")})
+    print("=" * 64)
+    threading.Thread(target=github_queue_poller_loop, daemon=True).start()
     if os.environ.get("AI_BRAIN_NO_OPEN") != "1":
         threading.Timer(0.6, lambda: webbrowser.open(url)).start()
     ThreadingHTTPServer((HOST, PORT), BridgeHandler).serve_forever()
