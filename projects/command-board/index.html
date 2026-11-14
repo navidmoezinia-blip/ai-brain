@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Brain Cloud Dispatch — Multi-LLM Command Board</title>
+  <meta
+    name="description"
+    content="Visual cloud dispatch hub and Kanban board for coordinating OpenAI Codex, Claude, and Antigravity / Gemini across navidmoezinia-blip/ai-brain."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@450;500;560;620;680&family=JetBrains+Mono:wght@450;550&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Masthead -->
+    <header class="masthead">
+      <div class="masthead-brand">
+        <h1>AI Brain Cloud Dispatch</h1>
+        <a
+          id="repo-header-link"
+          class="repo-tag"
+          href="https://github.com/navidmoezinia-blip/ai-brain"
+          target="_blank"
+          rel="noopener"
+        >navidmoezinia-blip/ai-brain</a>
+      </div>
+
+      <div class="masthead-controls">
+        <nav class="view-tabs" aria-label="Workspace views">
+          <button
+            type="button"
+            id="tab-btn-composer"
+            class="view-tab active"
+            data-view-tab="composer"
+          >
+            Dispatch Composer
+          </button>
+          <button
+            type="button"
+            id="tab-btn-board"
+            class="view-tab"
+            data-view-tab="board"
+          >
+            Mission Board
+            <span id="board-count-badge" class="tab-count">0</span>
+          </button>
+        </nav>
+
+        <button type="button" id="gh-settings-btn" class="status-indicator" title="Configure GitHub API sync">
+          <span id="gh-status-dot" class="status-dot"></span>
+          <span id="gh-status-text">Connect GitHub Sync</span>
+        </button>
+
+        <button type="button" id="theme-toggle-btn" class="btn btn-sm" title="Switch light / dark mode">
+          Theme
+        </button>
+      </div>
+    </header>
+
+    <!-- VIEW 1: MULTI-LLM COMPOSER -->
+    <main id="view-composer">
+      <div class="composer-layout">
+        <!-- Left Column: Task & Per-LLM Instructions -->
+        <section class="panel" aria-labelledby="composer-heading">
+          <div class="panel-header">
+            <div>
+              <h2 id="composer-heading" class="panel-title">1. Pick Cloud LLMs &amp; Assign Roles</h2>
+              <p class="panel-subtitle">
+                Toggle any combination of Codex, Claude, and Antigravity and give each model its own instructions.
+              </p>
+            </div>
+          </div>
+
+          <div id="preset-strip" class="preset-strip" role="group" aria-label="Workflow presets"></div>
+
+          <div id="agent-selector-grid" class="agent-selector-grid"></div>
+
+          <div class="field-group">
+            <label class="field-label" for="task-title-input">
+              <span>Task Title (auto-generates isolated agent branch names)</span>
+            </label>
+            <input
+              id="task-title-input"
+              class="input"
+              type="text"
+              placeholder="e.g., MICU Sepsis Prep or Reconcile Rounding Skill"
+            />
+          </div>
+
+          <div class="field-row">
+            <div>
+              <label class="field-label" for="target-path-input">Target Folder in Repo</label>
+              <input
+                id="target-path-input"
+                class="input"
+                type="text"
+                placeholder="e.g., learning/notebooklm/ or knowledge/"
+              />
+            </div>
+            <div>
+              <label class="field-label" for="base-branch-select">Base Layout Branch</label>
+              <select id="base-branch-select" class="select">
+                <option value="main">main (by artifact type)</option>
+                <option value="structured-by-topic">structured-by-topic</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="task-domain-select">Domain Tag</label>
+              <select id="task-domain-select" class="select">
+                <option value="clinical">Clinical / Residency</option>
+                <option value="study">Study / NotebookLM</option>
+                <option value="research">Research / Evidence</option>
+                <option value="automation">Automation &amp; Skills</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="shared-context-input">
+              <span>Shared Goal &amp; Context (sent to every selected LLM)</span>
+            </label>
+            <textarea
+              id="shared-context-input"
+              class="textarea"
+              rows="3"
+              placeholder="Shared background, files to reference, or acceptance criteria..."
+            ></textarea>
+          </div>
+
+          <div>
+            <div class="field-label">
+              <span>Per-LLM Instructions (placed FIRST so stateless cloud runs never skip your ask)</span>
+            </div>
+            <div id="per-agent-stack" class="per-agent-stack"></div>
+          </div>
+
+          <div id="guardrail-banner" class="guardrail-banner ok" role="status"></div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;">
+            <button type="button" id="queue-board-btn" class="btn">
+              Save to Mission Board
+            </button>
+            <button type="button" id="dispatch-github-btn" class="btn btn-primary">
+              Dispatch to GitHub Queue
+            </button>
+          </div>
+        </section>
+
+        <!-- Right Column: Compiled Cloud Dispatch Packets -->
+        <section class="panel" aria-labelledby="packets-heading">
+          <div class="panel-header">
+            <div>
+              <h2 id="packets-heading" class="panel-title">2. Ready-to-Run Cloud Dispatch Packets</h2>
+              <p class="panel-subtitle">
+                1-click copy &amp; launch into Codex Cloud, Claude Web, or Gemini / Antigravity — zero paid API keys required.
+              </p>
+            </div>
+          </div>
+
+          <div id="packet-list" class="packet-list"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- VIEW 2: VISUAL KANBAN MISSION BOARD -->
+    <section id="view-board" class="hidden" aria-labelledby="board-heading">
+      <div class="board-toolbar">
+        <div class="filter-group">
+          <h2 id="board-heading" class="panel-title" style="margin-right:8px;">Active Cloud Runs &amp; PRs</h2>
+          <select id="board-agent-filter" class="select" style="width:auto;">
+            <option value="all">All LLMs</option>
+            <option value="codex">OpenAI Codex</option>
+            <option value="claude">Claude</option>
+            <option value="gemini">Antigravity / Gemini</option>
+          </select>
+          <select id="board-domain-filter" class="select" style="width:auto;">
+            <option value="all">All Domains</option>
+            <option value="clinical">Clinical / Residency</option>
+            <option value="study">Study / NotebookLM</option>
+            <option value="research">Research / Evidence</option>
+            <option value="automation">Automation &amp; Skills</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <button type="button" id="sync-prs-btn" class="btn btn-sm">
+            Sync Live GitHub PRs
+          </button>
+        </div>
+      </div>
+
+      <div class="kanban-grid">
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">Queued</span>
+            <span id="count-queued" class="tab-count">0</span>
+          </div>
+          <div id="col-queued" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">Running in Cloud</span>
+            <span id="count-running" class="tab-count">0</span>
+          </div>
+          <div id="col-running" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">PR / Review Ready</span>
+            <span id="count-review" class="tab-count">0</span>
+          </div>
+          <div id="col-review" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title">Merged to Brain</span>
+            <span id="count-merged" class="tab-count">0</span>
+          </div>
+          <div id="col-merged" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- GitHub Cloud Sync Modal -->
+  <div id="gh-modal" class="modal-backdrop" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="gh-modal-title">
+      <div class="panel-header">
+        <div>
+          <h2 id="gh-modal-title" class="panel-title">GitHub Cloud Sync (Optional)</h2>
+          <p class="panel-subtitle">
+            Stored only in your local browser storage (`localStorage`) — never committed to git.
+          </p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="gh-repo-input">Repository (`owner/repo`)</label>
+        <input id="gh-repo-input" class="input" type="text" value="navidmoezinia-blip/ai-brain" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="gh-token-input">
+          Fine-Grained GitHub PAT (Issues &amp; Pull Requests read/write on `ai-brain`)
+        </label>
+        <input
+          id="gh-token-input"
+          class="input"
+          type="password"
+          placeholder="github_pat_..."
+          autocomplete="off"
+        />
+      </div>
+
+      <p class="panel-subtitle" style="margin-bottom:16px;">
+        When connected, <strong>Dispatch to GitHub Queue</strong> creates labeled GitHub Issues for each selected LLM and <strong>Sync Live GitHub PRs</strong> pulls open/merged PRs (`codex/*`, `claude/*`, `gemini/*`) straight onto your Mission Board.
+      </p>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button type="button" id="gh-modal-close" class="btn">Cancel</button>
+        <button type="button" id="gh-modal-save" class="btn btn-primary">Save &amp; Sync</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="app-toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

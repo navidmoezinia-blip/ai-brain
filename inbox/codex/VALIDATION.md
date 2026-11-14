@@ -10,6 +10,9 @@ The [manifest](MANIFEST.md) records the inventory, source selection and limits.
   Started from `origin/main`; no Claude or Gemini branch was modified.
   A final fetch detected Gemini PR #5; its separate project/deployment paths
   were inspected and its shared-status coordination was added to the manifest.
+  When #5 subsequently merged, updated this branch from `origin/main` and
+  resolved only `STATUS.md`, retaining both activity entries and inventories.
+  The command-board/deployment files match the new `origin/main` exactly.
 - Validated all four canonical `skills/*/SKILL.md` entrypoints with the
   installed `skill-creator/scripts/quick_validate.py`: all passed.
 - Checked local Markdown links. Active imported resources resolve. Nine missing

@@ -36,13 +36,16 @@ branch was modified.
 | [PR #1: Claude initial import](https://github.com/navidmoezinia-blip/ai-brain/pull/1), targets `main` | Do not overwrite its profile, inpatient global ruleset, or 11 skill paths. Its rounding source is rev 8; the rev 9 changed references are staged separately for deliberate reconciliation. |
 | [PR #2: Claude topic layout](https://github.com/navidmoezinia-blip/ai-brain/pull/2), targets `structured-by-topic` | Keep this PR on the user's chosen `main` artifact-type layout. Do not reorganize the other branch. |
 | [PR #4: Claude desktop import](https://github.com/navidmoezinia-blip/ai-brain/pull/4), targets `structured-by-topic` | Its topic/reconcile copies overlap `ask-all`, `note-audit`, `codex-self-improvement`, old `ed-note`, and chart-check resources. Use the single canonical main-layout paths from this import when consolidating, and reconcile behavioral differences rather than adding duplicate installed copies. |
-| [PR #5: Gemini cloud command board](https://github.com/navidmoezinia-blip/ai-brain/pull/5), targets `main` | Appeared during the final fetch. Its `projects/command-board/` and deployment workflow have no imported source-path overlap. Preserve its separate project; combine its `STATUS.md` project row/activity entry deliberately when merging. |
+| [PR #5: Gemini cloud command board](https://github.com/navidmoezinia-blip/ai-brain/pull/5), merged to `main` during handoff | Its `projects/command-board/` and deployment workflow have no imported source-path overlap. Merged the updated `origin/main` into this Codex branch, preserving the board/deployment files unchanged and deliberately combining both `STATUS.md` inventories/activity entries. |
 
 Audited remote snapshots: PR #1 `6829d52cc3012ede83613fe6576581774b4d7dfd`;
 PR #2 `3aaa0989e565320267004ceb1ac00788402022f0`;
 PR #4 `f5c5693e0e59eb46bbe96f5f7a3f1ff5c3c53673`.
 The final remote-state check also inspected PR #5's changed paths and status
 entry before committing this import.
+PR #5 then merged while PR #6 was being opened. The Codex branch was updated
+with `origin/main` at `7134a83fcc1a5ddbb6b0ce5d6a02cbb545b801c9`; only the shared
+`STATUS.md` needed conflict resolution. No existing application code was edited.
 
 The recorded raw-capture candidate prohibits the cleaner. PR #1's different
 simulated collection skill uses one. These have different scope and must not

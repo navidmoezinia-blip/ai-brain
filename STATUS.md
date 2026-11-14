@@ -23,11 +23,12 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 | [`knowledge/`](./knowledge/) | Prepared ED complaint/host launcher reference with source and precedence notes | All LLMs |
 | [`prompts/`](./prompts/) | Two-file FM clinic system, blank deidentified previsit worksheet, current ED encounter baseline and Epic field map | All LLMs |
 | [`skills/`](./skills/) | `ed-note`, `note-audit`, `ask-all`, `codex-self-improvement`; existing Claude skill proposals are tracked separately | All LLMs |
-| [`projects/`](./projects/) | Six existing project/tool source catalogs plus three reusable workspace templates | All LLMs |
+| [`projects/`](./projects/) | [`command-board/`](./projects/command-board/) from merged Gemini PR #5; six existing project/tool source catalogs plus three reusable workspace templates proposed by Codex | All LLMs |
 | [`inbox/`](./inbox/) | Codex import manifest, source-hash inventory, validation record, and 14 explicitly uninstalled inpatient reconciliation snapshots | All LLMs |
 
 This inventory describes the proposed `codex/initial-import` contents. Until its
-PR is merged, `main` retains the scaffold and the imports remain branch work.
+PR is merged, `main` contains the scaffold plus Gemini's command board; the
+Codex imports remain branch work.
 See [the Codex manifest](./inbox/codex/MANIFEST.md) for exact source mapping,
 overlap with PRs #1/#2/#4, deliberate exclusions, and installation limits.
 
@@ -37,7 +38,7 @@ overlap with PRs #1/#2/#4, deliberate exclusions, and installation limits.
 
 - [x] **Codex (`codex/initial-import`):** Prepared context, clinic/ED prompts, four portable skill entrypoints, ED reference, project catalog/templates and inpatient reconciliation delta; PR review/merge pending.
 - [ ] **Claude (`claude/*`):** PR #1 (`claude/initial-import`) targets `main`; PRs #2 (`claude/by-topic`) and #4 (`claude/desktop-import`) target `structured-by-topic`. Preserve their branches and reconcile overlapping variants deliberately.
-- [ ] **Gemini (`gemini/cloud-command-board`):** PR #5 targets `main` with a separate command-board project and deployment workflow. Preserve its project and combine its status entry during review; no board code is duplicated here.
+- [x] **Gemini (`gemini/cloud-command-board`):** PR #5 merged into `main` during this import. Its command-board project/deployment workflow and activity entry are preserved unchanged in the updated Codex branch.
 - [ ] **Consolidation:** Review and merge Codex + Claude branches onto preferred layout (`main` or `structured-by-topic`).
 
 ---
@@ -47,5 +48,6 @@ overlap with PRs #1/#2/#4, deliberate exclusions, and installation limits.
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
 | 2026-11-14 | Codex | `codex/initial-import` -> `main` | Imported prepared Codex context, clinic/ED prompts, ED launcher knowledge, four skills, six project/tool catalogs and project templates. Isolated rounding rev 9 refinements, recorded raw-capture variant and compatibility router in `inbox/codex/reconciliation/` to avoid overwriting PR #1. Added source hashes and validation; no PHI, secrets, live clinical actions or installed-source cutover. See [manifest](./inbox/codex/MANIFEST.md). |
+| 2026-11-14 | Gemini / Antigravity | `gemini/cloud-command-board` | Added `projects/command-board/` visual multi-LLM cloud dispatch board + GitHub Pages deploy workflow. |
 | 2026-11-14 | Gemini / Antigravity | `structured-by-topic` | Added subject/content-nested layout (`clinical/`, `research/`, `automation-and-apps/`, `personal/`, `shared/`). |
 | 2026-11-14 | Gemini / Antigravity | `main` | Initialized `ai-brain` scaffolding (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `STATUS.md`, shared folder structure). |
