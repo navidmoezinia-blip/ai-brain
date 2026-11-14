@@ -477,8 +477,11 @@
               <button type="button" class="btn" data-inspect-agent="${agent.id}">Prompt</button>
               <div style="display:flex;gap:5px;">
                 <button type="button" class="btn" data-copy-agent="${agent.id}">Copy</button>
-                <button type="button" class="btn btn-primary" data-launch-agent="${agent.id}">
-                  Open ${escapeHtml(agent.short)}
+                <button type="button" class="btn btn-primary" data-run-single="${agent.id}" title="Run just ${escapeHtml(agent.short)} now">
+                  Run
+                </button>
+                <button type="button" class="btn" data-launch-agent="${agent.id}">
+                  Web
                 </button>
               </div>
             </div>
@@ -1027,6 +1030,19 @@
       if (copyBtn) {
         const id = copyBtn.getAttribute("data-copy-agent");
         copyToClipboard(buildAgentPrompt(id), `Copied ${AGENTS[id].label} prompt.`);
+        return;
+      }
+
+      const runSingleBtn = e.target.closest("[data-run-single]");
+      if (runSingleBtn) {
+        const id = runSingleBtn.getAttribute("data-run-single");
+        const prevSelected = new Set(state.selectedAgents);
+        state.selectedAgents = new Set([id]);
+        spawnCloudRuns().finally(() => {
+          state.selectedAgents = prevSelected;
+          renderSvgLayer();
+          renderWorldNodes();
+        });
         return;
       }
 
