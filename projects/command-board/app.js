@@ -670,7 +670,10 @@
   }
 
   async function pollBridgeRuns() {
-    if (!state.bridgeOnline) return;
+    if (!state.bridgeOnline) {
+      await checkBridgeHealth(false);
+      if (!state.bridgeOnline) return;
+    }
     try {
       const res = await fetch(`${state.bridgeUrl}/runs`);
       if (!res.ok) return;
