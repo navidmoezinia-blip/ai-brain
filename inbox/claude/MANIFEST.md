@@ -9,3 +9,8 @@ Not imported yet (needs another pass):
 - Doximity/QH/OpenEvidence prompt files in Google Drive and claude.ai artifacts (see `clinical/clinical-ai-stack.md`, "Where the latest files live")
 - AHK scripts and userscripts (in old chats and on Nav's PCs)
 - Skills that only exist in old zips or projects: clinic-note, nbn-note, pulm-note, nephro-final
+
+## Desktop (Claude Code) additions, 2026-11-14
+
+- `third-party-skills/goal-loop`, `third-party-skills/de-ai-ify`: installed skills, origin not verified; same license check as the others.
+- Desktop copies that overlap existing files are in [`reconcile/`](../../reconcile/), not here.

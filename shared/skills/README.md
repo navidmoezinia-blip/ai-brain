@@ -15,5 +15,9 @@ Canonical `SKILL.md` packages for every LLM. `.claude/skills/<name>` and `.agent
 | [`qgenda-capacity-audit`](./qgenda-capacity-audit/) | Audit FM clinic schedules for over-capacity sessions | [`clinical/clinic/`](../../clinical/clinic/) |
 | [`duty-hours`](./duty-hours/) | Log duty hours in New Innovations from the QGenda schedule | [`personal/finance-and-admin/`](../../personal/finance-and-admin/) |
 | [`self-improvement`](./self-improvement/) | Review past chats for friction and fold fixes into skills/memory | [`automation-and-apps/ai-workflows/`](../../automation-and-apps/ai-workflows/) |
+| [`ask-all`](./ask-all/) | Ask Claude, ChatGPT (Codex CLI) and Gemini the same question and compare | [`automation-and-apps/ai-workflows/`](../../automation-and-apps/ai-workflows/) |
+| [`note-audit`](./note-audit/) | Audit a clinical note against OpenEvidence and UpToDate | [`clinical/`](../../clinical/) |
 
 Third-party skills awaiting license review sit in [`inbox/claude/third-party-skills/`](../../inbox/claude/third-party-skills/).
+
+Desktop copies that are similar to a skill here but not identical wait in [`reconcile/`](../../reconcile/).

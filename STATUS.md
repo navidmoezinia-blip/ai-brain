@@ -38,6 +38,7 @@ This file keeps **Codex**, **Claude**, and **Gemini / Antigravity** synchronized
 | :--- | :--- | :--- | :--- |
 | 2026-11-14 | Gemini / Antigravity | `structured-by-topic` | Created nested topic/content hierarchy covering Clinical, Research, Automation & Apps, Personal, and Shared context/skills. |
 | 2026-11-14 | Claude | `claude/ai-brain-repo-org-36ae4a` | Re-filed the `claude/initial-import` materials into the topic layout: 2 context docs, clinical AI stack, inpatient global ruleset, ED consult reference, 11 skills (symlinked into `.claude/skills` and `.agents/skills`), unsorted items in `inbox/claude/`. |
+| 2026-11-14 | Claude (Code, desktop) | `claude/desktop-import` | Copied the Claude Code side of the brain: 35 memory notes plus their index, filed by topic under `*/memory/`, global CLAUDE.md/AGENTS.md, 2 new skills, 3 userscripts, 9 AHK scripts, and a `reconcile/` folder for everything that overlaps an existing file. Files are verbatim copies except one redaction. |
 
 ---
 
@@ -52,9 +53,26 @@ This file keeps **Codex**, **Claude**, and **Gemini / Antigravity** synchronized
 | [`clinical/rotations/ed-aer1/`](./clinical/rotations/ed-aer1/) | `ed-consult-reference.md` |
 | [`inbox/claude/`](./inbox/claude/) | `MANIFEST.md`, `chat-history-improvements-2026-11-14.md`, `third-party-skills/` (6 public skills, license check pending) |
 
+## Claude Code (desktop) Import - Where Things Landed
+
+| Location | Files |
+| :--- | :--- |
+| [`shared/context/claude-code-memory/`](./shared/context/claude-code-memory/) | `MEMORY.md` (index of all 35 notes) and the general feedback rules |
+| `clinical/inpatient/memory/`, `clinical/rotations/ed-aer1/memory/`, `clinical/study/memory/` | Clinical feedback rules, Epic quirks, rounding v8, dotflows, ED rotation notes and contacts, Anki scripting |
+| `research/methodology/memory/` | Evidence tool access, UTMB library EZproxy route |
+| `automation-and-apps/ai-workflows/memory/`, `automation-and-apps/residency-apps/memory/` | Multi-model bridge, Hermes verdict, Chrome/Tampermonkey notes, Epic Note Cleaner, OpenEvidence Neon |
+| [`automation-and-apps/scripts/`](./automation-and-apps/scripts/) | `userscripts/` (3), `ahk/` (9) |
+| `personal/productivity/memory/`, `personal/finance-and-admin/memory/` | QGenda, machine setup, GPU issue log, duty hours |
+| [`shared/skills/`](./shared/skills/) | Added `ask-all`, `note-audit` |
+| [`reconcile/`](./reconcile/) | Desktop copies that are similar to an existing file but different: 8 skill folders and 4 context files, each mapped to its counterpart in [`reconcile/README.md`](./reconcile/README.md) |
+| [`inbox/claude/`](./inbox/claude/) | 2 more third-party skills (`goal-loop`, `de-ai-ify`) |
+
 ## Handoff Notes (any agent)
 
 - **Skills live once, in `shared/skills/`.** Topic READMEs link to them; do not copy skill files into topic folders.
 - **Still empty:** `research/`, `automation-and-apps/`, `personal/`, `clinical/clinic/`, `clinical/study/`. Nothing in the Claude import belonged there.
 - **Not imported yet** (listed in [`inbox/claude/MANIFEST.md`](./inbox/claude/MANIFEST.md)): Doximity/QH/OpenEvidence prompt files in Google Drive and claude.ai artifacts, AHK scripts and userscripts, older skills (`clinic-note`, `nbn-note`, `pulm-note`, `nephro-final`).
 - **`claude/initial-import`** holds the same materials in the `main` by-type layout. Keep the two in sync or retire one once a layout is chosen.
+- **`reconcile/` is the merge queue.** Every desktop file that overlaps an existing one sits there, untouched and unmerged. Nothing in `shared/` was changed except two new rows in the skills README.
+- **Memory notes are point-in-time copies** from `~/.claude/projects/C--Users-nav/memory/` (2026-11-14). They hold staff contacts and machine details, no patient data; one possible patient name was removed from `clinical/inpatient/memory/reference_inpatient_chart_check_epic.md`.
+- **Not copied:** raw chat transcripts (they contain PHI), `EpicPatientSearch.ahk` and `power button.ahk` (not readable from this session), Epic Note Cleaner source (own repo: `moaziniya-jpg/epic-note-cleaner`).

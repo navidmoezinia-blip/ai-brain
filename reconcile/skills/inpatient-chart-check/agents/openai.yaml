@@ -1,0 +1,4 @@
+interface:
+  display_name: "Inpatient Chart Check"
+  short_description: "Recorded Notes and Active Orders capture and cross-check"
+  default_prompt: "Use $inpatient-chart-check to save each requested patient's notes and active orders in one dated TXT and cross-check them in a separate Hosp chat."
