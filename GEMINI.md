@@ -1,9 +1,8 @@
 # GEMINI.md
 
-Read and follow [`AGENTS.md`](./AGENTS.md) as the single source of truth for this repository, and check [`STATUS.md`](./STATUS.md) at the start of every session.
+Read and follow [`AGENTS.md`](./AGENTS.md) as the single source of truth for this branch (`structured-by-topic`), and check [`STATUS.md`](./STATUS.md) at the start of every session.
 
-## Gemini / Antigravity Notes
+## Gemini / Antigravity Notes (`structured-by-topic` layout)
 
-- **Sync First:** Run `git fetch origin --prune` and check open PRs (`gh pr list --state all`) so you can see branches pushed by Codex (`codex/*`) and Claude (`claude/*`).
-- **Branching:** Use `gemini/<topic>` branches when proposing independent changes unless asked to merge or organize branches directly onto `main`.
-- **Skills Compatibility:** Canonical skills live in [`skills/`](./skills/) (`skills/<skill-name>/SKILL.md`) so they remain shared across Gemini, Codex, and Claude.
+- **Sync First:** Run `git fetch origin --prune` and check open PRs (`gh pr list --state all`) to inspect both `main` (type-based) and `structured-by-topic` (content-nested) branches plus `codex/*` and `claude/*` branches.
+- **Topic-First Organization:** Place related prompts, docs, data, and tools together inside their domain folder (`clinical/`, `research/`, `automation-and-apps/`, `personal/`) and universal context/skills in `shared/`.

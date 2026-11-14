@@ -2,8 +2,8 @@
 
 @AGENTS.md
 
-## Claude-Specific Notes
+## Claude-Specific Notes (`structured-by-topic` layout)
 
-- **Single Source of Truth:** Read and follow [`AGENTS.md`](./AGENTS.md) and check [`STATUS.md`](./STATUS.md) at the start of every session.
-- **Branching:** Use `claude/<topic>` branches (or your environment's auto-generated `claude/...` branch) for your changes, and update `STATUS.md` so Codex and Gemini/Antigravity know what you added.
-- **Skills Compatibility:** Canonical skills live in [`skills/`](./skills/) (`skills/<skill-name>/SKILL.md`) so all LLMs can use them. If you need a skill wired into `.claude/skills/<skill-name>`, create a relative symlink to `../../skills/<skill-name>` rather than duplicating files.
+- **Single Source of Truth:** Read and follow [`AGENTS.md`](./AGENTS.md) and [`STATUS.md`](./STATUS.md) at the start of every session.
+- **Topic-First Organization:** Keep prompts, knowledge guides, data, and helper scripts for a subject together inside its nested topic directory (`clinical/...`, `research/...`, `automation-and-apps/...`, `personal/...`).
+- **Skills Compatibility:** Store cross-cutting `SKILL.md` packages in [`shared/skills/`](./shared/skills/) and symlink from `.claude/skills/<skill-name>` (`../../shared/skills/<skill-name>`) rather than duplicating files.
