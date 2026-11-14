@@ -23,7 +23,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 | [`knowledge/`](./knowledge/) | Ready for clinical references, protocols, and research syntheses | All LLMs |
 | [`prompts/`](./prompts/) | Ready for system prompts, templates, and assistant instructions | All LLMs |
 | [`skills/`](./skills/) | Ready for portable `SKILL.md` skills shared across agents | All LLMs |
-| [`projects/`](./projects/) | [`command-board/`](./projects/command-board/) — Visual multi-LLM cloud dispatch hub & Kanban board | All LLMs |
+| [`projects/`](./projects/) | [`command-board/`](./projects/command-board/) — Visual multi-LLM cloud dispatch hub (circular infinite canvas) | All LLMs |
 | [`inbox/`](./inbox/) | Staging area for initial imports (`inbox/codex/`, `inbox/claude/`, etc.) | All LLMs |
 
 ---

@@ -14,9 +14,10 @@ Visual multi-LLM command board for coordinating **OpenAI Codex**, **Claude**, an
    - Supports both `main` (artifact-type layout) and `structured-by-topic` base branches.
 3. **Zero-PHI & Secret Guardrail Scanner**
    - Client-side check warns before copying or dispatching if text matches API token patterns (`sk-...`, `ghp_...`) or common PHI markers (`MRN`, `DOB`, SSN format).
-4. **Visual Kanban Mission Board + Optional GitHub API Sync**
-   - Tracks work across **Queued**, **Running in Cloud**, **PR / Review Ready**, and **Merged to Brain**.
-   - Optional fine-grained GitHub PAT (saved only in browser `localStorage`) enables **1-click GitHub Issue queue dispatch** and **live Pull Request sync** from `navidmoezinia-blip/ai-brain`.
+4. **Circular Infinite Canvas + Optional GitHub API Sync**
+   - Central `ai-brain` hub with the three LLM nodes on an inner ring and cloud runs / PRs as satellites on an outer ring, joined by curved tethers.
+   - Drag the canvas to pan, scroll to zoom, drag any node. **Snap Circle** resets the layout. Click a satellite to inspect it or change its stage (Queued → Running → PR Ready → Merged).
+   - Optional fine-grained GitHub PAT (saved only in browser `localStorage`) enables **Spawn Cloud Run → GitHub Issue** dispatch and **live Pull Request sync** into the outer ring.
 
 ---
 
