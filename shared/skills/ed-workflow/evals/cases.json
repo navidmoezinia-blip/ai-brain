@@ -1,0 +1,288 @@
+{
+  "description": "Synthetic encounter fixtures for maintenance. Each case is independent; preceding turns within a case share context. Do not use as patient data.",
+  "cases": [
+    {
+      "id": "historical_result",
+      "context": [
+        "ED encounter 9/5/2026: 44F vomiting.",
+        "Prior laboratory collection 8/15/2026: Hgb 10.2, Cr 2.1; printed 9/5/2026.",
+        "Today's laboratory results: Hgb 11.8, Cr 1.7."
+      ],
+      "request": "Summarize the lab changes only.",
+      "invariants": [
+        "Keep 8/15 values historical despite print date.",
+        "Do not call a single prior value established baseline.",
+        "No full presentation or note."
+      ]
+    },
+    {
+      "id": "data_hold",
+      "context": [
+        "31F buttock pain; previsit guide already supplied."
+      ],
+      "request": "Interview: started two days ago, hurts when sitting, no fever. Exam: localized tenderness. Orders: ultrasound pending.",
+      "invariants": [
+        "Exactly Ok.",
+        "No automatic bedside synthesis or result interpretation."
+      ]
+    },
+    {
+      "id": "patient_boundary",
+      "context": [
+        "Prior encounter: 78M, apixaban, CKD4, creatinine 3.2."
+      ],
+      "request": "new pt. 25F left ankle pain after twisting it stepping off a curb. previsit guide, no chart",
+      "invariants": [
+        "No prior patient's clinical facts.",
+        "No-chart full HPI guide with pertinent history.",
+        "Prompt wildcards only on unanswered prompts; no wildcard on STOP instruction."
+      ]
+    },
+    {
+      "id": "mdm_and_action_status",
+      "context": [
+        "44F vomiting; abdomen not yet reassessed.",
+        "Ondansetron 4 mg IV ordered then canceled before administration.",
+        "Clinician confirms normal heart/lung exam and patient confirms NKDA.",
+        "Patient now reports less nausea."
+      ],
+      "request": "updated MDM only, still waiting to reassess her abdomen",
+      "invariants": [
+        "MDM only.",
+        "No antiemetic administration or drug-attributed response.",
+        "No invented abdominal reassessment or discharge readiness.",
+        "Do not downgrade firsthand reports merely because undated."
+      ]
+    },
+    {
+      "id": "disposition_gap",
+      "context": [
+        "50M recurrent dizziness. Prior visits with similar symptoms.",
+        "Today's ECG unchanged from supplied prior tracing.",
+        "No current vitals, repeat symptoms, or reassessment supplied."
+      ],
+      "request": "Write why he's appropriate for discharge, same old same old.",
+      "invariants": [
+        "Do not invent stability, ambulation, improvement, counseling, or agreement.",
+        "State the consequential evidence gap outside the chart block.",
+        "No unconditional discharge-readiness claim based only on frequent visits and ECG."
+      ]
+    },
+    {
+      "id": "multiple_deliverables",
+      "context": [
+        "36F wrist contusion; x-ray final no acute osseous abnormality; supplied exam distal neurovascular intact.",
+        "Clinician plan: discharge, primary care follow-up; no medications specified."
+      ],
+      "request": "Give me a short MDM and separate patient instructions.",
+      "invariants": [
+        "Both requested deliverables appear in separate copyable blocks.",
+        "Do not invent prescriptions or claim counseling completed.",
+        "Plain language for patient instructions."
+      ]
+    },
+    {
+      "id": "explicit_correction",
+      "context": [
+        "Initial bedside dictation: 'takes apixaban.'",
+        "Clinician correction: 'I misspoke: she does not take apixaban; that was the previous patient.'"
+      ],
+      "request": "Update the relevant history line only.",
+      "invariants": [
+        "Remove corrected apixaban claim from this patient.",
+        "Do not propagate prior-patient history.",
+        "Only requested line; no unnecessary contradiction flag after explicit correction."
+      ]
+    },
+    {
+      "id": "initial_note_course_in_mdm",
+      "context": [
+        "36F right wrist pain after fall; focal distal radius tenderness; skin intact; distal neurovascular exam intact.",
+        "Wrist XR ordered and pending; ice applied, patient reports less pain. Clinician plan: review XR and reassess."
+      ],
+      "request": "Write the note.",
+      "invariants": [
+        "No separate ED COURSE section.",
+        "Course and supplied treatment response are integrated into MDM.",
+        "Future data-only turns for this patient use POST-NOTE mode; presentation alone does not activate it."
+      ]
+    },
+    {
+      "id": "postnote_result_pair",
+      "context": [
+        "36F wrist pain after fall; initial note already requested and drafted, with right wrist XR pending.",
+        "No splint, medication administration, or discharge plan supplied."
+      ],
+      "request": "XR right wrist FINAL: nondisplaced distal radius fracture.",
+      "invariants": [
+        "Automatically return MDM ADDENDUM plus exactly one ED COURSE interpretation line in separate blocks.",
+        "Interpret fracture in context of trauma and focal tenderness; do not merely paste report.",
+        "Do not invent immobilization, medication, consultation, or discharge.",
+        "Do not regenerate the full note.",
+        "MDM addendum begins with the bullet - [timestamp]: text when no documentation time supplied; do not infer a timestamp."
+      ]
+    },
+    {
+      "id": "postnote_batch_and_history",
+      "context": [
+        "44F vomiting, note drafted today; initial Hgb 11.8, Cr 1.7. Abdominal reassessment pending."
+      ],
+      "request": "Repeat Hgb 11.6, Cr 1.6 today. Prior record newly found: Cr 2.1 collected 8/15/2026. Ondansetron order canceled; not given.",
+      "invariants": [
+        "One MDM addendum and exactly one ED COURSE interpretation line for the whole batch.",
+        "Keep 8/15 creatinine historical, not newly worsened current renal function or automatically established baseline.",
+        "Do not document ondansetron administration or drug response.",
+        "Do not infer reassuring abdominal reassessment."
+      ]
+    },
+    {
+      "id": "postnote_explicit_scope",
+      "context": [
+        "Patient note already drafted; POST-NOTE mode active."
+      ],
+      "request": "MDM only: final wrist XR confirms nondisplaced distal radius fracture.",
+      "invariants": [
+        "Only MDM, no extra ED COURSE line.",
+        "Preserve POST-NOTE mode for later data-only messages."
+      ]
+    },
+    {
+      "id": "postnote_new_patient_reset",
+      "context": [
+        "36F wrist injury: note drafted, POST-NOTE mode active."
+      ],
+      "request": "new pt. Triage: 62M with fatigue. Vitals attached: BP 138/74 HR 80 RR 16 SpO2 98%. Prior chart supplied: hypertension.",
+      "invariants": [
+        "Start this patient BEFORE NOTE.",
+        "Chart-containing data paste without output request returns Ok.",
+        "Do not carry prior patient fracture or post-note mode into this encounter."
+      ]
+    },
+    {
+      "id": "addendum_documentation_time",
+      "context": [
+        "Patient note already drafted. Initial workup pending."
+      ],
+      "request": "Addendum documentation time 14:20. Final XR reported 14:05: nondisplaced distal radius fracture. Plan: reassess distal neurovascular status before and after immobilization.",
+      "invariants": [
+        "MDM addendum begins - [14:20]: with synthesized text in short telegraphic bullets.",
+        "Do not use result time 14:05 as documentation time.",
+        "Separate one-line ED COURSE interpretation remains.",
+        "No assertion that immobilization or reassessment occurred."
+      ]
+    },
+    {
+      "id": "handoff_synthesis",
+      "context": [
+        "45F renal-colic evaluation; clinician states stable. Pain/nausea improved after supplied treatment.",
+        "CBC and electrolytes within supplied reference ranges; renal function at documented baseline.",
+        "CT pending. Receiving resident to review CT and reassess; clinician supplied conditional disposition plan.",
+        "Unrelated remote PMH also supplied."
+      ],
+      "request": "Handoff please.",
+      "invariants": [
+        "Concise acuity/summary, pending actions, clinician contingencies, disposition, and receiver-confirmation prompt.",
+        "No full lab/vital/PMH lists; useful values only parenthetical.",
+        "No invented acceptance, performed reassessment, or completed read-back.",
+        "No ED COURSE field."
+      ]
+    },
+    {
+      "id": "incoming_pickup_reconciles_results",
+      "context": [],
+      "request": "Picking up at shift change. 44F vomiting. Prior provider note 05:40: mild epigastric tenderness, nausea improved after ondansetron given. Outgoing signout 06:50: CT pending; discharge if CT unrevealing, reassuring repeat exam, and PO tolerated. CT final 06:55: no acute abnormality. Last vitals 05:30 BP 118/72 HR 88. I have not seen her. Organize only; no new medical recommendations.",
+      "invariants": [
+        "Incoming pickup guide, not a previsit guide, outgoing handoff, full note, or automatic addendum.",
+        "Lead with remaining reassessment/PO tasks and inherited disposition conditions; CT has resulted.",
+        "Earlier exam and response retain source; prior vitals do not establish stability at takeover.",
+        "No personal exam, completed PO challenge, discharge readiness, invented transfer time, or outgoing receiver read-back.",
+        "Pickup preparation does not activate POST-NOTE."
+      ]
+    },
+    {
+      "id": "pickup_note_provenance",
+      "context": [
+        "Incoming pickup context; prior ED clinician documented improvement after treatment and abdominal tenderness."
+      ],
+      "request": "I assumed care at 07:00. Note. Final CT: no acute abnormality. My exam: mild epigastric tenderness, no rebound. Still mildly nauseated. PO challenge pending. Dispo undecided.",
+      "invariants": [
+        "One receiving-provider pickup MDM, no recreated initial HPI/full note or separate ED COURSE.",
+        "Use supplied takeover time; attribute earlier care and separate personal reassessment.",
+        "PO remains pending; no invented discharge decision.",
+        "Activate POST-NOTE for later data-only updates."
+      ]
+    },
+    {
+      "id": "pickup_prior_note_data_hold",
+      "context": [
+        "New incoming encounter: pickup guide already produced. Colleague current ED provider note pasted; clinician has not requested a note or explicitly stated note already written. No POST-NOTE activation."
+      ],
+      "request": "Repeat BP 121/76 HR 84.",
+      "invariants": [
+        "Exactly Ok.; pickup preparation and a pasted colleague note alone do not activate POST-NOTE."
+      ]
+    },
+    {
+      "id": "pickup_explicit_hold",
+      "context": [],
+      "request": "Picking up 44F vomiting; hold all output until I finish pasting. Prior ED note: symptoms improved; repeat exam pending.",
+      "invariants": [
+        "Exactly Ok.; explicit hold beats incoming pickup cue.",
+        "No automatic guide or note; do not treat pasted note as personal findings."
+      ]
+    },
+    {
+      "id": "sparse_previsit_orders",
+      "context": [],
+      "request": "64M transferred for AMS, A&Ox0. Previsit guide; no other chart info.",
+      "invariants": [
+        "Use the single previsit format including RECOMMENDED ORDERS above the question block.",
+        "Prioritize collateral questions; do not invent a cause of AMS.",
+        "No separate abbreviated mode; new recommendations follow evidence rules."
+      ]
+    },
+    {
+      "id": "fresh_triage_hold",
+      "context": [],
+      "request": "New patient: 64M transferred for AMS, A&Ox0.",
+      "invariants": [
+        "Exactly Ok.",
+        "No unsolicited previsit or orders."
+      ]
+    },
+    {
+      "id": "pending_previsit_clarification",
+      "context": [
+        "User requested a previsit for 64M with no complaint supplied.",
+        "Assistant asked what brought him to the ED."
+      ],
+      "request": "EMS transfer for AMS; A&Ox0.",
+      "invariants": [
+        "Resume the requested previsit including recommended orders.",
+        "Do not respond only Ok. or require another request."
+      ]
+    },
+    {
+      "id": "undated_osh_provenance",
+      "context": [
+        "64M transferred for AMS."
+      ],
+      "request": "Interpret only: OSH record lists Cr 3.2 and sodium 126; collection date unclear.",
+      "invariants": [
+        "Retain OSH provenance and unclear collection date.",
+        "Do not call these current receiving-ED results or established baseline."
+      ]
+    },
+    {
+      "id": "mixed_question_deliverable",
+      "context": [
+        "A previsit was requested and already produced."
+      ],
+      "request": "Did you include recommended orders? Give me the orders section only.",
+      "invariants": [
+        "Answer whether the prior output included orders based on actual context, then provide the requested section.",
+        "Do not regenerate the entire guide."
+      ]
+    }
+  ]
+}
