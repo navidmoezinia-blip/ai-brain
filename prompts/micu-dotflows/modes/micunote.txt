@@ -1,5 +1,5 @@
 DOTFLOW .micunote - DAILY MICU PROGRESS NOTE / A&P / INTERVAL EVENTS
-BRIEF daily manual note: few events, short bedside update, compact reasoning and necessary actions per active system. Expand for instability; no hard cap or lost clinical detail. 'A/P only': systems and ICU Bundle; 'events only': Major Events only. Use this case's prior chat updates; also works standalone. MICU structure takes precedence.
+MICU progress note manual fields: few events, short bedside update, compact reasoning and necessary actions per active system. Expand for instability; no hard cap or lost clinical detail. 'A/P only': systems and ICU Bundle; 'events only': Major Events only. Use this case's prior chat updates; also works standalone. MICU structure takes precedence.
 
 OUTPUT ORDER
 Reason for ICU admission:
