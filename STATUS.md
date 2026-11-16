@@ -46,6 +46,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
+| 2026-11-16 | Claude | `claude/micu-deid` | Added four de-identified MICU note-writing references to `knowledge/micu/` (playbook, template analysis, style spec, chart-checking guide). |
 | 2026-11-16 | Claude | `claude/micu-import` | Imported MICU material: `skills/micu-chart-check/`, `prompts/micu-dotflows/`, `knowledge/micu/` (prep guide, rounding columns), `projects/micu-anki/`. Note-derived MICU files held back until de-identified. |
 | 2026-11-14 | Gemini / Antigravity | `gemini/fix-claude-connection` (PR #13) | Fixed `claude.EXE` `ConnectionRefused`, piped prompt on stdin, streamed live thinking/tool events. |
 | 2026-11-14 | Gemini / Antigravity | `gemini/fix-bridge-toggle` (PR #11) | Fixed Bridge toggle state URL, served board directly from `http://127.0.0.1:8787/`. |
