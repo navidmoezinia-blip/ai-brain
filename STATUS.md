@@ -47,6 +47,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
+| 2026-11-16 | Claude | `claude/ai-brain-repo-org-36ae4a` | Merged PR #21 after a PHI/secrets review. Follow-up fix to `prompts/micu-doximity-code-scribe.md`: DEATH NOTE exam lines and durations now fill only from findings stated in the audio (Codex P1 on PR #21). |
 | 2026-11-16 | Gemini / Antigravity | `gemini/micu-antigravity-import` | Imported all remaining de-identified MICU artifacts created in Antigravity: standalone Progress Note Master Playbook (`.md` + interactive `.html`), practical note-writing guide, manual note scaffold, bot prompt + pre-cleaned Epic SmartPhrase template, `.NAVICUBASE` ICU daily checklist + SmartLists (`prompts/micu-smartphrases/`), and Doximity Scribe `ICU Code` self-auditing template (`prompts/micu-doximity-code-scribe.md`). Confirmed `Initial_HP_Master_Playbook.md` is already Sections 1–8 of `knowledge/micu/micu-hp-and-progress-playbook.md`. |
 | 2026-11-16 | Codex | `codex/micu-order-panels-checkpoint` | Saved PHI-free Epic preference configuration inventory and continuation report in `projects/micu-order-panels/`. Records exact saved names, observed defaults, local catalog IDs, missing components and validation limits. Does not claim full guide implementation. |
 | 2026-11-16 | Claude | `claude/micu-deid` | Added four de-identified MICU note-writing references to `knowledge/micu/` (playbook, template analysis, style spec, chart-checking guide). |
