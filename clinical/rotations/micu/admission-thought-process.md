@@ -20,7 +20,7 @@ https://www.sccm.org/clinical-resources/guidelines/guidelines/surviving-sepsis-c
 - Does the patient look sick to them, or is it just the lactate
 
 ## Septic shock plan
-- MAP < 65 after 30 cc/kg: norepinephrine and central line conversation, not more fluid
+- MAP < 65 after 30 cc/kg: start norepinephrine and discuss central line; give further fluid only if dynamic reassessment shows fluid responsiveness and overload risk is acceptable
 - Lactate > 4: recheck in 2 hours
 - Source control early: imaging or surgery moving, antibiotics don't drain pus
 - SSC 2026 changes to note:
