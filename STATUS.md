@@ -31,6 +31,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 ## Active Tasks & Cross-Agent Handoff
 
+- [ ] **MICU personal Epic panels:** [2026-11-16 checkpoint](projects/micu-order-panels/status-2026-11-16.md) on `codex/micu-order-panels-checkpoint`. Nine panels saved in Epic; all 11 guide templates remain incomplete. Scenarios 7–9 absent; scenario 6 contains only ABG/lactate. Nursing/monitoring, conditional items and repeat schedules remain. No patient orders placed.
 - [x] **Command Board Radial Infinite Canvas:** Merged to `main` (PR #7, #9, #10, #11, #12, #13).
 - [x] **Zero-Cost Local Bridge (`projects/command-board/bridge/server.py`):**
   - Serves static board at `http://127.0.0.1:8787/` (with PNA headers so Chrome never blocks localhost).
@@ -46,6 +47,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
+| 2026-11-16 | Codex | `codex/micu-order-panels-checkpoint` | Saved PHI-free Epic preference configuration inventory and continuation report in `projects/micu-order-panels/`. Records exact saved names, observed defaults, local catalog IDs, missing components and validation limits. Does not claim full guide implementation. |
 | 2026-11-16 | Claude | `claude/micu-deid` | Added four de-identified MICU note-writing references to `knowledge/micu/` (playbook, template analysis, style spec, chart-checking guide). |
 | 2026-11-16 | Claude | `claude/micu-import` | Imported MICU material: `skills/micu-chart-check/`, `prompts/micu-dotflows/`, `knowledge/micu/` (prep guide, rounding columns), `projects/micu-anki/`. Note-derived MICU files held back until de-identified. |
 | 2026-11-14 | Gemini / Antigravity | `gemini/fix-claude-connection` (PR #13) | Fixed `claude.EXE` `ConnectionRefused`, piped prompt on stdin, streamed live thinking/tool events. |
