@@ -38,6 +38,7 @@ This file keeps **Codex**, **Claude**, and **Gemini / Antigravity** synchronized
 | :--- | :--- | :--- | :--- |
 | 2026-11-14 | Gemini / Antigravity | `structured-by-topic` | Created nested topic/content hierarchy covering Clinical, Research, Automation & Apps, Personal, and Shared context/skills. |
 | 2026-11-14 | Claude | `claude/ai-brain-repo-org-36ae4a` | Re-filed the `claude/initial-import` materials into the topic layout: 2 context docs, clinical AI stack, inpatient global ruleset, ED consult reference, 11 skills (symlinked into `.claude/skills` and `.agents/skills`), unsorted items in `inbox/claude/`. |
+| 2026-11-16 | Claude | `claude/micu-admissions` | Added `clinical/rotations/micu/admission-thought-process.md` (consult-call questions, ED-doc questions, septic shock plan, SSC 2026). |
 
 ---
 
