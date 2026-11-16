@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICU Progress Note Master Playbook</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] > summary .chevron { transform: rotate(90deg); }
+    @media print {
+      .no-print { display: none !important; }
+      .print-full { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased m-0 p-0">
+  <div class="flex flex-col md:flex-row min-h-full">
+
+    <!-- Left Sidebar Navigation -->
+    <aside class="no-print w-full md:w-64 shrink-0 bg-[var(--sidebar)] border-b md:border-b-0 md:border-r border-[var(--border)] p-4 md:sticky md:top-0 md:self-start">
+      <div class="mb-4">
+        <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Master Deliverable</div>
+        <h1 class="text-base font-bold text-[var(--foreground)] mt-0.5">ICU Note Playbook</h1>
+        <p class="text-xs text-[var(--muted-foreground)] mt-0.5">MICU &amp; CCU Authoring, Style &amp; Bot Spec</p>
+      </div>
+
+      <div class="mb-3">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Filter sections..."
+          oninput="filterSections(this.value)"
+          class="w-full px-2.5 py-1.5 text-xs rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] placeholder-[var(--placeholder)] focus:outline-none focus:border-[var(--primary)]"
+        />
+      </div>
+
+      <nav class="space-y-1 text-xs" id="sideNav">
+        <a href="#sec-1" onclick="jumpTo('sec-1')" class="block px-2.5 py-1.5 rounded hover:bg-[var(--card)] text-[var(--foreground)] font-medium">1. Manual Scaffold &amp; Epic Template</a>
+        <a href="#sec-2" onclick="jumpTo('sec-2')" class="block px-2.5 py-1.5 rounded hover:bg-[var(--card)] text-[var(--foreground)] font-medium">2. Pre-Rounding Chart Check</a>
+        <a href="#sec-3" onclick="jumpTo('sec-3')" class="block px-2.5 py-1.5 rounded hover:bg-[var(--card)] text-[var(--foreground)] font-medium">3. Section &amp; System Guide</a>
+        <div class="pl-4 space-y-0.5 border-l border-[var(--border)] ml-2.5">
+          <a href="#sys-top" onclick="jumpTo('sec-3', 'sys-top')" class="block px-2 py-1 rounded hover:bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Top Sections &amp; Subjective</a>
+          <a href="#sys-neuro" onclick="jumpTo('sec-3', 'sys-neuro')" class="block px-2 py-1 rounded hover:bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Neuro &amp; Pulmonology</a>
+          <a href="#sys-cardio" onclick="jumpTo('sec-3', 'sys-cardio')" class="block px-2 py-1 rounded hover:bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Cardio &amp; FEN/GI</a>
+          <a href="#sys-id" onclick="jumpTo('sec-3', 'sys-id')" class="block px-2 py-1 rounded hover:bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]">ID, Renal, Endo &amp; Heme</a>
+          <a href="#sys-footer" onclick="jumpTo('sec-3', 'sys-footer')" class="block px-2 py-1 rounded hover:bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Bundle &amp; Hospital Course</a>
+        </div>
+        <a href="#sec-4" onclick="jumpTo('sec-4')" class="block px-2.5 py-1.5 rounded hover:bg-[var(--card)] text-[var(--foreground)] font-medium">4. Formatting &amp; Whitespace</a>
+        <a href="#sec-5" onclick="jumpTo('sec-5')" class="block px-2.5 py-1.5 rounded hover:bg-[var(--card)] text-[var(--foreground)] font-medium">5. Voice, Grammar &amp; Shorthand</a>
+        <a href="#sec-6" onclick="jumpTo('sec-6')" class="block px-2.5 py-1.5 rounded hover:bg-[var(--card)] text-[var(--foreground)] font-medium">6. Copy-Forward &amp; Dot-Phrases</a>
+        <a href="#sec-7" onclick="jumpTo('sec-7')" class="block px-2.5 py-1.5 rounded hover:bg-[var(--card)] text-[var(--foreground)] font-medium">7. Bot System Instructions</a>
+      </nav>
+
+      <div class="mt-5 pt-4 border-t border-[var(--border)] space-y-2">
+        <button onclick="copyBlock('raw-scaffold', this)" class="w-full px-2.5 py-1.5 rounded text-xs font-medium bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:opacity-90 text-left flex justify-between items-center">
+          <span>Copy Manual Scaffold</span><span>Copy</span>
+        </button>
+        <button onclick="copyBlock('raw-bot-prompt', this)" class="w-full px-2.5 py-1.5 rounded text-xs font-medium bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 text-left flex justify-between items-center">
+          <span>Copy Bot Prompt</span><span>Copy</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="print-full flex-1 min-w-0 p-4 md:p-6 space-y-4">
+
+      <!-- Sticky Toolbar: Rich Text vs Markdown Toggle + Expand/Collapse + Print -->
+      <div class="no-print sticky top-0 z-20 bg-[var(--card)] border border-[var(--border)] rounded-lg px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+        <div class="inline-flex rounded border border-[var(--border)] p-0.5 bg-[var(--background)]">
+          <button id="btnRich" onclick="setViewMode('rich')" class="px-3 py-1 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">
+            Rich Text View
+          </button>
+          <button id="btnMd" onclick="setViewMode('markdown')" class="px-3 py-1 rounded text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+            Markdown View
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs">
+          <button id="btnExpandAll" onclick="toggleAllDetails(true)" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:opacity-80">
+            Expand All
+          </button>
+          <button id="btnCollapseAll" onclick="toggleAllDetails(false)" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:opacity-80">
+            Collapse All
+          </button>
+          <button onclick="copyFullMarkdown(this)" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--secondary-foreground)] font-medium hover:opacity-90">
+            Copy Full .md
+          </button>
+          <button onclick="expandAndPrint()" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:opacity-80">
+            Print / PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- RICH TEXT VIEW CONTAINER -->
+      <div id="richContainer" class="space-y-4">
+
+        <!-- SECTION 1 -->
+        <details id="sec-1" open class="playbook-section bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <summary class="cursor-pointer px-4 py-3 flex items-center justify-between bg-[var(--card)] hover:opacity-90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="chevron transition-transform text-xs text-[var(--muted-foreground)]">&#9654;</span>
+              <span class="text-sm font-bold">Section 1: Pure Manual Scaffold &amp; Pre-Cleaned Epic Template</span>
+            </div>
+            <span class="text-xs text-[var(--muted-foreground)]">Manual slots only</span>
+          </summary>
+          <div class="px-4 pb-4 pt-2 border-t border-[var(--card-border)] space-y-4 text-xs leading-relaxed">
+            <p class="text-[var(--muted-foreground)]">
+              All auto-populated Epic flowsheet pulls (DOS, ICU Day, Code Status, Vent Settings, MAR infusion tables, Lines, Vitals, I/O, 24h/48h Labs, Micro, and 48h Radiology impressions) are stripped from <strong>1A</strong> so you see strictly what is written by hand. <strong>1B</strong> gives you a ready-to-save personal Epic SmartPhrase with dead boilerplate already deleted from the get-go.
+            </p>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-semibold text-[var(--foreground)]">1A. Pure Manual Note Scaffold (No Auto-Populated Stuff)</span>
+                <button onclick="copyBlock('raw-scaffold', this)" class="no-print px-2 py-0.5 rounded border border-[var(--border)] text-xs hover:bg-[var(--secondary)]">Copy Scaffold</button>
+              </div>
+              <pre id="raw-scaffold" class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--code-foreground)] font-mono text-xs overflow-x-auto whitespace-pre-wrap">Reason for ICU admission: [Presenting symptom acronym OR acute instability sequence]
+
+Major Events in Last 24 Hours:
+- [Overnight escalation, airway/O2 shift, or pressor/drip change]
+- [Completed procedure/scope/cath finding OR acute lab drop / positive culture]
+- [Optional: New exam red flag OR critical disposition hurdle]
+
+Subjective
+[1-4 short present-tense sentences matched to intubated/obtunded vs. awake/verbal status.]
+
+Assessment &amp; Plan
+Neuro
+[Active encephalopathy / agitation / withdrawal / focal deficit diagnosis]
+[Mentation/orientation status, suspected driver, head imaging, sedation response + "Will..." bridge.]
+- [Sedation drip &amp; RASS target OR hold sedatives/antipsychotics + reason]
+- [Withdrawal monitoring / PT/OT]
+
+Pulmonology
+[Acute (or acute-on-chronic) hypoxic/hypercapnic respiratory failure + etiology]
+[Active pulmonary pathology: pneumonia / effusions / pulmonary edema / PE / viral]
+[Chronic lung baseline: OSA / COPD / home O2]
+[Baseline O2, decompensation/intubation trigger, CXR/CT/pleural findings, SBT trajectory + "Will..." bridge.]
+- [Active support: Vent mode / BiPAP IPAP/EPAP / HFNC / O2 pp]
+- [Weaning plan: Plan for SAT/SBT OR Sedation holds with PS trials]
+- [Inhaled therapies / respiratory steroids or antivirals w/ EOT date]
+- [Gas monitoring: Monitor ABG / Serial VBGs / ABG PRN]
+
+Cardiovascular
+[Shock phenotype &amp; stage, e.g., Undifferentiated / mixed cardiogenic vs septic]
+[Heart failure w/ exact EF % &amp; etiology, e.g., HFrEF (EF X%, ICM)]
+[Arrhythmia / CAD s/p CABG or PCI w/ dates / Troponin / DVT / HTN / HLD]
+[Baseline BP, fluid/albumin response, pressor/inotrope arc w/ dates weaned, TTE/RHC findings, Cards/EP recs + "Will..." bridge.]
+- [Active pressor/inotrope/midodrine rate + MAP goal &gt;60]
+- [Active diuretic dose/drip + Strict I&amp;O / fluid restriction]
+- [Antiarrhythmics / anticoagulation swap (e.g., heparin gtt vs DOAC)]
+- [Home cardiac meds continued vs held + inline reason]
+- Tele
+- K &gt;4 [or &gt;4.5], Mg &gt;2
+
+FEN/GI
+[Active GI/hepatic issue: SBO / GI bleed / gastritis / shock liver / dysphagia / PEG]
+[Bleeding check, tube output/decompression, LFT trend, CT/KUB/scope findings, feed tolerance + "Will..." bridge.]
+- [Diet OR enteral tube feeds + fwf X ml q4h]
+- Stress ulcer prophylaxis: PPI
+- Continue bowel regimen
+- [f/u KUB / Trend LFTs / GI or Surgery recs / SLP]
+
+ID
+[Fever curve status, e.g., Fevers, resolving]
+[Confirmed or suspected infection(s) + organism/resistance]
+[Septic shock 2/2 above / Leukocytosis / MDR history]
+[Tmax, WBC/ANC context, source workup, full positive + negative culture/antigen ledger, completed abx dates + "Will..." bridge.]
+- [Active antimicrobial(s) + dose + EOT M/D]
+- [f/u pending blood/urine/sputum cultures w/ collection date &amp; hours negative]
+- [F/u ID recs / source control contingency]
+
+Renal, fluid, and electrolytes
+[AKI - status &amp; etiology (e.g., AKI 2/2 ATN / AKI on CKD3 / AKI - resolved)]
+[Acid-base or electrolyte disorder (e.g., HAGMA / Hyponatremia - resolved)]
+[Baseline Cr vs current Cr, etiology, CRRT or diuretic challenge response + "Will..." bridge.]
+- Monitor BMP and UOP
+- [Bladder scan/straight cath if retaining / urine studies contingency]
+
+Endo
+[T2DM (w/ A1c &amp; date) / Steroid-induced hyperglycemia]
+[Hypo- or hyperthyroidism / Adrenal insufficiency / Gout]
+- [Basal + prandial + SSI insulin regimen]
+- [C/w home thyroid med OR stress dose steroids]
+
+Heme/Onc
+[Anemia (AoCD / acute blood loss) / Thrombocytopenia / Coagulopathy / Malignancy]
+[Hgb/Plt/WBC trends, clinical oozing check, HIT/DIC/hemolysis results, Heme/Onc recs.]
+- Monitor CBC
+- Transfuse if Hgb &lt;7 [or &lt;8 if CAD]
+- [VTE prophylaxis status OR holding anticoagulant w/ current Plt count &amp; restart rule]
+
+ICU Bundle:
+Stress ulcer prophylaxis: [PPI / Protonix]
+DVT prophylaxis: [Heparin / Lovenox / Held]
+Nutrition: [NPO / NG Tube / Enteral feeds / Diet]
+MPOA/surrogate decision maker: [Name (relationship)]
+Dispo: [ICU / Pending floor / Pending LTACH + insurance status]
+Prognosis: [Guarded / Fair / Poor]
+
+______________________________________________
+
+HOSPITAL COURSE:
+[Full Name] is a [Age]-year-old [male/female] with PMH of [key conditions w/ EF %, CABG/PCI/device years] who presented with [initial symptoms &amp; shock/respiratory state]. [Past-tense synthesis of admission workup, major complications, procedures, and specialist decisions.] [Dated daily-log tail: On M/D, ...]</pre>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-semibold text-[var(--foreground)]">1B. Pre-Cleaned Personal Epic SmartPhrase Template (Dead Boilerplate Pre-Deleted)</span>
+                <button onclick="copyBlock('raw-epic-template', this)" class="no-print px-2 py-0.5 rounded border border-[var(--border)] text-xs hover:bg-[var(--secondary)]">Copy Epic Template</button>
+              </div>
+              <pre id="raw-epic-template" class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--code-foreground)] font-mono text-xs overflow-x-auto whitespace-pre-wrap">MICU Progress Note
+Date of Service: @TD@
+Reason for ICU admission: ***
+ICU Day: ***
+  Code Status: ***
+
+Major Events in Last 24 Hours:
+- ***
+
+{Please update the HOSPITAL COURSE by clicking this Link 
+This text will disappear when the note is signed:123}
+
+Subjective
+***
+
+Objective
+{Reference links Vitals  |  Intake/Output  |  Vent settings  |
+This text will disappear when the note is signed:123}
+[Keep your existing Objective Vent / {MICU SBT:30032053} / Sedation / Pressors / Lines / {UTMB_IP_RASS_VALUES:10166} / Vitals / I/O / Physical Exam / Labs / Micro / Imaging SmartLinks here]
+
+Assessment &amp; Plan
+{A/P Reference links MAR | Meds |  I/O  |  Vent settings | Glucose trends | Sepsis/Fever |  Lines Avatar | Advance directive |
+This text will disappear when the note is signed:123}
+Neuro
+***
+- ***
+
+Pulmonology
+***
+- ***
+
+Cardiovascular
+***
+- ***
+
+FEN/GI
+***
+- ***
+
+ID
+***
+- ***
+
+Renal, fluid, and electrolytes
+***
+- ***
+
+Endo
+***
+- ***
+
+Heme/Onc
+***
+- ***
+
+ICU Bundle:
+Stress ulcer prophylaxis: {STRESS ULCER PROPHYLAXIS:32045}
+DVT prophylaxis: {DVT PROPHYLAXIS:32046}
+Nutrition: {NUTRITION:32047}
+MPOA/surrogate decision maker: ***
+Dispo: ***
+Prognosis: ***</pre>
+            </div>
+          </div>
+        </details>
+
+        <!-- SECTION 2 -->
+        <details id="sec-2" open class="playbook-section bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <summary class="cursor-pointer px-4 py-3 flex items-center justify-between bg-[var(--card)] hover:opacity-90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="chevron transition-transform text-xs text-[var(--muted-foreground)]">&#9654;</span>
+              <span class="text-sm font-bold">Section 2: Pre-Rounding Chart-Check Flow (What Info to Gather)</span>
+            </div>
+            <span class="text-xs text-[var(--muted-foreground)]">5-minute Epic sequence</span>
+          </summary>
+          <div class="px-4 pb-4 pt-2 border-t border-[var(--card-border)] space-y-3 text-xs leading-relaxed">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+                    <th class="py-1.5 pr-3 font-semibold">Step</th>
+                    <th class="py-1.5 pr-3 font-semibold">Where in Epic</th>
+                    <th class="py-1.5 font-semibold">Exact Anchors to Jot Down</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[var(--card-border)]">
+                  <tr>
+                    <td class="py-2 pr-3 font-medium">1. Overnight Pass</td>
+                    <td class="py-2 pr-3 text-[var(--muted-foreground)]">Sign-out, Rapid/Transfer, Nursing &amp; Scope notes</td>
+                    <td class="py-2">Floor BP lows, airway/BiPAP escalations, completed scopes/cath, nursing red flags (cough reflex, agitation), BMs/bleeding, family wishes</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-medium">2. Live MAR &amp; Meds</td>
+                    <td class="py-2 pr-3 text-[var(--muted-foreground)]">Continuous Infusions + Scheduled Meds</td>
+                    <td class="py-2"><strong>Actual running pressor/inotrope/sedation/diuretic rates</strong>, antibiotic start + <strong>EOT dates</strong>, steroids, insulin, held home BP/DOAC meds + why</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-medium">3. Flowsheets &amp; Avatar</td>
+                    <td class="py-2 pr-3 text-[var(--muted-foreground)]">Vitals, Resp, I/O, Lines Avatar</td>
+                    <td class="py-2">24h Tmax, MAP lows, net 24h I/O + hourly UOP, Vent/BiPAP/HFNC &amp; SBT pass/fail, <strong>A-lines, midlines, PICCs, dialysis caths, NG/OG/PEG tubes</strong></td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-medium">4. Lab &amp; Gas Trends</td>
+                    <td class="py-2 pr-3 text-[var(--muted-foreground)]">Results Review</td>
+                    <td class="py-2"><strong>Baseline Cr vs. today's Cr</strong>, K/Mg, Hgb/Plt trajectory, WBC/ANC, LFTs/lactate, latest ABG/VBG (pH / pCO2 / pO2)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-medium">5. Micro, Imaging, Cath</td>
+                    <td class="py-2 pr-3 text-[var(--muted-foreground)]">Micro, Radiology, TTE/RHC, Consults</td>
+                    <td class="py-2">Culture collection dates + hours negative (<code>ng 24h</code>), organisms, viral/urinary Ags, CXR/CT reads, TTE (<code>EF %</code> + RV), RHC (<code>RA/PA/PCWP, CI</code>), specialist recs</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-medium">6. Bundle &amp; Dispo</td>
+                    <td class="py-2 pr-3 text-[var(--muted-foreground)]">Orders + Case Management</td>
+                    <td class="py-2">Code Status sync, GI PPX, VTE PPX (or hold reason), MPOA name/relationship, LTACH/facility insurance appeal deadlines</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-3 rounded border border-[var(--border)] bg-[var(--background)] space-y-1">
+              <div class="font-semibold text-[var(--warning)]">Three Dot-Phrase Blind Spots to Check Manually:</div>
+              <div>1. <strong>Pressors table printing "None"</strong>: Steady continuous bags (e.g., <code>vasopressin 0.03</code>, <code>milrinone</code>, <code>bumex gtt</code>) frequently do not appear in <code>Pressors (last 24 hours)</code> if no bag action fired. Always read the live MAR.</div>
+              <div>2. <strong>Missing access in "Lines:"</strong>: Arterial lines, midlines, feeding tubes, and wounds routinely drop out of <code>Objective -&gt; Lines:</code>. Check the Lines Avatar.</div>
+              <div>3. <strong>Missing RHC hemodynamics in "Imaging:"</strong>: Cardiac cath procedure notes do not auto-pull into 48h Radiology impressions—paste RHC pressures, CI, impression, and plan manually in CCU notes.</div>
+            </div>
+          </div>
+        </details>
+
+        <!-- SECTION 3 -->
+        <details id="sec-3" open class="playbook-section bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <summary class="cursor-pointer px-4 py-3 flex items-center justify-between bg-[var(--card)] hover:opacity-90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="chevron transition-transform text-xs text-[var(--muted-foreground)]">&#9654;</span>
+              <span class="text-sm font-bold">Section 3: Slot-by-Slot Guide, Info Needed &amp; Example Variations</span>
+            </div>
+            <span class="text-xs text-[var(--muted-foreground)]">Top-to-bottom authoring rules</span>
+          </summary>
+          <div class="px-4 pb-4 pt-2 border-t border-[var(--card-border)] space-y-4 text-xs leading-relaxed">
+
+            <div id="sys-top" class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-2">
+              <h3 class="font-bold text-sm">3A. Top Sections &amp; Subjective</h3>
+              <ul class="list-disc pl-4 space-y-1.5">
+                <li><strong>Reason for ICU admission:</strong> 1 acronym to 10-word noun phrase, no period. <em>Variations:</em> Single trigger acronym (<code>SOB</code>, <code>AMS</code>) vs. syndromic sequence (<code>PE s/p Cardiac Arrest and Shock</code>; <code>Syncope, AICD shocks, c/f mixed septic and cardiogenic shock</code>). Optional extra line: <code>Intubation Day: 6</code> when intubated at an outside hospital.</li>
+                <li><strong>Major Events in Last 24 Hours:</strong> 2–4 hyphen bullets (<code>- ...</code>), no periods. Placed <strong>above Subjective</strong> in all MICU notes (kept below Subjective in CCU). <em>Header variants:</em> <code>Major Events in Last 24 Hours:</code> | <code>Last 24 hour events (major events):</code> | <code>24 Hour Events:</code>.</li>
+                <li><strong>Subjective (4 State Templates):</strong>
+                  <ul class="list-disc pl-4 mt-1 space-y-0.5 text-[var(--muted-foreground)]">
+                    <li><em>Intubated &amp; deeply sedated:</em> <code>Patient is intubated and sedated</code></li>
+                    <li><em>Trached &amp; lightly awake:</em> <code>Patient remains intubated via tracheostomy and sedated. Appears comfortable, in no acute distress. Patient with eyes open, responding to some questions.</code></li>
+                    <li><em>Non-intubated, obtunded:</em> <code>Patient is somnolent. Does not respond to commands.</code></li>
+                    <li><em>Awake &amp; verbal:</em> <code>Patient reports feeling well this morning. She does not have SOB. She has been eating well. She reports no loose stools.</code></li>
+                  </ul>
+                </li>
+                <li><strong>Optional Objective Overrides:</strong> <code>Spontaneous Breathing Trial: SAT/SBT in AM</code>; <code>Physical Exam</code> via SmartBlock + <code>Comments: On BIPAP</code> OR 8-line semicolon shorthand (<code>GI: soft; non-tender; non-distended; normoactive bowel sounds</code>).</li>
+              </ul>
+            </div>
+
+            <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-2">
+              <h3 class="font-bold text-sm">3B. Global Organ-System Depth Variations</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <div class="p-2.5 rounded border border-[var(--border)]">
+                  <div class="font-semibold">1. Active ICU System (3-Tier)</div>
+                  <div class="text-[var(--muted-foreground)] mt-0.5">Header &rarr; Stacked Diagnoses &rarr; 4-Beat Narrative Paragraph &rarr; <code>- </code> Action Bullets (0 blank lines).</div>
+                </div>
+                <div class="p-2.5 rounded border border-[var(--border)]">
+                  <div class="font-semibold">2. Stable Chronic System (2-Tier)</div>
+                  <div class="text-[var(--muted-foreground)] mt-0.5">Header &rarr; Stacked Diagnoses &rarr; <code>- </code> Action Bullets (omits narrative paragraph; standard for routine Endo/GI).</div>
+                </div>
+                <div class="p-2.5 rounded border border-[var(--border)]">
+                  <div class="font-semibold">3. Inactive System</div>
+                  <div class="text-[var(--muted-foreground)] mt-0.5">Either omit system header (baseline Neuro / normal Heme) OR write <code>No acute concerns</code> under Renal.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="sys-neuro" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">Neuro / Neuro/Psych</div>
+                <div><strong>Info Needed:</strong> A&amp;O status, RASS goal, encephalopathy/agitation cause (CO2 narcosis, metabolic, dementia, meth/EtOH withdrawal + UDS), CTH result, active sedation drip (Precedex, Propofol/Fentanyl), held neuroleptics (Seroquel, lactulose) + family wishes, PT/OT.</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> Omitted if baseline; 2-line <code>-PT/OT</code> stub; withdrawal watch; or BiPAP-agitation narrative w/ indented sub-bullet.</div>
+              </div>
+
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">Pulmonology / Resp / Respiratory</div>
+                <div><strong>Info Needed:</strong> Hypoxic vs. hypercapnic failure + etiology (edema, pna, PE + PESI, viral), home O2, intubation/BiPAP trigger (WOB, ABG), CXR/CT &amp; pleural pockets, SBT pass/fail or Trach date, vent/BiPAP/HFNC settings (<code>O2 pp</code>), SAT/SBT or PS trials, duoneb/hypersal, antivirals/steroids (<code>EOT</code>), ABG/VBG plan.</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> Placed 1st w/ pasted <code>Order info:</code> vent block vs. placed 2nd w/ standard <code>- </code> vent/O2 bullets.</div>
+              </div>
+            </div>
+
+            <div id="sys-cardio" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">Cardiovascular</div>
+                <div><strong>Info Needed:</strong> Shock differential + SCAI stage, baseline BP, fluid/albumin response, pressor/inotrope arc (dates weaned off + current rates &amp; <code>MAP goal &gt;60</code>), <code>EF %</code> + ICM/NICM, TTE/RHC numbers (CI, PCWP), CAD (CABG/PCI + dates), arrhythmias/ICD settings, anticoagulation (heparin gtt vs Eliquis), diuretics + Strict I&amp;O/fluid limit, held vs continued home meds, Tele, <code>K &gt;4</code> (or <code>&gt;4.5</code>), <code>Mg &gt;2</code>.</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> 2-sentence post-rapid/post-RHC update vs. 10-sentence shock/VT/device summary; full dose bullets vs. bare chronic med lists (<code>-Lipitor</code>, <code>-Plavix</code>).</div>
+              </div>
+
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">FEN/GI / GI</div>
+                <div><strong>Info Needed:</strong> SBO/gastritis/bleed check (OGT output <code>&lt; 450 cc</code>, melena/BRBPR, EGD/ENT scopes), Shock liver/LFT trend, CTAP masses/KUB/small bowel f/t, PEG/NG/Dobhoff status, feed rate + free water flushes (<code>fwf 350ml q4h</code>), PPI, bowel regimen/BMs, GI/Surgery/SLP.</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> Full narrative + 6 bullets for SBO/bleed/shock liver vs. 2-bullet no-narrative stub for chronic dysphagia/PEG.</div>
+              </div>
+            </div>
+
+            <div id="sys-id" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">ID (Always Placed Right After FEN/GI)</div>
+                <div><strong>Info Needed:</strong> Tmax, WBC/ANC (note steroid leukocytosis), source ranking, <strong>full positive + negative micro/antigen ledger</strong> (blood cx w/ <code>ng 24h</code> or contaminant CoNS, sputum cx, UA/UCx, viral PCR, Legionella/Strep Ag, C. diff, prior ESBL hx), completed abx w/ dates, active abx w/ <code>EOT M/D</code>, pending cx, chest tube contingency.</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> 1-sentence viral summary + EOT bullet vs. full negative-workup paragraph justifying empiric broadening.</div>
+              </div>
+
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">Renal, fluid, and electrolytes / Renal/Lytes</div>
+                <div><strong>Info Needed:</strong> <code>Baseline Cr X now Y</code>, AKI status (<code>resolved</code>, <code>on CKD3</code>, <code>2/2 ATN</code>), HAGMA/Hyponatremia, CRRT or Lasix challenge response, <code>Monitor BMP and UOP</code>, <code>Bladder scan/straight cath if retaining</code>.</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> Full AKI/CRRT narrative vs. 2-line <code>- resolved</code> stack vs. <code>No acute concerns</code>.</div>
+              </div>
+
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">Endo</div>
+                <div><strong>Info Needed:</strong> T2DM (<code>A1c</code> + date) / steroid hyperglycemia, basal + prandial + SSI insulin, thyroid/adrenal meds (levothyroxine, stress dose steroids, or methimazole/prednisone), gout (allopurinol).</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> 1–2 bullet no-narrative block unless active Endocrine consult (e.g., amiodarone thyrotoxicosis).</div>
+              </div>
+
+              <div class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1">
+                <div class="font-bold">Heme/Onc / Heme / Heme/Onc/Other</div>
+                <div><strong>Info Needed:</strong> Anemia (AoCD), thrombocytopenia count, pancytopenia/CLL, oozing sites, DIC/HIT-ab/hemolysis labs, <code>Monitor CBC</code>, explicit transfusion trigger (<code>Hgb &lt;7</code> or <code>&lt;8</code> w/ CAD), Lovenox/heparin hold count &amp; restart rule.</div>
+                <div class="text-[var(--muted-foreground)]"><strong>Variations:</strong> Merged w/ Other on CLL patient vs. 1-line stable anemia stub vs. active oozing/HIT-negative block vs. omitted.</div>
+              </div>
+            </div>
+
+            <div id="sys-footer" class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] space-y-1.5">
+              <h3 class="font-bold text-sm">3C. Footer Checklist &amp; Hospital Course Variations</h3>
+              <div><strong>4 Footer Variants:</strong> (1) Standard MICU (<code>ICU Bundle:</code> / <code>ICU Issues:</code> w/ Nutrition, VTE PPX, GI PPX, MPOA, detailed LTACH <code>Dispo</code>); (2) Compact <code>Other:</code> w/ manual <code>Lines: CVC, PIV x3, A-line</code>; (3) <code>CCU CHECKLIST:</code> 9-line ALL-CAPS block (<code>CODE</code>, <code>VENT</code>, <code>FEEDING/FLUIDS</code>, <code>ANALGESIA</code>, <code>SEDATION</code>, <code>THROMBOPROPHYLAXIS</code>, <code>ULCER (STRESS) PPX</code>, <code>GLYCEMIC CONTROL</code>, <code>SBT/SEDATION VACATION</code>); (4) Minimal <code>Prognosis: Guarded</code>.</div>
+              <div><strong>HOSPITAL COURSE:</strong> Always opens with <code>[Full Name] is a [Age]-year-old [male/female] with PMH of [...] who presented with [...]</code>. First ~70% is polished past-tense narrative; final ~30% shifts to short, date-stamped daily log fragments (<code>Weaned pressors off on M/D. ... On M/D, furosemide initiated.</code>).</div>
+            </div>
+
+          </div>
+        </details>
+
+        <!-- SECTION 4 -->
+        <details id="sec-4" class="playbook-section bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <summary class="cursor-pointer px-4 py-3 flex items-center justify-between bg-[var(--card)] hover:opacity-90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="chevron transition-transform text-xs text-[var(--muted-foreground)]">&#9654;</span>
+              <span class="text-sm font-bold">Section 4: Visual Formatting, Whitespace &amp; Punctuation Rules</span>
+            </div>
+            <span class="text-xs text-[var(--muted-foreground)]">Zero-blank-line stacking &amp; bullets</span>
+          </summary>
+          <div class="px-4 pb-4 pt-2 border-t border-[var(--card-border)] space-y-3 text-xs leading-relaxed">
+            <ul class="list-disc pl-4 space-y-1">
+              <li><strong>Zero-Blank-Line Rule Inside Organ Systems:</strong> Stack <code>System Header</code> &rarr; <code>Diagnosis Stack</code> &rarr; <code>Narrative Paragraph</code> &rarr; <code>- Action Bullets</code> flush on consecutive lines. Leave <strong>1 blank line</strong> between organ systems.</li>
+              <li><strong>Diagnosis Stack:</strong> Sentence case, no <code>#</code>, no bullets, no trailing periods. Attach status via comma (<code>SBO, resolving</code>) or spaced hyphen (<code>AKI - resolved</code>), etiology via <code>2/2</code> / <code>2/2 above</code>, and differentials via <code>c/f</code>, <code>vs</code>, <code>&gt;</code>.</li>
+              <li><strong>Bullets &amp; Nesting:</strong> ASCII <code>- </code> (or tight <code>-Text</code> in CCU), no periods (~98%). Use <strong>semicolons</strong> for order + titration (<code>- HFNC; wean as tolerated</code>), <strong>commas</strong> for inline lab reasons (<code>- holding lovenox with plt 58, will resume once improved</code>), and <strong>12–15 leading spaces + <code>- </code></strong> for nested sub-bullets.</li>
+              <li><strong>Dates &amp; Drips:</strong> Current stay = <code>M/D</code> (<code>M/D</code>); recent test anchors = <code>M/D/YY</code> (<code>M/D/YY</code>); PMH = <code>(YYYY)</code> or <code>M/YYYY</code>. Standard drips often omit units (<code>Bumex gtt at 1</code>, <code>milrinone 0.375</code>, <code>vasopressin 0.03</code>).</li>
+            </ul>
+            <pre class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--code-foreground)] font-mono text-xs overflow-x-auto">Cardiovascular                                                     &lt;-- Title Case, no colon
+Undifferentiated shock, likely mixed cardiogenic vs septic         &lt;-- No '#', Sentence case, no period
+HFrEF (EF 30-35%, ICM) s/p CRT-D                                   &lt;-- Chronic background w/ specs
+Presents with syncope and multiple ICD shocks. TTE with EF         &lt;-- 0 blank lines; pro-drop + "with"
+20-25% w G2DD. Off pressors since M/D. Furosemide started M/D.  &lt;-- Dated trajectory milestones
+- Continue midodrine 10 mg enteral TID                             &lt;-- 0 blank lines; '- ' prefix, no period
+- K &gt;4.5, Mg &gt;2                                                    &lt;-- Tight inequality
+- continue stress dose steroids                                    &lt;-- Parent bullet
+               - Biopsy deferred until patient stable              &lt;-- Sub-bullet: 12-15 spaces + '- '</pre>
+          </div>
+        </details>
+
+        <!-- SECTION 5 -->
+        <details id="sec-5" class="playbook-section bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <summary class="cursor-pointer px-4 py-3 flex items-center justify-between bg-[var(--card)] hover:opacity-90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="chevron transition-transform text-xs text-[var(--muted-foreground)]">&#9654;</span>
+              <span class="text-sm font-bold">Section 5: Clinical Voice, Elliptical Grammar &amp; Shorthand Lexicon</span>
+            </div>
+            <span class="text-xs text-[var(--muted-foreground)]">Telegraphic ICU English</span>
+          </summary>
+          <div class="px-4 pb-4 pt-2 border-t border-[var(--card-border)] space-y-3 text-xs leading-relaxed">
+            <ul class="list-disc pl-4 space-y-1">
+              <li><strong>Zero First-Person (<code>I</code> / <code>We</code>):</strong> Never write <code>"I will"</code> or <code>"We"</code> in resident notes—use subjectless <code>"Will [verb]..."</code> (<code>Will repeat blood cultures.</code>).</li>
+              <li><strong>Pro-Drop &amp; Copula-Drop:</strong> Drop redundant subjects (<code>Appears comfortable.</code>, <code>Remains neutropenic.</code>) and linking verbs (<code>CTH unremarkable.</code>, <code>Cultures negative.</code>, <code>Hemoglobin stable.</code>).</li>
+              <li><strong>"with" Replaces Verbs:</strong> Write <code>TTE with EF 20-25%</code> and <code>CXR with pulmonary edema</code> instead of <em>showed/demonstrated</em>.</li>
+            </ul>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+                    <th class="py-1.5 pr-3 font-semibold">Shorthand</th>
+                    <th class="py-1.5 pr-3 font-semibold">Meaning</th>
+                    <th class="py-1.5 font-semibold">Context Rule</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[var(--card-border)]">
+                  <tr><td class="py-1.5 pr-3 font-mono font-semibold">C/w vs c/w</td><td class="py-1.5 pr-3">Continue with vs consistent with</td><td class="py-1.5">Bullet start (<code>- C/w Merrem</code>) = Continue with; prose (<code>CT c/w pna</code>) = consistent with</td></tr>
+                  <tr><td class="py-1.5 pr-3 font-mono font-semibold">c/f</td><td class="py-1.5 pr-3">Concern for</td><td class="py-1.5">Used in both problem stacks and clinical prose</td></tr>
+                  <tr><td class="py-1.5 pr-3 font-mono font-semibold">2/2 / 2/2 above</td><td class="py-1.5 pr-3">Secondary to</td><td class="py-1.5"><code>2/2 above</code> points directly to the diagnosis line immediately preceding it</td></tr>
+                  <tr><td class="py-1.5 pr-3 font-mono font-semibold">EOT &lt;date&gt;</td><td class="py-1.5 pr-3">End of Therapy date</td><td class="py-1.5">Preferred antimicrobial stop notation (<code>Rocephin 2 g EOT M/D</code>)</td></tr>
+                  <tr><td class="py-1.5 pr-3 font-mono font-semibold">O2 pp / CTM</td><td class="py-1.5 pr-3">O2 per protocol / Continue to monitor</td><td class="py-1.5">Standard RT weaning and watchful-waiting plan bullets</td></tr>
+                  <tr><td class="py-1.5 pr-3 font-mono font-semibold">fwf / ng 24h</td><td class="py-1.5 pr-3">Free water flushes / No growth at 24h</td><td class="py-1.5">Tube-feed hydration (<code>fwf 350ml q4h</code>) and pending blood culture tracking</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <!-- SECTION 6 -->
+        <details id="sec-6" class="playbook-section bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <summary class="cursor-pointer px-4 py-3 flex items-center justify-between bg-[var(--card)] hover:opacity-90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="chevron transition-transform text-xs text-[var(--muted-foreground)]">&#9654;</span>
+              <span class="text-sm font-bold">Section 6: Day 2+ Copy-Forward Hygiene &amp; Auto-Populated Dot-Phrases</span>
+            </div>
+            <span class="text-xs text-[var(--muted-foreground)]">5-point pre-sign scrub</span>
+          </summary>
+          <div class="px-4 pb-4 pt-2 border-t border-[var(--card-border)] space-y-2 text-xs leading-relaxed">
+            <div class="font-semibold">5-Point Copy-Forward Scrub Before Signing:</div>
+            <ol class="list-decimal pl-4 space-y-1">
+              <li><strong>Cross-System Med Purge:</strong> When stopping an antibiotic or drip in one section (e.g., <code>meropenem completed M/D</code> in ID), scrub stale <code>"still on merrem"</code> text from Heme, Pulm, or Cardio.</li>
+              <li><strong>Convert Relative Words to M/D Dates:</strong> Replace <code>"today"</code>, <code>"yesterday"</code>, and <code>"this morning"</code> with explicit dates (<code>on M/D</code>).</li>
+              <li><strong>Rotate Major Events:</strong> Move yesterday's 24h bullets into the relevant organ-system narrative and <code>HOSPITAL COURSE</code> tail, then write fresh 24h events.</li>
+              <li><strong>Sync Code Status:</strong> Match manual footer Code Status to the live top order (<code>Full</code> vs <code>DNR</code>).</li>
+              <li><strong>Refresh Inline Hold Numbers:</strong> Update stale platelet/creatinine values inside held-med bullets (<code>now plt 58</code>).</li>
+            </ol>
+            <div class="pt-2 text-[var(--muted-foreground)]">
+              <strong>Auto-Populated Fields to Ignore:</strong> Date of Service, ICU Day, top Code Status, Vent Settings &amp; airway LDA days, Sedation/Pressor MAR logs, Lines, Vitals, 24h I/O, 24h/48h Lab grids, Microbiology table, 48h Imaging impressions, SmartLists (<code>{MICU SBT}</code>, <code>{RASS}</code>, <code>{ICU Bundle}</code>), vanishing <code>{:123}</code> UI links, and deleted <code>{:300000123}</code> DocuAid CDI blocks.
+            </div>
+          </div>
+        </details>
+
+        <!-- SECTION 7 -->
+        <details id="sec-7" open class="playbook-section bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <summary class="cursor-pointer px-4 py-3 flex items-center justify-between bg-[var(--card)] hover:opacity-90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="chevron transition-transform text-xs text-[var(--muted-foreground)]">&#9654;</span>
+              <span class="text-sm font-bold">Section 7: Copy-Paste Bot System Instructions</span>
+            </div>
+            <span class="text-xs text-[var(--muted-foreground)]">Ready for LLM system prompt</span>
+          </summary>
+          <div class="px-4 pb-4 pt-2 border-t border-[var(--card-border)] space-y-2 text-xs leading-relaxed">
+            <div class="flex items-center justify-between">
+              <span class="text-[var(--muted-foreground)]">Drop this directly into your bot's system instructions:</span>
+              <button onclick="copyBlock('raw-bot-prompt', this)" class="no-print px-2.5 py-1 rounded bg-[var(--primary)] text-[var(--primary-foreground)] font-medium hover:opacity-90">Copy Bot Prompt</button>
+            </div>
+            <pre id="raw-bot-prompt" class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--code-foreground)] font-mono text-xs overflow-x-auto whitespace-pre-wrap">You are an ICU clinical documentation assistant drafting the manual sections of a MICU or CCU Progress Note (plus the daily Hospital Course update).
+
+### 1. SCOPE &amp; PRE-CLEANED TEMPLATE RULES
+- Output ONLY the manually authored sections: `Reason for ICU admission`, `Major Events in Last 24 Hours`, `Subjective`, Organ-System `Assessment &amp; Plan`, `ICU Bundle` (or `CCU CHECKLIST`), and `HOSPITAL COURSE`.
+- Do NOT output auto-populated EHR flowsheet tables (DOS, ICU Day, Code Status, Vent table, MAR logs, Lines table, Vitals, 24h I/O, 24h/48h Labs, Micro table, or 48h Radiology impressions).
+- Do NOT output CDI/DocuAid blocks, `#` prefixes before diagnoses, the A&amp;P patient one-liner stub, or rigid `- nutrition:` / `- cultures:` / `- antibiotic day #:` labels.
+- Missing data rule: Never invent clinical numbers, dates, drips, or consult recs. Insert Epic's wildcard `***` whenever a required anchor is missing so the physician can F2-jump to it.
+- Source-of-truth rule: Trust active clinical notes, MAR drip mentions, and sign-out over `Pressors: None` or incomplete `Lines:` pulls.
+
+### 2. LAYOUT &amp; WHITESPACE RULES
+- Place `Major Events in Last 24 Hours:` ABOVE `Subjective`.
+- Order organ systems: `Neuro` -&gt; `Pulmonology` -&gt; `Cardiovascular` -&gt; `FEN/GI` -&gt; `ID` -&gt; `Renal, fluid, and electrolytes` -&gt; `Endo` -&gt; `Heme/Onc`.
+- Leave 1 blank line between major sections and 1 blank line between organ systems.
+- ZERO BLANK LINES inside an organ system: stack Header, Diagnosis lines, Narrative Paragraph, and `- ` Action Bullets flush on consecutive lines.
+- System depth: Use 3-Tier (Diagnoses + Narrative + Bullets) for active ICU issues; 2-Tier (Diagnoses + Bullets, no narrative) for stable chronic issues (e.g., routine Endo); omit inactive baseline systems or write `No acute concerns` under Renal.
+
+### 3. SECTION &amp; LAYER FORMULAS
+- `Reason for ICU admission:`: 1 acronym to 10-word noun phrase, no period.
+- `Major Events in Last 24 Hours:`: 2-4 `- ` bullets, no periods (escalations, drip/rhythm shifts, scopes/cath, acute lab drops + workup, new positive cultures, or critical LTACH hurdles).
+- `Subjective`: 1-4 short present-tense sentences matched to arousal (`Patient is intubated and sedated` | `Appears comfortable, in no acute distress...` | `Patient is somnolent. Does not respond to commands.` | `"Patient reports..."`).
+- Diagnosis Stack: Plain lines, Sentence case, no `#` or periods, sorted acute -&gt; chronic. Use inline `2/2`, `2/2 above`, `c/f`, `vs`, `&gt;`, comma/hyphen status (`SBO, resolving`, `AKI - resolved`), and parenthetical specs (`HFrEF (EF 30-35%, ICM)`).
+- Narrative Paragraph (3-7 clipped sentences): (1) Baseline/presentation anchor -&gt; (2) Key echo/cath/imaging/micro &amp; specialist recs -&gt; (3) Differential weighing &amp; dated milestones (`Off pressors since M/D`) -&gt; (4) Closing `"Will..."` bridge.
+- Action Bullets (`- `): No trailing periods. Use `;` to pair order + parameter (`- HFNC; wean as tolerated`) and `,` for inline hold reasons (`- holding lovenox with plt 58, will resume once improved`). Indent nested sub-bullets with 14 spaces + `- `. Always include explicit targets (`RASS`, `MAP goal &gt;60`, `K &gt;4, Mg &gt;2`, `fwf`, `EOT M/D`, `ng 24h`, `Baseline Cr X now Y`, `Transfuse if Hgb &lt;7` or `&lt;8`).
+- `HOSPITAL COURSE:`: Start with `[Full Name] is a [Age]-year-old [male/female] with PMH of [...] who presented with [...]`. Follow with formal past-tense synthesis, ending with dated daily-log sentences (`On M/D, ...`).
+
+### 4. VOICE, SHORTHAND, &amp; COPY-FORWARD SANITIZATION
+- Never use `I` or `we`. Use subjectless `"Will..."`, drop redundant subjects (`Appears comfortable.`, `Remains neutropenic.`), replace `"showed/has"` with `"with"` (`TTE with EF 25%`, `CXR with edema`), and drop filler `"is/was"` (`CTH unremarkable.`, `Cultures negative.`).
+- Shorthand: `C/w` in bullets = Continue with; `c/w` in prose = consistent with; `c/f`, `2/2`, `s/p`, `f/u`, `EOT`, `O2 pp`, `CTM`, `fwf`, `ng 24h`.
+- When updating a prior note: purge stopped antibiotics/drips across ALL organ systems, convert `"today/yesterday"` from prior days into `M/D` dates, rotate yesterday's `Major Events` into A&amp;P + `HOSPITAL COURSE` tail, sync `Code Status`, and update inline lab hold numbers.</pre>
+          </div>
+        </details>
+
+      </div>
+
+      <!-- RAW MARKDOWN VIEW CONTAINER -->
+      <div id="mdContainer" class="hidden bg-[var(--card)] border border-[var(--border)] rounded-lg p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-[var(--foreground)]">Unified Master Markdown Source</span>
+          <button onclick="copyFullMarkdown(this)" class="px-2.5 py-1 rounded text-xs bg-[var(--primary)] text-[var(--primary-foreground)] font-medium">Copy All Markdown</button>
+        </div>
+        <pre id="fullMarkdownPre" class="p-3 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--code-foreground)] font-mono text-xs overflow-x-auto whitespace-pre-wrap leading-relaxed"></pre>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    function buildUnifiedMarkdown() {
+      const scaffold = document.getElementById('raw-scaffold').innerText;
+      const epicTpl = document.getElementById('raw-epic-template').innerText;
+      const botPrompt = document.getElementById('raw-bot-prompt').innerText;
+      return `# ICU Progress Note Master Playbook (MICU & CCU)
+
+## Section 1: Pure Manual Scaffold & Pre-Cleaned Epic Template
+
+### 1A. Pure Manual Note Scaffold (No Auto-Populated Fields)
+\`\`\`text
+${scaffold}
+\`\`\`
+
+### 1B. Pre-Cleaned Personal Epic SmartPhrase Template
+\`\`\`text
+${epicTpl}
+\`\`\`
+
+---
+
+## Section 2: Pre-Rounding Chart-Check Flow
+1. **Overnight Pass** (Sign-out, Rapid/Transfer, Nursing, Scopes): Floor BP lows, escalations, completed scopes/cath, nursing red flags, BMs/bleeding, family wishes.
+2. **Live MAR & Meds**: Actual running pressor/inotrope/sedation/diuretic rates (never trust \`Pressors: None\`), antibiotic start + \`EOT\` dates, steroids, insulin, held home meds + why.
+3. **Flowsheets & Avatar**: 24h Tmax, MAP lows, net 24h I/O + hourly UOP, Vent/BiPAP/HFNC & SBT pass/fail, Avatar check for A-lines, midlines, PICCs, dialysis caths, feeding tubes.
+4. **Lab & Gas Trends**: Baseline Cr vs today's Cr, K/Mg, Hgb/Plt trajectory, WBC/ANC, LFTs/lactate, latest ABG/VBG.
+5. **Micro, Imaging, Cath & Consults**: Culture dates + hours negative (\`ng 24h\`), organisms, viral/urinary Ags, CXR/CT, TTE (\`EF %\` + RV), RHC (\`RA/PA/PCWP, CI\` — paste manually in CCU), specialist recs.
+6. **Bundle & Dispo**: Code Status sync, GI PPX, VTE PPX (or hold reason), MPOA name/relationship, LTACH/insurance status.
+
+---
+
+## Section 3: Slot-by-Slot Guide, Info Needed & Example Variations
+- **Reason for ICU admission**: 1 acronym (\`SOB\`, \`AMS\`) to 10-word sequence (\`PE s/p Cardiac Arrest and Shock\`), no period.
+- **Major Events in Last 24 Hours**: 2-4 \`- \` bullets above \`Subjective\` in MICU (below in CCU), no periods.
+- **Subjective**: 1-4 short present-tense sentences matched to arousal (intubated/sedated vs trached/awake vs somnolent vs awake/verbal).
+- **Organ-System Depth**: 3-Tier (Diagnoses + Narrative + Bullets) for active ICU issues; 2-Tier (Diagnoses + Bullets) for stable chronic issues; omit inactive systems or write \`No acute concerns\` under Renal.
+- **Organ Order**: \`Neuro\` -> \`Pulmonology\` -> \`Cardiovascular\` -> \`FEN/GI\` -> \`ID\` (always right after GI) -> \`Renal, fluid, and electrolytes\` -> \`Endo\` -> \`Heme/Onc\`.
+- **Footer Variants**: Standard MICU \`ICU Bundle:\` / \`ICU Issues:\` | Compact \`Other:\` w/ manual \`Lines:\` | ALL-CAPS \`CCU CHECKLIST:\` | \`Prognosis: Guarded\`.
+- **HOSPITAL COURSE**: Full one-liner + polished past-tense body (~70%) + dated daily-log tail (~30%, \`On M/D, ...\`).
+
+---
+
+## Section 4: Visual Formatting, Whitespace & Punctuation Rules
+- **Zero blank lines inside an organ system**: Header -> Diagnosis Stack -> Narrative Paragraph -> \`- \` Action Bullets sit flush on consecutive lines; 1 blank line between organ systems.
+- **Diagnosis Stack**: Plain lines, Sentence case, no \`#\`, no bullets, no periods. Use inline \`2/2\`, \`2/2 above\`, \`c/f\`, \`vs\`, \`>\`, comma/hyphen status (\`SBO, resolving\`, \`AKI - resolved\`), and parenthetical specs.
+- **Bullets**: \`- \` prefix, no trailing periods (~98%). Semicolons join order + titration (\`- HFNC; wean as tolerated\`); commas join inline lab reasons; nested sub-bullets use 12-15 leading spaces + \`- \`.
+
+---
+
+## Section 5: Clinical Voice, Grammar & Shorthand
+- Zero first-person (\`I\` / \`we\`); use subjectless \`"Will [verb]..."\`.
+- Drop redundant subjects (\`Appears comfortable.\`) and filler \`is/was\` (\`CTH unremarkable.\`, \`Cultures negative.\`).
+- Replace \`showed/has\` with \`with\` (\`TTE with EF 20-25%\`, \`CXR with edema\`).
+- Shorthand: \`C/w\` in bullets = Continue with; \`c/w\` in prose = consistent with; \`c/f\` = concern for; \`2/2\` = secondary to; \`EOT\` = End of Therapy date; \`O2 pp\` = O2 per protocol; \`CTM\` = Continue to monitor; \`fwf\` = free water flushes; \`ng 24h\` = no growth at 24h.
+
+---
+
+## Section 6: Day 2+ Copy-Forward Scrub List
+1. Purge stopped antibiotics/drips across ALL organ systems.
+2. Convert \`today\` / \`yesterday\` into explicit \`M/D\` dates.
+3. Rotate yesterday's \`Major Events\` into A&P + \`HOSPITAL COURSE\` tail.
+4. Sync manual footer \`Code Status\` with live top order.
+5. Refresh inline platelet/creatinine hold numbers.
+
+---
+
+## Section 7: Copy-Paste Bot System Instructions
+\`\`\`markdown
+${botPrompt}
+\`\`\`
+`;
+    }
+
+    document.getElementById('fullMarkdownPre').textContent = buildUnifiedMarkdown();
+
+    function setViewMode(mode) {
+      const rich = document.getElementById('richContainer');
+      const md = document.getElementById('mdContainer');
+      const btnRich = document.getElementById('btnRich');
+      const btnMd = document.getElementById('btnMd');
+      if (mode === 'markdown') {
+        rich.classList.add('hidden');
+        md.classList.remove('hidden');
+        btnMd.className = 'px-3 py-1 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
+        btnRich.className = 'px-3 py-1 rounded text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]';
+      } else {
+        md.classList.add('hidden');
+        rich.classList.remove('hidden');
+        btnRich.className = 'px-3 py-1 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
+        btnMd.className = 'px-3 py-1 rounded text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]';
+      }
+    }
+
+    function toggleAllDetails(openState) {
+      document.querySelectorAll('#richContainer details').forEach(d => { d.open = openState; });
+    }
+
+    function jumpTo(sectionId, subId) {
+      setViewMode('rich');
+      const sec = document.getElementById(sectionId);
+      if (sec) sec.open = true;
+      const target = document.getElementById(subId || sectionId);
+      if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+    }
+
+    function filterSections(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll('.playbook-section').forEach(sec => {
+        if (!q) {
+          sec.classList.remove('hidden');
+          return;
+        }
+        const match = sec.innerText.toLowerCase().includes(q);
+        sec.classList.toggle('hidden', !match);
+        if (match) sec.open = true;
+      });
+    }
+
+    function flashBtn(btn, label) {
+      if (!btn) return;
+      const orig = btn.innerHTML;
+      btn.textContent = label || 'Copied!';
+      setTimeout(() => { btn.innerHTML = orig; }, 1400);
+    }
+
+    function copyBlock(id, btn) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => flashBtn(btn, 'Copied!'));
+    }
+
+    function copyFullMarkdown(btn) {
+      const text = document.getElementById('fullMarkdownPre').textContent;
+      navigator.clipboard.writeText(text).then(() => flashBtn(btn, 'Copied Full .md!'));
+    }
+
+    function expandAndPrint() {
+      setViewMode('rich');
+      toggleAllDetails(true);
+      setTimeout(() => window.print(), 100);
+    }
+  </script>
+</body>
+</html>

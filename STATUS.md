@@ -20,9 +20,9 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 | Directory | Current Contents | Maintained By |
 | :--- | :--- | :--- |
 | [`context/`](./context/) | Ready for standing user context, preferences, and house styles | All LLMs |
-| [`knowledge/`](./knowledge/) | Ready for clinical references, protocols, and research syntheses | All LLMs |
+| [`knowledge/`](./knowledge/) | [`knowledge/micu/`](./knowledge/micu/) — Prep guide, rounding columns, Initial H&P + Progress Note playbooks (Markdown + interactive HTML), practical writing guide, manual scaffold, template/style/chart-check specs | All LLMs |
 | [`learning/`](./learning/) | [`learning/notebooklm/`](./learning/notebooklm/) scaffold + templates (`README.md`, `videos.md`, `audios.md`, `mindmaps.md`) | All LLMs |
-| [`prompts/`](./prompts/) | Ready for system prompts, templates, and assistant instructions | All LLMs |
+| [`prompts/`](./prompts/) | [`micu-dotflows/`](./prompts/micu-dotflows/), [`micu-progress-note-bot-and-template.md`](./prompts/micu-progress-note-bot-and-template.md), [`micu-smartphrases/`](./prompts/micu-smartphrases/), [`micu-doximity-code-scribe.md`](./prompts/micu-doximity-code-scribe.md) | All LLMs |
 | [`skills/`](./skills/) | Ready for portable `SKILL.md` skills shared across agents | All LLMs |
 | [`projects/`](./projects/) | [`command-board/`](./projects/command-board/) — Visual multi-LLM command board (radial infinite canvas) + zero-cost local bridge (`projects/command-board/bridge/`) | All LLMs |
 | [`inbox/`](./inbox/) | Staging area for initial imports (`inbox/codex/`, `inbox/claude/`, etc.) | All LLMs |
@@ -47,6 +47,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 | Date | Agent | Branch / PR | Summary |
 | :--- | :--- | :--- | :--- |
+| 2026-11-16 | Gemini / Antigravity | `gemini/micu-antigravity-import` | Imported all remaining de-identified MICU artifacts created in Antigravity: standalone Progress Note Master Playbook (`.md` + interactive `.html`), practical note-writing guide, manual note scaffold, bot prompt + pre-cleaned Epic SmartPhrase template, `.NAVICUBASE` ICU daily checklist + SmartLists (`prompts/micu-smartphrases/`), and Doximity Scribe `ICU Code` self-auditing template (`prompts/micu-doximity-code-scribe.md`). Confirmed `Initial_HP_Master_Playbook.md` is already Sections 1–8 of `knowledge/micu/micu-hp-and-progress-playbook.md`. |
 | 2026-11-16 | Codex | `codex/micu-order-panels-checkpoint` | Saved PHI-free Epic preference configuration inventory and continuation report in `projects/micu-order-panels/`. Records exact saved names, observed defaults, local catalog IDs, missing components and validation limits. Does not claim full guide implementation. |
 | 2026-11-16 | Claude | `claude/micu-deid` | Added four de-identified MICU note-writing references to `knowledge/micu/` (playbook, template analysis, style spec, chart-checking guide). |
 | 2026-11-16 | Claude | `claude/micu-import` | Imported MICU material: `skills/micu-chart-check/`, `prompts/micu-dotflows/`, `knowledge/micu/` (prep guide, rounding columns), `projects/micu-anki/`. Note-derived MICU files held back until de-identified. |
