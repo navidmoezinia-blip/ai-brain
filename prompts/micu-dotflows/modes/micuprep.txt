@@ -1,0 +1,26 @@
+DOTFLOW .micuprep - MICU PRE-ROUND PREPARATION
+BEFORE ARRIVAL: chart-only preparation from supplied records, before the resident reaches the hospital. No assumed patient encounter. Complete chart-derived synthesis now; queue bedside checks for later. After .micuupdate, refresh only changed priorities unless asked for the full guide. Private prep, not chart documentation. Compare the latest H&P/progress-note plan with current orders, MAR/infusions, results and clinical observations. Identify what changed, what was actually done, what remains unverified, and new problems outside yesterday's list. Use the whole relevant supplied case, not a drug log alone.
+
+Print these bold headers in order: SUMMARY, INTERVAL EVENTS, CHECK IN CHART, PROBLEMS TO DISCUSS, PATIENT UPDATE, QUESTIONS, EXAM. SUMMARY comes first; show Anchor briefly there. Aim for one scannable screen; expand for consequential instability, never drop an important item to meet a cap. Empty optional sections may be omitted. No admin cleanup, tables, ORDER NOW/LIKELY ORDERS or RED FLAGS section.
+
+SUMMARY
+Brief orientation: admission reason, current trajectory, respiratory/hemodynamic support and the main decision keeping the patient in ICU. Prior course is dated context. Prioritize unresolved immediate risk.
+
+INTERVAL EVENTS
+Usually 2-4 concise bullets, more if clinically necessary. Major event -> documented intervention -> response/reassessment; omit undocumented links. A quiet-night statement requires overnight-source support. General timing when the verified window permits; exact times when sequence affects a decision. Include consequential procedures/results, support changes, nursing escalation, refusals, device issues or disposition changes. Consultant involvement is qualitative; detailed recommendations go under the decision they affect. No Consults, MAR, Given despite hold, Insulin or Devices display blocks. No routine lab/administration inventory. Brief antimicrobial/course tracking when useful, with verified administration day and plan-derived end; actual relevant PRN dose/route/count. Partial MAR permits only a labeled covered-period subtotal, never a full-day zero.
+
+CHECK IN CHART
+Most consequential verification first. Each line: what to verify + discrepancy/finding + why it changes care. Check prescribed vs delivered support, infusion rates/units, delayed/held/refused time-critical therapy, pending vs resulted specimens, allergy/dose/monitoring conflicts, unimplemented care-changing recommendations only when sources establish the gap, missed procedures vs future/pending work, incomplete sources. Date both sides of true conflicts. Current high-risk exposure may justify review of an older known risk. Routine pending results are not chase tasks.
+Select relevant MICU domains: airway/intubation chronology; vent settings and gas type/time with contemporaneous support; sedation/analgesia and observed vs target RASS; documented SAT/SBT readiness, trial and barriers; pressor/inotrope trajectory with patient-specific target/perfusion; UOP/net balance with exact interval and renal support; infection/source control and antimicrobial match; feeding tolerance; glycemic events; anticoagulation/bleeding; bowel/bladder/skin/mobility; device need; code/GOC constraints. Selective domains, not inventories; external urine device is not indwelling.
+
+PROBLEMS TO DISCUSS
+Prioritized decisions: current problem + deciding evidence + conditional option + patient-specific why. Include de-escalation when supported, not automatically. Reasoned observation is an option. Proposals remain distinct from adopted care. Numeric doses/thresholds only when verified. A measurable contingency may be proposed when supported; do not imply it was ordered. Use OpenEvidence for the specific uncertain decision, not an unrelated literature dump.
+
+PATIENT UPDATE
+Optional script: verified results/current support and documented decisions or topics for rounds; never infer today's accepted plan from yesterday's plan. Adapt to communication/cognition; a possible family update is a script, not a completed conversation. No unsupported prognosis or discharge promise.
+
+QUESTIONS
+About six or fewer high-yield patient/collateral questions, prioritizing decisions that could change today. One main question per bullet; useful answer-dependent follow-ups nested. Actual patient-facing wording; retain onset, severity, laterality and response details that matter. For noncommunicative patients adapt to meaningful yes/no, surrogate or bedside-team questions with addressee clear; no impossible verbal questions. Skip already-answered facts unless changed/conflicting. Maneuvers belong in EXAM; chart lookups above.
+
+EXAM
+Relevant organ-system headings with one concrete finding/check per nested bullet: note-style question prompts, not broad labels or assumed normal findings. Prioritize perfusion, arousal/focal findings, respiratory effort/synchrony, volume, abdominal/source findings, bleeding and devices as the case warrants. Prior findings may be dated comparators. An exam target is not a performed finding. Preserve important qualifiers when shortening. No unvalidated maneuver or universal escalation threshold.

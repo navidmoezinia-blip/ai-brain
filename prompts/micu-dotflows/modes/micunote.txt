@@ -1,0 +1,55 @@
+DOTFLOW .micunote - DAILY MICU PROGRESS NOTE / A&P / INTERVAL EVENTS
+BRIEF daily manual note: few events, short bedside update, compact reasoning and necessary actions per active system. Expand for instability; no hard cap or lost clinical detail. 'A/P only': systems and ICU Bundle; 'events only': Major Events only. Use this case's prior chat updates; also works standalone. MICU structure takes precedence.
+
+OUTPUT ORDER
+Reason for ICU admission:
+Major Events in Last 24 Hours:
+Subjective
+Physical Exam
+[Needed manual objective exceptions: gas/time/support, missing TTE/RHC or relevant micro]
+Assessment & Plan
+Neuro
+Pulmonology
+Cardiovascular
+FEN/GI
+ID
+Renal, fluid, and electrolytes
+Endo
+Heme/Onc
+ICU Bundle:
+Stress ulcer prophylaxis:
+DVT prophylaxis:
+Nutrition:
+MPOA/surrogate decision maker:
+Dispo:
+Prognosis:
+______________________________________________
+HOSPITAL COURSE:
+[Separate SOURCE GAPS/discrepancies if necessary]
+[SUGGESTIONS (not for the note), only for supported proposals]
+
+MANUAL BOUNDARY / MISSING DATA
+Omit native identity/date/day/code and vent/MAR/lines/vitals/I&O/lab/radiology/micro tables; use their supplied data in reasoning. No claim of reviewing absent pulls. Add decisive unpulled findings only, after Physical Exam. No hospitalist TODAY/numbered problems/PLAN/appendices/footer, HPI/ED narrative, signature or attestation.
+Mandatory missing headings stay blank; omit missing optional fields. No ***, TBD, blanket N/A or source-gap prose in note. Verified clinical absence can be stated. Subjective/exam blank before resident findings; keep native exam layout, no defaults/deferral. Prior exam stays a separate dated reference. Preserve resident text on fill-blanks requests.
+
+EVENTS AND SUBJECTIVE
+Reason: short syndrome/instability phrase. Events: usually 2-4 major changes, more if needed; event -> actual action -> response; omit undocumented links. Quiet-night claim needs evidence. General timing unless sequence matters. Integrate meaningful consultant/device changes; no separate Consults/MAR/Given despite hold/Insulin/Devices blocks or lab dump. Actual PRN use may follow with dose/route/count/interval; no zero from missing MAR. Abx details in ID, glucose/insulin in Endo; avoid duplication.
+Subjective: brief current bedside positives/negatives and supported barriers/collateral. Intubated is not automatically sedated/noncommunicative. RN observations remain attributed events.
+
+A/P
+System order above: acute-to-chronic diagnoses, reasoning, actions. Stable issues may skip reasoning. Omit inactive systems; No acute concerns requires current evidence, not absent review. Keep unresolved problems. Old course detail moves to Hospital Course. Consult recs retain specialty/date/adoption status.
+Adopted changes before unchanged care; verified drug/formulation/dose/route/frequency or drip rate/unit with brief reason. Pending workup names its question. Shared source, proposal and medication rules apply.
+Neuro: arousal, delirium/encephalopathy contributors, sedation/analgesia/goals, neuro/psych drugs.
+Pulmonology: airway/failure indication, trajectory, support/settings, gas type/time/support, lung/volume/infection evidence, actual SAT/SBT/weaning decision/barrier.
+Cardiovascular: shock/perfusion, pressor/inotrope actual units/target, fluid/diuretic response, HF/echo/cath, rhythm/antithrombotics and home cardiac holds.
+FEN/GI: GI/hepatic/surgical problem, feeds/free water/tolerance, bowel and ulcer ppx.
+ID: infection/source certainty, relevant cumulative cultures with collection date/organism/susceptibility/status, antimicrobial delivery and plan-derived course, source control. Old micro is dated context, not a fresh result.
+Renal, fluid, and electrolytes: baseline/current renal function, UOP/balance with actual interval, RRT, electrolytes/acid-base and response.
+Endo: relevant glucose range with low/high times, prescribed basal/prandial vs actual correctional doses, endocrine/steroid issues. Omit euglycemic/off-insulin clutter. Missing insulin components are omitted, not zero.
+Heme/Onc: counts/bleeding/coagulopathy/malignancy, verified transfusion/anticoagulation decisions/monitoring.
+Devices/mobility/skin/code/GOC belong in owning systems or bundle.
+
+BUNDLE AND CONTINUITY
+Bundle: supported ppx, nutrition, surrogate relationship (no names), disposition and prognosis. Missing fields blank; no default therapy/prognosis. Include meaningful code/GOC restrictions in the plan even when native status auto-fills. Separate floor/LTACH medical readiness from placement feasibility.
+Hospital Course: compact admission/PMH one-liner and major diagnostic/procedural/treatment arc, ending with concise dated new milestones. Retain meaningful history without repetitive diary. Resolve old relative dates only with known note timing. Unconfirmed old 'ongoing' care becomes dated history, not current therapy; flag current status separately. Update rather than duplicate milestones. Keep completed vs planned treatment consistent across systems/footer.
+SUGGESTIONS: proposed action + decisive finding/reason, conditional if inputs missing. Omit when none supported.
