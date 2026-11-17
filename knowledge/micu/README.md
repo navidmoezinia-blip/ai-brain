@@ -5,6 +5,7 @@
 
 Related material:
 
+- `prompts/micu-doximity-assistant/` — All-in-one Doximity Ask MICU Template + 6 attached source files (`prep`, `admit prep`, `update`, `note`/`ccu note`, `hp`, `check`/`orders`/`oe`, `pres`, `handoff`, `consult`, and safety-gated `code`/`death note`).
 - `prompts/micu-dotflows/` — OpenEvidence DotFlow prompts for MICU prep, notes, presentations and handoffs.
 - `prompts/micu-progress-note-bot-and-template.md` — Bot system prompt + pre-cleaned personal Epic SmartPhrase template for daily MICU/CCU progress notes.
 - `prompts/micu-smartphrases/` — `.NAVICUBASE` ICU daily checklist SmartPhrase, `{ICU PROBLEM ADD-ONS}` scaffold, 14 reusable ICU SmartLists, and 12-system physical exam SmartList status.
