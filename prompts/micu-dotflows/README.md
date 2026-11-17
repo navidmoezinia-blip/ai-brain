@@ -9,7 +9,7 @@ follow-through. These are prompt sources, not a chart integration.
 | --- | --- | --- |
 | `.micuprep` | Before arrival, with chart data | Chart-derived summary, changes, verification, rounds decisions, later bedside questions/exam |
 | `.micuupdate` | New results, bedside findings, rounds decisions, action updates | Incorporates facts; receipt by default, delta/refresh only on request |
-| `.micunote` | Daily brief progress note | MICU manual fields; also supports A/P-only and events-only |
+| `.micunote` | Daily progress note | MICU manual fields; also supports A/P-only and events-only |
 | `.micuhp` | Initial encounter/admission/transfer | Chart-based preparation, then supplied bedside findings into exact H&P slots |
 | `.micucheck` | A consequential treatment/diagnostic question or plan audit | Evidence/medication review, current plan vs proposed changes |
 | `.micupres` | Spoken rounds | Brief presentation with support, active decisions and ICU barrier |

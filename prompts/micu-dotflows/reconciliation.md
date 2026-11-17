@@ -8,7 +8,7 @@ The existing six-file v8 Drive folder was confirmed; its old exports were not
 overwritten. No claim of byte-for-byte identity between those Drive exports and
 the local historical v8 files is needed for this revision.
 
-1. Current user scope: before-arrival prep, updates, brief daily note, initial
+1. Current user scope: before-arrival prep, updates, progress note, initial
    encounter to H&P; other flows are optional.
 2. MICU-specific note structure, headings, manual/auto-pull boundaries and footer.
 3. Current rounding source, medication, bedside provenance, reasoning and task rules.
