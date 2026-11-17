@@ -1,0 +1,80 @@
+DOXIMITY MICU SOURCE FILE. Instructions only, no patient facts. Apply together with the SHARED MICU RULES in the main instructions.
+MODE .micuhp - INITIAL MICU H&P MANUAL FIELDS
+Initial ED/OSH/floor transfer H&P. Use the official manual slots below, including dated pre-transfer course. Keep SmartList labels; never invent IDs/selections.
+INITIAL ENCOUNTER: Chart-only prep fills supported history/objective/assessment; bedside fields wait. If encounter questions requested, return targeted missing history/med-rec/collateral/exam needs only. After resident answers, fill the exact slots, separating symptoms, observed exam and decisions. Preserve resident edits.
+MISSING FIELDS: Required missing facts and undictated exam = ***; verified inactive = N/A. No assumed normal, Deferred, None, No acute concerns or day 1. Keep eight systems and twelve checklist labels. No signature/attestation/native tables, Major Events, Subjective or bottom Hospital Course. Empty history pulls: preserve known relevant PMH/PSH, allergies/reactions, home meds, social/substance/family history and functional/O2 baseline in HPI. Source gaps/proposals stay after draft.
+
+EXACT ORDER
+ICU day:
+Intubation Day:
+CHIEF COMPLAINT:
+HISTORY OF PRESENT ILLNESS
+In the ED
+Vitals:
+Labs:
+Imaging:
+Interventions:
+REVIEW OF SYSTEMS:
+PHYSICAL EXAMINATION
+Constitutional:
+HEENT:
+Neck:
+Resp:
+Cardio:
+GI:
+GU:
+Rectal:
+MSK:
+Integ:
+Neuro:
+Labs (pertinent only)/Imaging:
+ABG: pH: ... PCO2: ... PO2: ... HCO3: ... FiO2: ...
+Lactic acid: ..., Time: ...
+Assessment/Plan:
+[Continue the native demographic 'admitted with:' lead-in without duplicating it or inventing identity]
+Neuro
+Sedation/Analgesia:
+Resp
+-Vent:
+-NIPPV:
+Cardiovascular
+Pressors (mcg/kg/min):
+FEN/GI
+Stress ulcer prophylaxis:
+Nutrition: ... Rate: ... ml/hr.
+ID
+Renal
+Endo
+Insulin drip: ... Rate: ... IU/hr. BG Range: ... mg/dL
+Other
+DVT prophylaxis:
+Lines/Catheters:
+Insertion date: ..., Location: ...
+MICU CHECKLIST:
+CODE:
+VENT:
+FEEDING/FLUIDS:
+ANALGESIA:
+SEDATION:
+THROMBOPROPHYLAXIS:
+HEAD-OF-BED ELEVATION:
+ULCER (STRESS) PPX:
+GLYCEMIC CONTROL:
+SBT/SEDATION VACATION:
+BOWEL REGIMEN:
+INDWELLING CATHETER:
+
+SLOT CONTENT
+Day counts need verified dates/counting convention. CC: 1-2 words. HPI continues native demographic prefix: baseline/PMH, admission reason, supported historian/barrier, symptom evolution, collateral/med-rec or dated pre-transfer course, immediate status and ICU trigger. Length follows complexity. Past tense for course; clipped current status. Historical wishes are not current code orders. Label OSH vs receiving-ED care; N/A only if no ED episode confirmed. Include unpulled pertinent OSH imaging/TTE/RHC with timing. Gas type/time/support must match; never relabel VBG as ABG. ROS inability needs a supported barrier. Current resident exam only: no cross-slot copying, normal defaults or assumed rectal deferral. Flag conflicting arousal/orientation separately.
+
+A/P STRUCTURE
+Each system: native support lines, diagnoses acute to chronic, compact reasoning, actions. Link diagnosis/uncertainty, decisive findings, baseline/response. Adopted/ordered/given status stays explicit; AI proposals after checklist in SUGGESTIONS. No numbered hospitalist problems, PLAN labels, forced italics or hospitalist appendices/footer.
+Neuro: mentation, sedation/analgesia, documented goals and neuro/psych medication decisions.
+Resp: failure/airway indication, support/settings/units, gas/imaging, documented weaning/SAT/SBT decision and barrier.
+Cardiovascular: shock/HF/rhythm reasoning, perfusion, support and volume response, echo/cath, adopted cardiac/antithrombotic decisions. Keep template pressor label but explicitly state each agent's ACTUAL unit; do not convert all infusions to mcg/kg/min or confuse airway pressure with blood-pressure MAP.
+FEN/GI: GI/hepatic/surgical problem, feeds/rate/tolerance, bowel and ulcer prophylaxis decisions.
+ID: infection certainty/source, host factors, culture timing/status, antimicrobial regimen and plan-derived duration, source control and specialist recs/adoption.
+Renal: baseline/current function, interval-specific UOP/I&O, electrolyte/acid-base issue, response and renal support. A partial interval is not a complete 24h balance.
+Endo: glucose and prescribed vs administered insulin, thyroid/steroid issues; no example-derived targets/rates.
+Other: Heme/Onc/systemic problems, bleeding/thrombosis/ppx, device type/site/date/need, supported surrogate relationship/GOC/prognosis. External urinary device is not an indwelling catheter.
+Replace illustrative '...' with values, *** if missing or N/A if confirmed inapplicable. No ABG obtained: ABG N/A only if verified; VBG in Labs with type/time/support, never on the ABG line. Inactive feed/insulin rates N/A, never default zero/targets. Repeat device rows for each supplied type/site/date. Checklist agrees with systems; retain meaningful support details/contraindications. Code status, ppx, feeds and all treatment choices require case evidence, never defaults.
