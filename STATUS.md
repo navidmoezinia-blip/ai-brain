@@ -31,6 +31,7 @@ Whenever an agent imports files, adds tools/knowledge, or finishes a branch, rec
 
 ## Active Tasks & Cross-Agent Handoff
 
+- **MICU checkpoint update (2026-11-16):** User reports changing lactate to “lactic acid with 2 hr reflex,” which automatically gets follow-up. Panel scope and reflex trigger not reverified; inspect before adding duplicate follow-up. See the [checkpoint update](projects/micu-order-panels/status-2026-11-16.md#user-update-after-the-original-checkpoint).
 - [ ] **MICU personal Epic panels:** [2026-11-16 checkpoint](projects/micu-order-panels/status-2026-11-16.md) on `codex/micu-order-panels-checkpoint`. Nine panels saved in Epic; all 11 guide templates remain incomplete. Scenarios 7–9 absent; scenario 6 contains only ABG/lactate. Nursing/monitoring, conditional items and repeat schedules remain. No patient orders placed.
 - [x] **Command Board Radial Infinite Canvas:** Merged to `main` (PR #7, #9, #10, #11, #12, #13).
 - [x] **Zero-Cost Local Bridge (`projects/command-board/bridge/server.py`):**
